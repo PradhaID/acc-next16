@@ -40,6 +40,10 @@ const ROLES = {
   INCOME_STATEMENT_PDF: new ObjectId("670000000000000000000211"),
   INCOME_STATEMENT_XLSX: new ObjectId("670000000000000000000212"),
   CLOSING: new ObjectId("670000000000000000000213"),
+  COA_PDF: new ObjectId("670000000000000000000214"),
+  COA_XLSX: new ObjectId("670000000000000000000215"),
+  ACCOUNT_PDF: new ObjectId("670000000000000000000216"),
+  ACCOUNT_XLSX: new ObjectId("670000000000000000000217"),
 };
 
 const ADMIN_GROUP = new ObjectId("670000000000000000000010");
@@ -244,6 +248,22 @@ async function seed() {
       updated: { at: now, by: null },
     },
     {
+      _id: ROLES.COA_PDF,
+      parent: ROLES.COA,
+      name: "Print PDF",
+      description: "Download chart of accounts as PDF",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
+      _id: ROLES.COA_XLSX,
+      parent: ROLES.COA,
+      name: "Download Excel",
+      description: "Download chart of accounts as XLSX",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
       _id: ROLES.ACCOUNT,
       parent: ROLES.ACCOUNTING,
       name: "Account",
@@ -273,6 +293,22 @@ async function seed() {
       parent: ROLES.ACCOUNT,
       name: "Account Detail",
       description: "View account details",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
+      _id: ROLES.ACCOUNT_PDF,
+      parent: ROLES.ACCOUNT,
+      name: "Print PDF",
+      description: "Download accounts list as PDF",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
+      _id: ROLES.ACCOUNT_XLSX,
+      parent: ROLES.ACCOUNT,
+      name: "Download Excel",
+      description: "Download accounts list as XLSX",
       created: { at: now, by: null },
       updated: { at: now, by: null },
     },

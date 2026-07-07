@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { downloadXLSX } from "@/lib/xlsx";
 import PageHeader from "@/components/ui/PageHeader";
 import { formatNumber } from "@/lib/format";
 import { usePermission } from "@/hooks/useSession";
@@ -62,7 +64,11 @@ export default function AccountListPage() {
   const [coaFilter, setCoaFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "true" | "false">("all");
 
+  const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
+
   const canEditAccount = usePermission(ROLES.EDIT_ACCOUNT);
+  const canPrintPdf = usePermission(ROLES.ACCOUNT_PDF);
+  const canDownloadXlsx = usePermission(ROLES.ACCOUNT_XLSX);
 
   useEffect(() => { document.title = "Accounts - AccNext"; }, []);
 
@@ -121,23 +127,123 @@ export default function AccountListPage() {
     setActiveFilter("all");
   };
 
+  const generatePdf = async () => {
+    const doc = await PDFDocument.create();
+    const font = await doc.embedFont(StandardFonts.Helvetica);
+    const bold = await doc.embedFont(StandardFonts.HelveticaBold);
+    let page = doc.addPage([612, 792]);
+    const { width, height } = page.getSize();
+    const margin = 48;
+    let y = height - margin;
+    const minY = 60;
+    const rowH = 16;
+    const colX = [margin, margin + 70, margin + 200, margin + 350, margin + 440, margin + 520];
+    const colW = [70, 130, 150, 90, 80];
+
+    const addPage = () => {
+      page = doc.addPage([612, 792]);
+      y = height - margin;
+    };
+
+    const ensureSpace = () => { if (y - rowH < minY) addPage(); };
+
+    const drawText = (text: string, x: number, size: number, opts?: { bold?: boolean; color?: number[] }) => {
+      const f = opts?.bold ? bold : font;
+      page.drawText(text, { x, y: y - 2, size, font: f, color: rgb(opts?.color?.[0] ?? 0, opts?.color?.[1] ?? 0, opts?.color?.[2] ?? 0.4) });
+    };
+
+    drawText("Accounts", margin, 18, { bold: true, color: [0, 0, 0] });
+    y -= 24;
+    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 1.5, color: rgb(0, 0, 0) });
+    y -= rowH;
+
+    drawText("Number", colX[0], 9, { bold: true, color: [0, 0, 0] });
+    drawText("Account Name", colX[1], 9, { bold: true, color: [0, 0, 0] });
+    drawText("COA", colX[2], 9, { bold: true, color: [0, 0, 0] });
+    drawText("Category", colX[3], 9, { bold: true, color: [0, 0, 0] });
+    drawText("Balance", colX[4], 9, { bold: true, color: [0, 0, 0] });
+    y -= 4;
+    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 0.5, color: rgb(0.7, 0.7, 0.7) });
+    y -= rowH;
+
+    for (const a of filtered) {
+      ensureSpace();
+      const coa = typeof a.coa === "string" ? coaMap.get(a.coa) : (a.coa as COA);
+      drawText(a.number, colX[0], 8);
+      drawText(a.name, colX[1], 8);
+      drawText(coa ? `${coa.code} – ${coa.name}` : "-", colX[2], 7);
+      drawText(coa?.category || "-", colX[3], 8);
+      drawText(formatNumber(a.balance), colX[4], 8);
+      y -= rowH;
+    }
+
+    y -= 4;
+    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 0.5, color: rgb(0.7, 0.7, 0.7) });
+    y -= 16;
+    drawText(`Total: ${filtered.length} accounts`, margin, 10, { bold: true });
+
+    const bytes = await doc.save();
+    setPdfBytes(bytes);
+  };
+
+  const handleDownloadXLSX = () => {
+    const rows = filtered.map((a) => {
+      const coa = typeof a.coa === "string" ? coaMap.get(a.coa) : (a.coa as COA);
+      return {
+        Number: a.number,
+        "Account Name": a.name,
+        Description: a.description || "",
+        COA: coa ? `${coa.code} – ${coa.name}` : "-",
+        Category: coa?.category || "-",
+        Balance: a.balance,
+        Status: a.isActive ? "Active" : "Inactive",
+      };
+    });
+    downloadXLSX([{ name: "Accounts", rows }], `accounts.xlsx`);
+  };
+
   return (
     <div className="max-w-full mx-auto space-y-4 pb-10">
       <PageHeader
         title="Accounts"
         subtitle="Manage your ledger accounts"
         actions={
-          usePermission(ROLES.ADD_ACCOUNT) && (
-            <Link
-              href="/accounting/account/add"
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Add Account
-            </Link>
-          )
+          <div className="flex items-center gap-2">
+            {canPrintPdf && (
+              <button
+                onClick={generatePdf}
+                className="inline-flex items-center gap-1.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all active:scale-95"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                </svg>
+                Print PDF
+              </button>
+            )}
+            {canDownloadXlsx && (
+              <button
+                onClick={handleDownloadXLSX}
+                disabled={!filtered.length}
+                className="inline-flex items-center gap-1.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-800 transition-all active:scale-95 disabled:opacity-40"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                Excel
+              </button>
+            )}
+            {usePermission(ROLES.ADD_ACCOUNT) && (
+              <Link
+                href="/accounting/account/add"
+                className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Add Account
+              </Link>
+            )}
+          </div>
         }
       />
 
@@ -299,6 +405,35 @@ export default function AccountListPage() {
           </div>
         )}
       </div>
+
+      {pdfBytes && (
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-[32px] shadow-2xl w-full max-w-4xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Accounts PDF</h3>
+              <button onClick={() => setPdfBytes(null)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
+                <svg className="w-6 h-6 text-gray-400 hover:text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex-1 bg-gray-50 dark:bg-black/20 overflow-auto p-4">
+              <iframe src={URL.createObjectURL(new Blob([pdfBytes as BlobPart], { type: "application/pdf" }))} className="w-full h-full rounded-xl border border-gray-200 dark:border-gray-800" />
+            </div>
+            <div className="p-6 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3">
+              <button
+                onClick={() => window.open(URL.createObjectURL(new Blob([pdfBytes as BlobPart], { type: "application/pdf" })))}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20"
+              >
+                Download
+              </button>
+              <button onClick={() => setPdfBytes(null)} className="px-6 py-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
