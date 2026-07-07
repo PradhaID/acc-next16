@@ -53,7 +53,7 @@ const navItems: NavItem[] = [
     roleUrl: "/system",
     subItems: [
       { label: "Users", href: "/system/users", roleUrl: "/system/users" },
-      { label: "Groups", href: "/system/group", roleUrl: "/system/groups" },
+      { label: "Groups", href: "/system/group", roleUrl: "/system/group" },
     ],
   },
 ];
@@ -134,13 +134,15 @@ export default function Sidebar({ user }: SidebarProps) {
 
   const userRoleUrls = user.roleUrls || [];
 
+  const hasRoleUrl = (prefix: string) => userRoleUrls.some((url: string) => url === prefix || url.startsWith(prefix + "/"));
+
   const visibleItems = navItems.filter((item) => {
     if (item.subItems) {
       return item.subItems.some(
-        (sub) => !sub.roleUrl || userRoleUrls.includes(sub.roleUrl)
+        (sub) => !sub.roleUrl || hasRoleUrl(sub.roleUrl)
       );
     }
-    return !item.roleUrl || userRoleUrls.includes(item.roleUrl);
+    return !item.roleUrl || hasRoleUrl(item.roleUrl);
   });
 
   return (
@@ -234,7 +236,7 @@ export default function Sidebar({ user }: SidebarProps) {
                     <div className="ml-4 mt-1 space-y-1 border-l border-zinc-200 pl-3 dark:border-white/[0.08]">
                       {item.subItems
                         .filter(
-                          (sub) => !sub.roleUrl || userRoleUrls.includes(sub.roleUrl)
+                          (sub) => !sub.roleUrl || hasRoleUrl(sub.roleUrl)
                         )
                         .map((sub) => {
                           const subActive = pathname === sub.href || pathname.startsWith(sub.href + "/");
@@ -266,7 +268,7 @@ export default function Sidebar({ user }: SidebarProps) {
                       </div>
                       {item.subItems
                         .filter(
-                          (sub) => !sub.roleUrl || userRoleUrls.includes(sub.roleUrl)
+                          (sub) => !sub.roleUrl || hasRoleUrl(sub.roleUrl)
                         )
                         .map((sub) => {
                           const subActive = pathname === sub.href || pathname.startsWith(sub.href + "/");
