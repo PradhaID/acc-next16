@@ -44,3 +44,8 @@ next-env.d.ts
 .opencode
 AGENTS.md
 CLAUDE.md
+
+package-lock.json
+ecosystem.config.js
+
+deploy.sh
