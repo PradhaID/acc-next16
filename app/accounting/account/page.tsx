@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { formatNumber } from "@/lib/format";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface COA {
   _id: string;
@@ -59,6 +61,8 @@ export default function AccountListPage() {
   const [search, setSearch] = useState("");
   const [coaFilter, setCoaFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState<"all" | "true" | "false">("all");
+
+  const canEditAccount = usePermission(ROLES.EDIT_ACCOUNT);
 
   useEffect(() => { document.title = "Accounts - AccNext"; }, []);
 
@@ -123,15 +127,17 @@ export default function AccountListPage() {
         title="Accounts"
         subtitle="Manage your ledger accounts"
         actions={
-          <Link
-            href="/accounting/account/add"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Account
-          </Link>
+          usePermission(ROLES.ADD_ACCOUNT) && (
+            <Link
+              href="/accounting/account/add"
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Account
+            </Link>
+          )
         }
       />
 
@@ -239,12 +245,14 @@ export default function AccountListPage() {
                           )}
                         </div>
                         <div className="absolute bottom-1.5 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                          <Link
-                            href={`/accounting/account/edit/${a._id}`}
-                            className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-[10px] font-black uppercase tracking-wider"
-                          >
-                            Edit
-                          </Link>
+                          {canEditAccount && (
+                            <Link
+                              href={`/accounting/account/edit/${a._id}`}
+                              className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-[10px] font-black uppercase tracking-wider"
+                            >
+                              Edit
+                            </Link>
+                          )}
                         </div>
                       </td>
 

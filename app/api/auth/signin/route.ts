@@ -58,6 +58,7 @@ export async function POST(request: Request) {
     }
 
     let roleUrls: string[] = [];
+    let roleIds: string[] = [];
     if (user.groupId) {
       const groupDoc = await db.collection("systemGroups").findOne({ _id: user.groupId });
       if (groupDoc && groupDoc.isActive === false) {
@@ -67,9 +68,10 @@ export async function POST(request: Request) {
         );
       }
       const joins = await db.collection("systemGroupHasRole").find({ groupId: user.groupId }).toArray();
-      const roleIds = joins.map((j) => j.roleId);
-      if (roleIds.length > 0) {
-        const roleDocList = await db.collection("systemRoles").find({ _id: { $in: roleIds } }).toArray();
+      const joinedRoleIds = joins.map((j) => j.roleId);
+      roleIds = joinedRoleIds.map((id) => id.toString());
+      if (joinedRoleIds.length > 0) {
+        const roleDocList = await db.collection("systemRoles").find({ _id: { $in: joinedRoleIds } }).toArray();
         roleUrls = roleDocList.filter((r) => r.url).map((r) => r.url);
       }
     }
@@ -83,6 +85,7 @@ export async function POST(request: Request) {
       email: user.email,
       timezone: tz,
       roleUrls,
+      roleIds,
     });
 
     const secureFlag = COOKIE_OPTIONS.secure ? "; Secure" : "";

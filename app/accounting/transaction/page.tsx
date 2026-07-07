@@ -5,6 +5,8 @@ import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { formatNumber } from "@/lib/format";
 import { useFormatDateInTimezone, FormattedDateTime } from "@/hooks/useTimezone";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface Transaction {
   _id: string;
@@ -32,6 +34,8 @@ export default function TransactionListPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const canAddTransaction = usePermission(ROLES.CREATE_TRANSACTION);
 
   useEffect(() => { document.title = "Transactions - AccNext"; }, []);
 
@@ -85,15 +89,17 @@ export default function TransactionListPage() {
         title="Transactions"
         subtitle="Journal entries"
         actions={
-          <Link
-            href="/accounting/transaction/add"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Transaction
-          </Link>
+          canAddTransaction && (
+            <Link
+              href="/accounting/transaction/add"
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Transaction
+            </Link>
+          )
         }
       />
 

@@ -6,6 +6,8 @@ import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { formatNumber } from "@/lib/format";
 import { useFormatDateInTimezone, FormattedDateTime } from "@/hooks/useTimezone";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface LineItem {
   _id: string;
@@ -81,15 +83,12 @@ export default function TransactionDetailPage({
   const [errorMsg, setErrorMsg] = useState("");
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [showReverseModal, setShowReverseModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
   const [showViewerModal, setShowViewerModal] = useState(false);
   const [viewerUrl, setViewerUrl] = useState("");
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
-  const [uploadPreview, setUploadPreview] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
+
+  const canEditTransaction = usePermission(ROLES.EDIT_TRANSACTION);
+  const canConfirmTransaction = usePermission(ROLES.CONFIRM_TRANSACTION);
 
   useEffect(() => { document.title = "Transaction Detail - AccNext"; }, []);
 
@@ -155,28 +154,6 @@ export default function TransactionDetailPage({
     finally { setActionLoading(false); }
   };
 
-  const handleReject = async () => {
-    setActionLoading(true);
-    try {
-      const res = await fetch(`/api/accounting/transaction?id=${id}&action=reject`, { method: "DELETE" });
-      if (res.ok) { setShowRejectModal(false); refetch(); }
-      else { const d = await res.json(); setErrorMsg(d.error || "Failed to reject"); setShowRejectModal(false); }
-    } catch { setErrorMsg("Connection error"); setShowRejectModal(false); }
-    finally { setActionLoading(false); }
-  };
-
-  const handleReverse = async () => {
-    setActionLoading(true);
-    try {
-      const res = await fetch(`/api/accounting/transaction?id=${id}&action=reverse`, {
-        method: "PATCH",
-      });
-      if (res.ok) { setShowReverseModal(false); refetch(); }
-      else { const d = await res.json(); setErrorMsg(d.error || "Failed to reverse"); setShowReverseModal(false); }
-    } catch { setErrorMsg("Connection error"); setShowReverseModal(false); }
-    finally { setActionLoading(false); }
-  };
-
   const handleDelete = async () => {
     setActionLoading(true);
     try {
@@ -185,48 +162,6 @@ export default function TransactionDetailPage({
       else { const d = await res.json(); setErrorMsg(d.error || "Failed to delete"); setShowDeleteModal(false); }
     } catch { setErrorMsg("Connection error"); setShowDeleteModal(false); }
     finally { setActionLoading(false); }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setUploadFile(file);
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onloadend = () => setUploadPreview(reader.result as string);
-        reader.readAsDataURL(file);
-      } else {
-        setUploadPreview("");
-      }
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!uploadFile) return;
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("transactionId", id);
-      formData.append("file", uploadFile);
-      const res = await fetch("/api/accounting/transaction/evidence", {
-        method: "POST",
-        body: formData,
-      });
-      if (res.ok) {
-        setShowUploadModal(false);
-        setUploadFile(null);
-        setUploadPreview("");
-        refetch();
-        setSuccessBanner("Evidence uploaded successfully.");
-      } else {
-        const d = await res.json();
-        setErrorMsg(d.error || "Upload failed");
-      }
-    } catch {
-      setErrorMsg("Upload failed");
-    } finally {
-      setIsUploading(false);
-    }
   };
 
   const handleDeleteEvidence = async (url: string) => {
@@ -339,68 +274,43 @@ export default function TransactionDetailPage({
           <div className="flex gap-2">
             {transaction.status === "Pending" && (
               <>
-                <Link
-                  href={`/accounting/transaction/edit/${id}`}
-                  className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                  </svg>
-                  Edit
-                </Link>
-                <button
-                  onClick={() => setShowDeleteModal(true)}
-                  disabled={actionLoading}
-                  className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-900/50 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                  </svg>
-                  Delete
-                </button>
-                <button
-                  onClick={() => setShowRejectModal(true)}
-                  disabled={actionLoading}
-                  className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                  </svg>
-                  Reject
-                </button>
-                <button
-                  onClick={() => setShowConfirmModal(true)}
-                  disabled={actionLoading}
-                  className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                  </svg>
-                  Confirm
-                </button>
+                {canEditTransaction && (
+                  <Link
+                    href={`/accounting/transaction/edit/${id}`}
+                    className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                    Edit
+                  </Link>
+                )}
+                {canEditTransaction && (
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    disabled={actionLoading}
+                    className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-900/50 text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                    Delete
+                  </button>
+                )}
+                {canConfirmTransaction && (
+                  <button
+                    onClick={() => setShowConfirmModal(true)}
+                    disabled={actionLoading}
+                    className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    Confirm
+                  </button>
+                )}
               </>
             )}
-            {transaction.status === "Confirmed" && !transaction.reversed?.at && (
-              <button
-                onClick={() => setShowReverseModal(true)}
-                disabled={actionLoading}
-                className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-                </svg>
-                Reverse
-              </button>
-            )}
-            <button
-              onClick={() => setShowUploadModal(true)}
-              className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-              </svg>
-              Upload
-            </button>
           </div>
         </div>
 
@@ -652,52 +562,6 @@ export default function TransactionDetailPage({
         </div>
       )}
 
-      {/* Modal Reject */}
-      {showRejectModal && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center">
-            <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-amber-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">Reject Transaction?</h3>
-            <p className="text-gray-500 text-sm mb-8">This transaction will be marked as rejected and no balances will be affected.</p>
-            <div className="flex gap-3">
-              <button onClick={handleReject} disabled={actionLoading} className="flex-1 bg-amber-600 text-white py-3 rounded-2xl font-bold hover:bg-amber-700 transition-all active:scale-95 disabled:opacity-50">
-                {actionLoading ? "Processing..." : "Yes, Reject"}
-              </button>
-              <button onClick={() => setShowRejectModal(false)} className="flex-1 bg-gray-100 dark:bg-gray-700 py-3 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 text-gray-700 dark:text-gray-300">
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Reverse */}
-      {showReverseModal && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center">
-            <div className="w-20 h-20 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-orange-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-bold mb-2 text-gray-900 dark:text-white">Reverse Entry?</h3>
-            <p className="text-gray-500 text-sm mb-8">A new reversal transaction will be created to offset these ledger entries.</p>
-            <div className="flex gap-3">
-              <button onClick={handleReverse} disabled={actionLoading} className="flex-1 bg-orange-600 text-white py-3 rounded-2xl font-bold hover:bg-orange-700 transition-all active:scale-95 disabled:opacity-50">
-                {actionLoading ? "Reversing..." : "Yes, Reverse"}
-              </button>
-              <button onClick={() => setShowReverseModal(false)} className="flex-1 bg-gray-100 dark:bg-gray-700 py-3 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 text-gray-700 dark:text-gray-300">
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Modal Delete */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
@@ -714,86 +578,6 @@ export default function TransactionDetailPage({
                 {actionLoading ? "Deleting..." : "Delete Now"}
               </button>
               <button onClick={() => setShowDeleteModal(false)} className="flex-1 bg-gray-100 dark:bg-gray-700 py-3 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 text-gray-700 dark:text-gray-300">
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Modal Upload */}
-      {showUploadModal && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-[32px] shadow-2xl max-w-lg w-full overflow-hidden">
-            <div className="p-8 border-b border-gray-100 dark:border-gray-800">
-              <h3 className="text-xl font-extrabold text-gray-900 dark:text-white">Upload Evidence</h3>
-              <p className="text-sm text-gray-500 mt-1">Add images or PDF documents for this transaction.</p>
-            </div>
-
-            <div className="p-8 space-y-6">
-              <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 block">Select File</label>
-                {!uploadFile ? (
-                  <div className="relative group">
-                    <input
-                      type="file"
-                      accept="image/*,application/pdf"
-                      onChange={handleFileChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                    />
-                    <div className="h-48 bg-gray-50 dark:bg-gray-800/50 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-3xl flex flex-col items-center justify-center transition-all group-hover:border-indigo-400 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-900/10">
-                      <div className="w-14 h-14 bg-white dark:bg-gray-800 rounded-2xl flex items-center justify-center shadow-sm mb-4 text-indigo-500">
-                        <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-                        </svg>
-                      </div>
-                      <p className="text-sm font-bold text-gray-700 dark:text-gray-300">Browse files to upload</p>
-                      <p className="text-[10px] text-gray-400 mt-1 font-bold">JPG, PNG, GIF or PDF</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-3xl p-6 border border-gray-100 dark:border-gray-700/50 relative">
-                    <button
-                      onClick={() => { setUploadFile(null); setUploadPreview(""); }}
-                      className="absolute -top-3 -right-3 w-8 h-8 bg-white dark:bg-gray-800 shadow-xl border border-gray-100 dark:border-gray-700 rounded-full flex items-center justify-center text-red-500 hover:scale-110 transition-transform"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                    <div className="flex items-center gap-6">
-                      {uploadPreview ? (
-                        <img src={uploadPreview} alt="Preview" className="w-24 h-24 rounded-2xl object-cover bg-white shadow-lg" />
-                      ) : (
-                        <div className="w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-2xl flex flex-col items-center justify-center text-red-600">
-                          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                          </svg>
-                          <span className="text-[10px] font-black mt-1">PDF</span>
-                        </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{uploadFile.name}</p>
-                        <p className="text-xs font-bold text-gray-400 mt-1">{(uploadFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="p-8 bg-gray-50/50 dark:bg-gray-800/50 flex gap-4">
-              <button
-                onClick={handleUpload}
-                disabled={!uploadFile || isUploading}
-                className="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-black text-sm hover:bg-indigo-700 transition-all active:scale-95 disabled:opacity-50 shadow-xl shadow-indigo-500/20"
-              >
-                {isUploading ? "Uploading..." : "Confirm Upload"}
-              </button>
-              <button
-                onClick={() => { setShowUploadModal(false); setUploadFile(null); setUploadPreview(""); }}
-                className="px-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 py-4 rounded-2xl font-black text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-all active:scale-95 text-gray-600 dark:text-gray-400"
-              >
                 Cancel
               </button>
             </div>

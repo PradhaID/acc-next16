@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { FormattedDateTime } from "@/hooks/useTimezone";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface User {
   _id: string;
@@ -56,6 +58,10 @@ export default function UsersPage() {
       u.email.toLowerCase().includes(q)
   );
 
+  const canAddUser = usePermission(ROLES.ADD_USER);
+  const canEditUser = usePermission(ROLES.EDIT_USER);
+  const canViewDetails = usePermission(ROLES.USER_DETAIL);
+
   const resetFilters = () => setSearch("");
 
   return (
@@ -64,15 +70,17 @@ export default function UsersPage() {
         title="Users"
         subtitle="Manage system users and their group assignments"
         actions={
-          <Link
-            href="/system/users/add"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add User
-          </Link>
+          canAddUser && (
+            <Link
+              href="/system/users/add"
+              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add User
+            </Link>
+          )
         }
       />
 
@@ -136,18 +144,22 @@ export default function UsersPage() {
                         <div>
                           <div className="font-bold text-sm text-gray-900 dark:text-white">{u.fullName}</div>
                           <div className="flex items-center gap-3 mt-0.5">
-                            <Link
-                              href={`/system/users/edit/${u._id}`}
-                              className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-[10px] font-black uppercase tracking-wider"
-                            >
-                              Edit
-                            </Link>
-                            <Link
-                              href={`/system/users/${u._id}`}
-                              className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 text-[10px] font-black uppercase tracking-wider"
-                            >
-                              Detail
-                            </Link>
+                            {canEditUser && (
+                              <Link
+                                href={`/system/users/edit/${u._id}`}
+                                className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-[10px] font-black uppercase tracking-wider"
+                              >
+                                Edit
+                              </Link>
+                            )}
+                            {canViewDetails && (
+                              <Link
+                                href={`/system/users/${u._id}`}
+                                className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 text-[10px] font-black uppercase tracking-wider"
+                              >
+                                Detail
+                              </Link>
+                            )}
                           </div>
                         </div>
                       </div>

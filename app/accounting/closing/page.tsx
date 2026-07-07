@@ -43,6 +43,7 @@ export default function ClosingPage() {
   const [confirming, setConfirming] = useState(false);
   const [history, setHistory] = useState<ClosingTransaction[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
+  const canExecuteClosing = true;
 
   useEffect(() => { document.title = "Closing - AccNext"; }, []);
 
@@ -172,40 +173,42 @@ export default function ClosingPage() {
               </select>
             </div>
           </div>
-          <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-gray-800">
-            {!confirming ? (
-              <button
-                onClick={() => setConfirming(true)}
-                disabled={!fiscalYear || !retainedEarningsAccountId}
-                className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                Execute Closing
-              </button>
-            ) : (
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-xs font-bold text-gray-500">
-                  Close fiscal year {fiscalYear}? This cannot be undone.
-                </span>
+          {canExecuteClosing && (
+            <div className="flex items-center gap-3 pt-2 border-t border-gray-100 dark:border-gray-800">
+              {!confirming ? (
                 <button
-                  onClick={handleExecute}
-                  disabled={submitting}
-                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-5 py-2 rounded-xl font-bold text-xs transition-all hover:scale-105 active:scale-95"
+                  onClick={() => setConfirming(true)}
+                  disabled={!fiscalYear || !retainedEarningsAccountId}
+                  className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
                 >
-                  {submitting ? "Processing…" : "Confirm"}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                  Execute Closing
                 </button>
-                <button
-                  onClick={() => setConfirming(false)}
-                  disabled={submitting}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/50 text-xs px-4 py-2 rounded-xl font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="text-xs font-bold text-gray-500">
+                    Close fiscal year {fiscalYear}? This cannot be undone.
+                  </span>
+                  <button
+                    onClick={handleExecute}
+                    disabled={submitting}
+                    className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-5 py-2 rounded-xl font-bold text-xs transition-all hover:scale-105 active:scale-95"
+                  >
+                    {submitting ? "Processing…" : "Confirm"}
+                  </button>
+                  <button
+                    onClick={() => setConfirming(false)}
+                    disabled={submitting}
+                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/50 text-xs px-4 py-2 rounded-xl font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

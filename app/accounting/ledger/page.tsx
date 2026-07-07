@@ -5,6 +5,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import { formatNumber } from "@/lib/format";
 import { useFormatDateInTimezone } from "@/hooks/useTimezone";
 import { formatDateInTimezone, localDateStartUTC, localDateEndUTC } from "@/lib/timezone";
+import { downloadXLSX } from "@/lib/xlsx";
 
 interface Account {
   _id: string;
@@ -55,6 +56,8 @@ export default function LedgerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const canDownloadXlsx = true;
+
   useEffect(() => { document.title = "Ledger - AccNext"; }, []);
 
   useEffect(() => {
@@ -103,6 +106,35 @@ export default function LedgerPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDownloadXLSX = () => {
+    if (!data) return;
+    downloadXLSX([
+      {
+        name: "Ledger",
+        rows: [
+          {
+            "Account Number": data.account.number,
+            "Account Name": data.account.name,
+            "COA Category": data.coa.category,
+            "Position": data.coa.position,
+            "Opening Balance": data.openingBalance,
+            "Start Date": data.startDate,
+            "End Date": data.endDate,
+          },
+          {},
+          ...data.rows.map((r) => ({
+            Date: r.date,
+            Code: r.code,
+            Information: r.information,
+            Debit: r.debit,
+            Credit: r.credit,
+            Balance: r.balance,
+          })),
+        ],
+      },
+    ], `ledger-${data.account.number}-${startDate}-${endDate}.xlsx`);
   };
 
   const totalDebit = data ? data.rows.reduce((s, r) => s + r.debit, 0) : 0;
@@ -179,6 +211,15 @@ export default function LedgerPage() {
         >
           {loading ? "Loading…" : "View"}
         </button>
+        {canDownloadXlsx && (
+          <button
+            onClick={handleDownloadXLSX}
+            disabled={!data || loading}
+            className="px-5 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            XLSX
+          </button>
+        )}
       </div>
 
       {error && (

@@ -6,6 +6,9 @@ import { formatNumber } from "@/lib/format";
 import { localDateEndUTC } from "@/lib/timezone";
 import { useFormatDateInTimezone } from "@/hooks/useTimezone";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { downloadXLSX } from "@/lib/xlsx";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface AccountLine {
   number: string;
@@ -135,6 +138,9 @@ export default function BalanceSheetPage() {
   const [showCode, setShowCode] = useState(false);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
+
+  const canPrintPdf = usePermission(ROLES.BALANCE_SHEET_PDF);
+  const canDownloadXlsx = usePermission(ROLES.BALANCE_SHEET_XLSX);
 
   useEffect(() => { document.title = "Balance Sheet - AccNext"; }, []);
 
@@ -304,45 +310,31 @@ export default function BalanceSheetPage() {
     setPdfBytes(await pdfDoc.save());
   }
 
-  function downloadCSV() {
+  function handleDownloadXLSX() {
     if (!data) return;
-    const rows: string[] = [];
-    rows.push('"Balance Sheet"');
-    rows.push(`"As of ${data.asOfDate}"`);
-    rows.push('');
-
-    const sections = [
-      { label: 'Assets', root: data.assets, color: '' },
-      { label: 'Liabilities', root: data.liabilities, color: '' },
-      { label: 'Equity', root: data.equity, color: '' },
+    const sections: { label: string; root: TreeNode }[] = [
+      { label: "Assets", root: data.assets },
+      { label: "Liabilities", root: data.liabilities },
+      { label: "Equity", root: data.equity },
     ];
-
+    const allRows: Record<string, unknown>[] = [];
+    allRows.push({ "Balance Sheet": `As of ${data.asOfDate}` });
+    allRows.push({});
     for (const { label, root } of sections) {
-      rows.push(`"${label}"`);
+      allRows.push({ [label]: "" });
       const tree = flattenTree(root);
-      const netIncomeRow = label === 'Equity' && data.netIncome > 0 ? { depth: 1, name: 'Current Year Earnings', code: '', total: data.netIncome, section: 'Equity' } : null;
-      if (netIncomeRow) tree.push(netIncomeRow);
-      for (const r of tree) {
-        const indent = '  '.repeat(r.depth + 1);
-        rows.push(`${indent}"${r.name}",${r.total}`);
+      if (label === "Equity" && data.netIncome > 0) {
+        tree.push({ depth: 1, name: "Current Year Earnings", code: "", total: data.netIncome });
       }
-      rows.push(`"Total ${label}",${root.total}`);
-      rows.push('');
+      for (const r of tree) {
+        allRows.push({ "": r.name, Total: r.total });
+      }
+      allRows.push({ "": `Total ${label}`, Total: root.total });
+      allRows.push({});
     }
-
-    rows.push(`"Total Liabilities & Equity",${totalLiabilitiesEquity}`);
-    if (isBalanced) rows.push('"Balanced"');
-    else rows.push('"Out of Balance"');
-
-    const csv = rows.join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `balance-sheet-${data.asOfDate}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
+    allRows.push({ "": "TOTAL LIABILITIES & EQUITY", Total: totalLiabilitiesEquity });
+    allRows.push({ "": isBalanced ? "Balanced" : "Out of Balance" });
+    downloadXLSX([{ name: "Balance Sheet", rows: allRows }], `balance-sheet-${data.asOfDate}.xlsx`);
   }
 
   return (
@@ -372,19 +364,23 @@ export default function BalanceSheetPage() {
         >
           Code
         </button>
-        <button
-          onClick={() => { generatePdf(); }}
-          className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300"
-        >
-          Print PDF
-        </button>
-        <button
-          onClick={downloadCSV}
-          disabled={!data || loading}
-          className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Excel
-        </button>
+        {canPrintPdf && (
+          <button
+            onClick={() => { generatePdf(); }}
+            className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300"
+          >
+            Print PDF
+          </button>
+        )}
+        {canDownloadXlsx && (
+          <button
+            onClick={handleDownloadXLSX}
+            disabled={!data || loading}
+            className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Excel
+          </button>
+        )}
       </div>
 
       {error && (

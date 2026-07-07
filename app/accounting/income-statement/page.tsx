@@ -6,6 +6,9 @@ import { formatNumber } from "@/lib/format";
 import { useFormatDateInTimezone } from "@/hooks/useTimezone";
 import { localDateStartUTC, localDateEndUTC } from "@/lib/timezone";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { downloadXLSX } from "@/lib/xlsx";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface CoaNode {
   _id: string;
@@ -197,6 +200,9 @@ export default function IncomeStatementPage() {
   const [showCode, setShowCode] = useState(false);
   const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null);
 
+  const canPrintPdf = usePermission(ROLES.INCOME_STATEMENT_PDF);
+  const canDownloadXlsx = usePermission(ROLES.INCOME_STATEMENT_XLSX);
+
   useEffect(() => { document.title = "Income Statement - AccNext"; }, []);
 
   const toggleCollapse = (id: string) => {
@@ -372,6 +378,30 @@ export default function IncomeStatementPage() {
     setPdfBytes(await pdfDoc.save());
   }
 
+  function handleDownloadXLSX() {
+    if (!data) return;
+    const sections: { label: string; node: CoaNode }[] = [
+      { label: "Revenue", node: data.revenue },
+      { label: "Cost of Goods Sold", node: data.cogs },
+      { label: "Expenses", node: data.expenses },
+    ];
+    const allRows: Record<string, unknown>[] = [];
+    allRows.push({ "Income Statement": `${data.startDate} — ${data.endDate}` });
+    allRows.push({});
+    for (const { label, node } of sections) {
+      allRows.push({ [label]: "" });
+      const tree = flattenTree(node);
+      for (const r of tree) {
+        allRows.push({ "": r.name, Total: r.total });
+      }
+      allRows.push({ "": `Total ${label}`, Total: node.total });
+      allRows.push({});
+    }
+    allRows.push({ "": "Gross Profit", Total: data.grossProfit });
+    allRows.push({ "": `Net ${data.netProfit >= 0 ? "Profit" : "Loss"}`, Total: data.netProfit });
+    downloadXLSX([{ name: "Income Statement", rows: allRows }], `income-statement-${data.startDate}-${data.endDate}.xlsx`);
+  }
+
   return (
     <div className="max-w-full mx-auto space-y-4 pb-10">
       <PageHeader title="Income Statement" subtitle="Profit & loss report" />
@@ -418,12 +448,22 @@ export default function IncomeStatementPage() {
         >
           Code
         </button>
-        <button
-          onClick={() => { generatePdf(); }}
-          className="px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 hover:bg-rose-200 dark:hover:bg-rose-900/50"
-        >
-          Print PDF
-        </button>
+        {canPrintPdf && (
+          <button
+            onClick={() => { generatePdf(); }}
+            className="px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 hover:bg-rose-200 dark:hover:bg-rose-900/50"
+          >
+            Print PDF
+          </button>
+        )}
+        {canDownloadXlsx && (
+          <button
+            onClick={handleDownloadXLSX}
+            className="px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50"
+          >
+            XLSX
+          </button>
+        )}
       </div>
 
       {error && (

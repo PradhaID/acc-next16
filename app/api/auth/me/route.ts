@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     }
 
     const { password, ...rest } = user;
-    return Response.json({ ...rest, groupName, createdByName, updatedByName });
+    return Response.json({ ...rest, groupName, createdByName, updatedByName, roleIds: session.roleIds || [] });
   } catch (error) {
     console.error("Auth me GET error:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });

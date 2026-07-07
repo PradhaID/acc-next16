@@ -9,6 +9,7 @@ export interface SessionPayload extends JWTPayload {
   email: string;
   timezone: string;
   roleUrls: string[];
+  roleIds: string[];
 }
 
 export async function signToken(payload: SessionPayload): Promise<string> {
