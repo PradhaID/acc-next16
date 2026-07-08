@@ -162,11 +162,39 @@ export default function COAListPage() {
       y = height - margin;
     };
 
-    const ensureSpace = () => { if (y - rowH < minY) addPage(); };
-
     const drawText = (text: string, x: number, size: number, opts?: { bold?: boolean; color?: number[] }) => {
       const f = opts?.bold ? bold : font;
       page.drawText(text, { x, y: y - 2, size, font: f, color: rgb(opts?.color?.[0] ?? 0, opts?.color?.[1] ?? 0, opts?.color?.[2] ?? 0.4) });
+    };
+
+    const wrapText = (text: string, maxWidth: number, size: number): string[] => {
+      const words = text.split(' ');
+      const lines: string[] = [];
+      let currentLine = '';
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        if (font.widthOfTextAtSize(testLine, size) > maxWidth) {
+          if (currentLine) lines.push(currentLine);
+          if (font.widthOfTextAtSize(word, size) > maxWidth) {
+            let chars = '';
+            for (const ch of word) {
+              if (font.widthOfTextAtSize(chars + ch, size) > maxWidth) {
+                lines.push(chars);
+                chars = ch;
+              } else {
+                chars += ch;
+              }
+            }
+            currentLine = chars;
+          } else {
+            currentLine = word;
+          }
+        } else {
+          currentLine = testLine;
+        }
+      }
+      if (currentLine) lines.push(currentLine);
+      return lines.length ? lines : [''];
     };
 
     // Title
@@ -186,12 +214,22 @@ export default function COAListPage() {
     y -= rowH;
 
     for (const c of coaList) {
-      ensureSpace();
+      const nameLines = wrapText(c.name, colW[1], 8);
+      const catLines = wrapText(c.category, colW[2], 8);
+      const posLines = wrapText(c.position, colW[3], 8);
+      const lineCount = Math.max(nameLines.length, catLines.length, posLines.length, 1);
+      const rowHeight = rowH * lineCount;
+
+      if (y - rowHeight < minY) addPage();
+
       drawText(String(c.code), colX[0], 8);
-      drawText(c.name, colX[1], 8);
-      drawText(c.category, colX[2], 8);
-      drawText(c.position, colX[3], 8);
-      drawText(c.isActive ? "Active" : "Inactive", colX[4], 8);
+      for (let i = 0; i < lineCount; i++) {
+        if (i > 0) y -= rowH;
+        drawText(nameLines[i] ?? '', colX[1], 8);
+        if (catLines[i]) drawText(catLines[i], colX[2], 8);
+        if (posLines[i]) drawText(posLines[i], colX[3], 8);
+        if (i === 0) drawText(c.isActive ? "Active" : "Inactive", colX[4], 8);
+      }
       y -= rowH;
     }
 
