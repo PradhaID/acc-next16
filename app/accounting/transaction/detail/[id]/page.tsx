@@ -24,7 +24,7 @@ interface TransactionDetail {
   information: string;
   amount: number;
   evidence: string[];
-  status: "Pending" | "Confirmed" | "Rejected" | "Reversed";
+  status: "Pending" | "Confirmed" | "Rejected" | "Reversed" | "Canceled";
   created: { at: string; by: string | null };
   updated: { at: string; by: string | null };
   confirmed?: { at: string; by: string | null };
@@ -62,6 +62,7 @@ const statusColors: Record<string, string> = {
   Confirmed: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Rejected: "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800 dark:text-red-400",
   Reversed: "bg-blue-50 border-blue-100 text-blue-600 dark:bg-blue-950/20 dark:border-blue-800 dark:text-blue-400",
+  Canceled: "bg-gray-50 border-gray-100 text-gray-400 dark:bg-gray-800/30 dark:border-gray-700 dark:text-gray-500",
 };
 
 export default function TransactionDetailPage({
@@ -211,7 +212,7 @@ export default function TransactionDetailPage({
 
   return (
     <>
-      <div className="max-w-full mx-auto space-y-6 pb-10">
+      <div className={`max-w-full mx-auto space-y-6 pb-10${transaction?.status === "Canceled" ? " opacity-50" : ""}`}>
         {successBanner && (
           <div className="flex items-center gap-3 px-5 py-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 rounded-2xl text-emerald-700 dark:text-emerald-300 text-sm font-bold">
             <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

@@ -379,13 +379,20 @@ export async function DELETE(request: NextRequest) {
       return Response.json({ message: "Rejected." });
     }
 
-    // Delete (hard delete for pending only)
+    // Soft delete (pending only)
     if (existing.status !== "Pending") {
       return Response.json({ error: "Only pending transactions can be deleted." }, { status: 400 });
     }
 
-    await db.collection("accountingTransactionDetails").deleteMany({ transaction: existing._id });
-    await transactions.deleteOne({ _id: existing._id });
+    await transactions.updateOne(
+      { _id: existing._id },
+      {
+        $set: {
+          status: "Canceled",
+          updated: { at: now, by: userId },
+        },
+      }
+    );
 
     return Response.json({ message: "Deleted." });
   } catch (error) {

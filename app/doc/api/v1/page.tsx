@@ -350,7 +350,7 @@ export default function ApiDocsPage() {
           <Endpoint
             method="DELETE"
             path="/api/v1/transactions/:id?action=cancel"
-            description="Hard-delete a pending transaction (removes from database)."
+            description="Cancel a pending transaction (soft delete — sets status to Canceled, hidden from ledger)."
             response={`{
   "message": "Deleted."
 }`}

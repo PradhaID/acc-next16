@@ -198,8 +198,15 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     if (action === "cancel") {
       if (existing.status !== "Pending") return errors.notPending("deleted");
 
-      await db.collection("accountingTransactionDetails").deleteMany({ transaction: existing._id });
-      await transactions.deleteOne({ _id: existing._id });
+      await transactions.updateOne(
+        { _id: existing._id },
+        {
+          $set: {
+            status: "Canceled",
+            updated: { at: now, by: userId },
+          },
+        }
+      );
 
       return Response.json({ message: "Deleted." });
     }

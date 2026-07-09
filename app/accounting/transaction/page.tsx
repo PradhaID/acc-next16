@@ -25,6 +25,7 @@ const statusColors: Record<string, string> = {
   Confirmed: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Rejected: "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800 dark:text-red-400",
   Reversed: "bg-blue-50 border-blue-100 text-blue-600 dark:bg-blue-950/20 dark:border-blue-800 dark:text-blue-400",
+  Canceled: "bg-gray-50 border-gray-100 text-gray-400 dark:bg-gray-800/30 dark:border-gray-700 dark:text-gray-500",
 };
 
 export default function TransactionListPage() {
@@ -129,6 +130,7 @@ export default function TransactionListPage() {
             <option value="Confirmed">Confirmed</option>
             <option value="Rejected">Rejected</option>
             <option value="Reversed">Reversed</option>
+            <option value="Canceled">Canceled</option>
           </select>
         </div>
 
@@ -167,8 +169,8 @@ export default function TransactionListPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800/50">
-                {filtered.map((t) => (
-                  <tr key={t._id} className="group hover:bg-indigo-50/40 dark:hover:bg-indigo-500/5 transition-all cursor-pointer">
+                  {filtered.map((t) => (
+                  <tr key={t._id} className={`group hover:bg-indigo-50/40 dark:hover:bg-indigo-500/5 transition-all cursor-pointer${t.status === "Canceled" ? " opacity-50" : ""}`}>
                     {/* Code + actions (bottom, on hover) */}
                     <td className="px-4 py-3 relative group-hover:pb-6 transition-all duration-200">
                       <Link

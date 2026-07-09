@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
-export type TransactionStatus = "Pending" | "Confirmed" | "Rejected" | "Reversed";
+export type TransactionStatus = "Pending" | "Confirmed" | "Rejected" | "Reversed" | "Canceled";
 
 export interface EvidenceItem {
   url: string;
