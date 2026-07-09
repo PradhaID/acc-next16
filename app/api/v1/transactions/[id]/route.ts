@@ -186,7 +186,59 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return Response.json({ message: "Deleted." });
     }
 
-    return errors.validation("Unknown action. Use confirm, reject, or cancel.");
+    if (action === "reverse") {
+      if (existing.status !== "Confirmed") return errors.validation("Only confirmed transactions can be reversed.");
+
+      const reversalId = new ObjectId();
+      const details = await db
+        .collection<TransactionDetail>("accountingTransactionDetails")
+        .find({ transaction: existing._id })
+        .toArray();
+
+      const reversalDetails: TransactionDetail[] = details.map((d) => ({
+        _id: new ObjectId(),
+        transaction: reversalId,
+        account: d.account,
+        position: d.position === "Db" ? ("Cr" as const) : ("Db" as const),
+        amount: d.amount,
+      }));
+
+      const reversal: Transaction = {
+        _id: reversalId,
+        code: `REV-${existing.code}`,
+        effectiveDate: now,
+        reference: existing.code,
+        information: `Reversal of ${existing.code}${existing.information ? ` - ${existing.information}` : ""}`,
+        amount: existing.amount,
+        evidence: [],
+        status: "Pending",
+        source: "api",
+        created: { at: now, by: userId },
+        updated: { at: now, by: userId },
+      };
+
+      await transactions.insertOne(reversal);
+      await db.collection("accountingTransactionDetails").insertMany(reversalDetails);
+
+      await transactions.updateOne(
+        { _id: existing._id },
+        {
+          $set: {
+            status: "Reversed",
+            "reversed.at": now,
+            "reversed.by": userId,
+            updated: { at: now, by: userId },
+          },
+        }
+      );
+
+      const allAccountIds = [...new Set([...details.map((d) => d.account), ...reversalDetails.map((d) => d.account)])];
+      await recalculateMultipleBalances(allAccountIds);
+
+      return Response.json({ message: "Reversed.", reversalId: reversalId.toString() });
+    }
+
+    return errors.validation("Unknown action. Use confirm, reject, cancel, or reverse.");
   } catch (error) {
     console.error("v1 Transaction DELETE error:", error);
     return errors.internal();
