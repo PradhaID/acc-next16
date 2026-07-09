@@ -451,10 +451,10 @@ export default function ApiDocsPage() {
               { name: "date", type: "string (YYYY-MM-DD)", description: "Date as of which to generate the balance sheet. Defaults to today." },
             ]}
             response={`{
-  "asOfDate": "2026-07-01",
-  "assets": { "_id": "Asset", "code": "", "name": "ASSET", "children": [...], "accounts": [], "total": 50000000 },
-  "liabilities": { "_id": "Liability", "code": "", "name": "LIABILITY", "children": [...], "accounts": [], "total": 10000000 },
-  "equity": { "_id": "Equity", "code": "", "name": "EQUITY", "children": [...], "accounts": [], "total": 40000000 },
+  "asOfDate": "2026-07-01T00:00:00.000Z",
+  "assets": { "_id": "Asset", "code": "", "name": "ASSET", "position": "Db", "children": [...], "accounts": [], "total": 50000000 },
+  "liabilities": { "_id": "Liability", "code": "", "name": "LIABILITY", "position": "Cr", "children": [...], "accounts": [], "total": 10000000 },
+  "equity": { "_id": "Equity", "code": "", "name": "EQUITY", "position": "Cr", "children": [...], "accounts": [], "total": 40000000 },
   "netIncome": 5000000
 }`}
           />
@@ -468,11 +468,11 @@ export default function ApiDocsPage() {
               { name: "endDate", type: "string (YYYY-MM-DD)", description: "End date (inclusive). Defaults to today." },
             ]}
             response={`{
-  "startDate": "2026-01-01",
-  "endDate": "2026-07-01",
-  "revenue": { "_id": "Revenue", "code": "", "name": "REVENUE", "children": [...], "accounts": [], "total": 50000000 },
-  "cogs": { "_id": "COGS", "code": "", "name": "COGS", "children": [...], "accounts": [], "total": 20000000 },
-  "expenses": { "_id": "Expense", "code": "", "name": "EXPENSE", "children": [...], "accounts": [], "total": 25000000 },
+  "startDate": "2026-01-01T00:00:00.000Z",
+  "endDate": "2026-07-01T00:00:00.000Z",
+  "revenue": { "_id": "Revenue", "code": "", "name": "REVENUE", "position": "Cr", "category": "Revenue", "parent": null, "children": [...], "total": 50000000 },
+  "cogs": { "_id": "COGS", "code": "", "name": "COGS", "position": "Db", "category": "COGS", "parent": null, "children": [...], "total": 20000000 },
+  "expenses": { "_id": "Expense", "code": "", "name": "EXPENSE", "position": "Db", "category": "Expense", "parent": null, "children": [...], "total": 25000000 },
   "grossProfit": 30000000,
   "netProfit": 5000000
 }`}

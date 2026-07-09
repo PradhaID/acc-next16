@@ -4,12 +4,14 @@ import { getDb } from "@/lib/mongodb";
 import { verifyApiKey } from "@/lib/api-auth";
 import type { ChartOfAccount, Account, Transaction, TransactionDetail, CoaCategory } from "@/lib/models";
 
-interface TreeNode {
+interface CoaNode {
   _id: string;
   code: string;
   name: string;
-  children: TreeNode[];
-  accounts: { number: string; name: string; balance: number }[];
+  position: "Db" | "Cr";
+  category: string;
+  parent: string | null;
+  children: CoaNode[];
   total: number;
 }
 
@@ -18,7 +20,7 @@ async function buildTree(
   category: CoaCategory,
   startDate: Date,
   endDate: Date
-): Promise<TreeNode[]> {
+): Promise<CoaNode[]> {
   const db = await getDb();
   const coaCollection = db.collection<ChartOfAccount>("accountingCoa");
   const accountCollection = db.collection<Account>("accountingAccounts");
@@ -30,7 +32,7 @@ async function buildTree(
     .sort({ code: 1 })
     .toArray();
 
-  const result: TreeNode[] = [];
+  const result: CoaNode[] = [];
 
   for (const node of nodes) {
     const children = await buildTree(node._id.toString(), category, startDate, endDate);
@@ -55,26 +57,24 @@ async function buildTree(
       })
       .toArray();
 
-    const accountsWithBalance = accountDocs.map((a) => {
-      const balance = details
-        .filter((d) => d.account.toString() === a._id.toString())
-        .reduce((sum, d) => {
-          if (node.position === "Db") return sum + (d.position === "Db" ? d.amount : -d.amount);
-          return sum + (d.position === "Cr" ? d.amount : -d.amount);
-        }, 0);
-      return { number: a.number, name: a.name, balance };
-    });
+    const total = details
+      .filter((d) => accountDocs.some((a) => a._id.toString() === d.account.toString()))
+      .reduce((sum, d) => {
+        if (node.position === "Db") return sum + (d.position === "Db" ? d.amount : -d.amount);
+        return sum + (d.position === "Cr" ? d.amount : -d.amount);
+      }, 0);
 
-    const accountsTotal = accountsWithBalance.reduce((s, a) => s + a.balance, 0);
     const childrenTotal = children.reduce((s, c) => s + c.total, 0);
 
     result.push({
       _id: node._id.toString(),
       code: node.code,
       name: node.name,
+      position: node.position as "Db" | "Cr",
+      category,
+      parent: node.parent ? node.parent.toString() : null,
       children,
-      accounts: accountsWithBalance,
-      total: accountsTotal + childrenTotal,
+      total: total + childrenTotal,
     });
   }
 
@@ -98,22 +98,24 @@ export async function GET(request: NextRequest) {
     const cogs = await buildTree(null, "COGS", startDate, endDate);
     const expenses = await buildTree(null, "Expense", startDate, endDate);
 
-    const wrapSection = (children: TreeNode[], name: string, id: string): TreeNode => ({
+    const wrapSection = (children: CoaNode[], name: string, id: string, position: "Db" | "Cr", category: string): CoaNode => ({
       _id: id,
       code: "",
       name: name.toUpperCase(),
+      position,
+      category,
+      parent: null,
       children,
-      accounts: [],
       total: children.reduce((s, n) => s + n.total, 0),
     });
 
-    const revenueNode = wrapSection(revenue, "Revenue", "Revenue");
-    const cogsNode = wrapSection(cogs, "COGS", "COGS");
-    const expensesNode = wrapSection(expenses, "Expense", "Expense");
+    const revenueNode = wrapSection(revenue, "Revenue", "Revenue", "Cr", "Revenue");
+    const cogsNode = wrapSection(cogs, "COGS", "COGS", "Db", "COGS");
+    const expensesNode = wrapSection(expenses, "Expense", "Expense", "Db", "Expense");
 
     return Response.json({
-      startDate: startDateStr,
-      endDate: endDateStr,
+      startDate,
+      endDate,
       revenue: revenueNode,
       cogs: cogsNode,
       expenses: expensesNode,

@@ -8,6 +8,7 @@ interface TreeNode {
   _id: string;
   code: string;
   name: string;
+  position: "Db" | "Cr";
   children: TreeNode[];
   accounts: { number: string; name: string; balance: number }[];
   total: number;
@@ -71,6 +72,7 @@ async function buildTree(
       _id: node._id.toString(),
       code: node.code,
       name: node.name,
+      position: node.position as "Db" | "Cr",
       children,
       accounts: accountsWithBalance,
       total: accountsTotal + childrenTotal,
@@ -157,20 +159,21 @@ export async function GET(request: NextRequest) {
 
     const netIncome = revenueTotal - cogsTotal - expenseTotal;
 
-    const wrapSection = (children: TreeNode[], name: string, id: string): TreeNode => ({
+    const wrapSection = (children: TreeNode[], name: string, id: string, position: "Db" | "Cr"): TreeNode => ({
       _id: id,
       code: "",
       name: name.toUpperCase(),
+      position,
       children,
       accounts: [],
       total: children.reduce((s, n) => s + n.total, 0),
     });
 
     return Response.json({
-      asOfDate: dateStr,
-      assets: wrapSection(assets, "Asset", "Asset"),
-      liabilities: wrapSection(liabilities, "Liability", "Liability"),
-      equity: wrapSection(equity, "Equity", "Equity"),
+      asOfDate,
+      assets: wrapSection(assets, "Asset", "Asset", "Db"),
+      liabilities: wrapSection(liabilities, "Liability", "Liability", "Cr"),
+      equity: wrapSection(equity, "Equity", "Equity", "Cr"),
       netIncome,
     });
   } catch (error) {
