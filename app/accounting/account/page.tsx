@@ -362,7 +362,7 @@ export default function AccountListPage() {
                   <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400">Account Name</th>
                   <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400">COA</th>
                   <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400">Category</th>
-                  <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400">Balance</th>
+                  <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Balance</th>
                   <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-gray-400">Status</th>
                 </tr>
               </thead>
@@ -417,8 +417,8 @@ export default function AccountListPage() {
                       </td>
 
                       {/* Balance */}
-                      <td className="px-4 py-3">
-                        <span className="font-mono text-sm tabular-nums text-gray-700 dark:text-gray-300">
+                      <td className="px-4 py-3 text-right">
+                        <span className={`font-mono text-sm tabular-nums ${a.balance >= 0 ? "text-gray-700 dark:text-gray-300" : "text-red-600"}`}>
                           {formatNumber(a.balance)}
                         </span>
                       </td>

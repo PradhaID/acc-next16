@@ -157,13 +157,20 @@ export async function GET(request: NextRequest) {
 
     const netIncome = revenueTotal - cogsTotal - expenseTotal;
 
-    const sumTotal = (nodes: TreeNode[]): number => nodes.reduce((s, n) => s + n.total, 0);
+    const wrapSection = (children: TreeNode[], name: string, id: string): TreeNode => ({
+      _id: id,
+      code: "",
+      name: name.toUpperCase(),
+      children,
+      accounts: [],
+      total: children.reduce((s, n) => s + n.total, 0),
+    });
 
     return Response.json({
       asOfDate: dateStr,
-      assets: { total: sumTotal(assets), children: assets },
-      liabilities: { total: sumTotal(liabilities), children: liabilities },
-      equity: { total: sumTotal(equity), children: equity },
+      assets: wrapSection(assets, "Asset", "Asset"),
+      liabilities: wrapSection(liabilities, "Liability", "Liability"),
+      equity: wrapSection(equity, "Equity", "Equity"),
       netIncome,
     });
   } catch (error) {

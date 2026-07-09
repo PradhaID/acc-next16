@@ -478,12 +478,10 @@ export default function BalanceSheetPage() {
                   colors={sectionColors.Equity}
                 />
                 </div>
-                {data.netIncome > 0 && (
-                  <div className="flex items-center justify-between px-4 py-2.5 text-sm text-blue-600 dark:text-blue-400 font-bold">
-                    <span>Current Year Earnings</span>
-                    <span className="font-mono text-sm font-black">{fm(data.netIncome)}</span>
-                  </div>
-                )}
+                <div className={`flex items-center justify-between px-4 py-2.5 text-sm font-bold ${data.netIncome >= 0 ? "text-blue-600 dark:text-blue-400" : "text-red-600"}`}>
+                  <span>Current Year Earnings</span>
+                  <span className="font-mono text-sm font-black">{fm(data.netIncome)}</span>
+                </div>
                 <div className="px-4 py-2.5">
                   <div className={`${sectionColors.Equity.badge} rounded-lg px-3 py-2`}>
                     <div className="flex items-center justify-between">

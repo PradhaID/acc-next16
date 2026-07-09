@@ -98,19 +98,27 @@ export async function GET(request: NextRequest) {
     const cogs = await buildTree(null, "COGS", startDate, endDate);
     const expenses = await buildTree(null, "Expense", startDate, endDate);
 
-    const sumTotal = (nodes: TreeNode[]): number => nodes.reduce((s, n) => s + n.total, 0);
-    const revenueTotal = sumTotal(revenue);
-    const cogsTotal = sumTotal(cogs);
-    const expensesTotal = sumTotal(expenses);
+    const wrapSection = (children: TreeNode[], name: string, id: string): TreeNode => ({
+      _id: id,
+      code: "",
+      name: name.toUpperCase(),
+      children,
+      accounts: [],
+      total: children.reduce((s, n) => s + n.total, 0),
+    });
+
+    const revenueNode = wrapSection(revenue, "Revenue", "Revenue");
+    const cogsNode = wrapSection(cogs, "COGS", "COGS");
+    const expensesNode = wrapSection(expenses, "Expense", "Expense");
 
     return Response.json({
       startDate: startDateStr,
       endDate: endDateStr,
-      revenue: { total: revenueTotal, children: revenue },
-      cogs: { total: cogsTotal, children: cogs },
-      expenses: { total: expensesTotal, children: expenses },
-      grossProfit: revenueTotal - cogsTotal,
-      netProfit: revenueTotal - cogsTotal - expensesTotal,
+      revenue: revenueNode,
+      cogs: cogsNode,
+      expenses: expensesNode,
+      grossProfit: revenueNode.total - cogsNode.total,
+      netProfit: revenueNode.total - cogsNode.total - expensesNode.total,
     });
   } catch (error) {
     console.error("v1 income-statement GET error:", error);

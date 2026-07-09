@@ -452,9 +452,9 @@ export default function ApiDocsPage() {
             ]}
             response={`{
   "asOfDate": "2026-07-01",
-  "assets": { "total": 50000000, "children": [...] },
-  "liabilities": { "total": 10000000, "children": [...] },
-  "equity": { "total": 40000000, "children": [...] },
+  "assets": { "_id": "Asset", "code": "", "name": "ASSET", "children": [...], "accounts": [], "total": 50000000 },
+  "liabilities": { "_id": "Liability", "code": "", "name": "LIABILITY", "children": [...], "accounts": [], "total": 10000000 },
+  "equity": { "_id": "Equity", "code": "", "name": "EQUITY", "children": [...], "accounts": [], "total": 40000000 },
   "netIncome": 5000000
 }`}
           />
@@ -470,9 +470,9 @@ export default function ApiDocsPage() {
             response={`{
   "startDate": "2026-01-01",
   "endDate": "2026-07-01",
-  "revenue": { "total": 50000000, "children": [...] },
-  "cogs": { "total": 20000000, "children": [...] },
-  "expenses": { "total": 25000000, "children": [...] },
+  "revenue": { "_id": "Revenue", "code": "", "name": "REVENUE", "children": [...], "accounts": [], "total": 50000000 },
+  "cogs": { "_id": "COGS", "code": "", "name": "COGS", "children": [...], "accounts": [], "total": 20000000 },
+  "expenses": { "_id": "Expense", "code": "", "name": "EXPENSE", "children": [...], "accounts": [], "total": 25000000 },
   "grossProfit": 30000000,
   "netProfit": 5000000
 }`}

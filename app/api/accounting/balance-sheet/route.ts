@@ -45,7 +45,7 @@ function buildTree(
 }
 
 function computeTotals(node: TreeNode): number {
-  let sum = node.accounts.reduce((acc, a) => acc + Math.abs(a.balance), 0);
+  let sum = node.accounts.reduce((acc, a) => acc + a.balance, 0);
   for (const child of node.children) {
     sum += computeTotals(child);
   }
@@ -169,7 +169,7 @@ export async function GET(request: NextRequest) {
         node.accounts.push({
           number: acc.number,
           name: acc.name,
-          balance: Math.abs(balance),
+          balance,
         });
       }
     }
@@ -178,16 +178,14 @@ export async function GET(request: NextRequest) {
     computeTotals(liabilities);
     computeTotals(equity);
 
-    if (netIncome > 0) {
-      equity.total += Math.abs(netIncome);
-    }
+    equity.total += netIncome;
 
     return Response.json({
       asOfDate,
       assets,
       liabilities,
       equity,
-      netIncome: Math.abs(netIncome),
+      netIncome,
     });
   } catch (error) {
     console.error("Balance Sheet GET error:", error);
