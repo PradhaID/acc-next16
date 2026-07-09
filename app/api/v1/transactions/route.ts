@@ -2,8 +2,10 @@ import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyApiKey } from "@/lib/api-auth";
+import { buildFilter } from "@/lib/filter";
+import { errors, checkIdempotency, storeIdempotency } from "@/lib/api-error";
 import { recalculateMultipleBalances } from "@/lib/accounting/balance";
-import type { Transaction, TransactionDetail } from "@/lib/models";
+import type { Transaction, TransactionDetail, EvidenceItem } from "@/lib/models";
 
 function generateCode(type: string, effectiveDate?: string): string {
   const prefixMap: Record<string, string> = {
@@ -27,14 +29,45 @@ function generateCode(type: string, effectiveDate?: string): string {
   return `${prefix}-${y}${m}${day}-${rand}`;
 }
 
+function mapLines(lines: any[]) {
+  return lines.map((line: any) => {
+    if (line.debit !== undefined && line.debit > 0) {
+      return { account: line.accountId || line.account, position: "Db" as const, amount: line.debit };
+    }
+    if (line.credit !== undefined && line.credit > 0) {
+      return { account: line.accountId || line.account, position: "Cr" as const, amount: line.credit };
+    }
+    return { account: line.accountId || line.account, position: line.position, amount: line.amount };
+  });
+}
+
+function validateLines(mappedLines: { account: string; position: string; amount: number }[]): string | null {
+  if (!mappedLines || mappedLines.length < 2) {
+    return "At least 2 journal lines required.";
+  }
+  const totalDb = mappedLines
+    .filter((l) => l.position === "Db")
+    .reduce((s, l) => s + l.amount, 0);
+  const totalCr = mappedLines
+    .filter((l) => l.position === "Cr")
+    .reduce((s, l) => s + l.amount, 0);
+  if (Math.abs(totalDb - totalCr) > 0.01) {
+    return "Debits must equal credits.";
+  }
+  for (const line of mappedLines) {
+    if (!line.account) return "Each line must specify an account.";
+    if (line.amount <= 0) return "Amount must be positive.";
+  }
+  return null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const session = await verifyApiKey(request);
-    if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session) return errors.unauthorized();
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const status = searchParams.get("status");
     const includeDetails = searchParams.get("includeDetails");
 
     const db = await getDb();
@@ -42,7 +75,7 @@ export async function GET(request: NextRequest) {
 
     if (id) {
       const txn = await transactions.findOne({ _id: new ObjectId(id) });
-      if (!txn) return Response.json({ error: "Not found." }, { status: 404 });
+      if (!txn) return errors.notFound("Transaction not found");
 
       if (includeDetails === "true") {
         const details = await db
@@ -72,8 +105,14 @@ export async function GET(request: NextRequest) {
       return Response.json(txn);
     }
 
-    const filter: Record<string, unknown> = {};
-    if (status) filter.status = status;
+    const filter = buildFilter(searchParams, {
+      code: { type: "regex" },
+      status: { type: "exact" },
+      source: { type: "exact" },
+      startDate: { type: "dateRange", startField: "effectiveDate" },
+      endDate: { type: "dateRange", endField: "effectiveDate" },
+      vendor: { type: "regex", field: "reference" },
+    });
 
     const docs = await transactions
       .find(filter)
@@ -83,49 +122,73 @@ export async function GET(request: NextRequest) {
     return Response.json(docs);
   } catch (error) {
     console.error("v1 Transaction GET error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return errors.internal();
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const session = await verifyApiKey(request);
-    if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session) return errors.unauthorized();
+
+    // Idempotency check
+    const idempotencyKey = request.headers.get("Idempotency-Key");
+    if (idempotencyKey) {
+      const { exists, response } = await checkIdempotency(idempotencyKey);
+      if (exists) return Response.json(response, { status: 200 });
+    }
 
     const body = await request.json();
-    const { type, effectiveDate, reference, information, lines } = body;
+    const { type, effectiveDate, reference, information, lines, evidence, dryRun } = body;
 
     if (!lines || lines.length < 2) {
-      return Response.json({ error: "At least 2 journal lines required." }, { status: 400 });
+      return errors.validation("At least 2 journal lines required.");
     }
 
-    // Map debit/credit format to position/amount format
-    const mappedLines = lines.map((line: any) => {
-      if (line.debit !== undefined && line.debit > 0) {
-        return { account: line.accountId, position: "Db" as const, amount: line.debit };
-      }
-      if (line.credit !== undefined && line.credit > 0) {
-        return { account: line.accountId, position: "Cr" as const, amount: line.credit };
-      }
-      // Support legacy position/amount format too
-      return { account: line.accountId, position: line.position, amount: line.amount };
-    });
+    const mappedLines = mapLines(lines);
+
+    const validationError = validateLines(mappedLines);
+    if (validationError) return errors.validation(validationError);
+
+    // Validate accounts exist
+    const db = await getDb();
+    const accountsCol = db.collection("accountingAccounts");
+    const accountIds = [...new Set(mappedLines.map((l) => l.account))];
+    const existingAccounts = await accountsCol
+      .find({ _id: { $in: accountIds.map((a) => new ObjectId(a)) } })
+      .project({ _id: 1 })
+      .toArray();
+    const existingIds = new Set(existingAccounts.map((a: any) => a._id.toString()));
+    for (const accId of accountIds) {
+      if (!existingIds.has(accId)) return errors.accountNotFound(accId);
+    }
 
     const totalDb = mappedLines
-      .filter((l: { position: string }) => l.position === "Db")
-      .reduce((s: number, l: { amount: number }) => s + l.amount, 0);
-    const totalCr = mappedLines
-      .filter((l: { position: string }) => l.position === "Cr")
-      .reduce((s: number, l: { amount: number }) => s + l.amount, 0);
+      .filter((l) => l.position === "Db")
+      .reduce((s, l) => s + l.amount, 0);
 
-    if (Math.abs(totalDb - totalCr) > 0.01) {
-      return Response.json({ error: "Debits must equal credits." }, { status: 400 });
+    if (dryRun) {
+      return Response.json({
+        valid: true,
+        summary: {
+          type: type || "General",
+          effectiveDate,
+          linesCount: mappedLines.length,
+          totalDebit: totalDb,
+          totalCredit: totalDb,
+          accounts: accountIds.length,
+        },
+      });
     }
 
-    const db = await getDb();
     const now = new Date();
     const txnId = new ObjectId();
     const userId = new ObjectId(session.userId);
+
+    const evidenceItems: EvidenceItem[] = (evidence || []).map((e: any) => ({
+      url: e.url,
+      ...(e.description ? { description: e.description } : {}),
+    }));
 
     const txn: Transaction = {
       _id: txnId,
@@ -134,7 +197,7 @@ export async function POST(request: NextRequest) {
       reference,
       information,
       amount: totalDb,
-      evidence: [],
+      evidence: evidenceItems,
       status: "Pending",
       source: "api",
       created: { at: now, by: userId },
@@ -152,9 +215,15 @@ export async function POST(request: NextRequest) {
     await db.collection("accountingTransactions").insertOne(txn);
     await db.collection("accountingTransactionDetails").insertMany(details);
 
-    return Response.json(txn, { status: 201 });
+    const responseBody = txn;
+
+    if (idempotencyKey) {
+      await storeIdempotency(idempotencyKey, responseBody);
+    }
+
+    return Response.json(responseBody, { status: 201 });
   } catch (error) {
     console.error("v1 Transaction POST error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return errors.internal();
   }
 }

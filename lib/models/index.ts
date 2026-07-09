@@ -7,5 +7,5 @@ export type {
 } from "./system";
 export type { ChartOfAccount, CoaCategory, CoaPosition } from "./accounting/coa";
 export type { Account } from "./accounting/account";
-export type { Transaction, TransactionStatus } from "./accounting/transaction";
+export type { Transaction, TransactionStatus, EvidenceItem } from "./accounting/transaction";
 export type { TransactionDetail, DetailPosition } from "./accounting/transactionDetail";

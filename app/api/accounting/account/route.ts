@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
+import { buildFilter } from "@/lib/filter";
+import { errors } from "@/lib/api-error";
 import { recalculateBalance } from "@/lib/accounting/balance";
 import type { Account } from "@/lib/models";
 
@@ -9,32 +11,34 @@ export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get(COOKIE_NAME)?.value;
     const session = token ? await verifyToken(token) : null;
-    if (!session) {
-      return Response.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    if (!session) return errors.unauthorized();
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const coa = searchParams.get("coa");
-    const all = searchParams.get("all");
 
     const db = await getDb();
     const collection = db.collection<Account>("accountingAccounts");
 
     if (id) {
       const doc = await collection.findOne({ _id: new ObjectId(id) });
+      if (!doc) return errors.notFound("Account not found");
       return Response.json(doc);
     }
 
-    const filter: Record<string, unknown> = {};
-    if (!all) filter.isActive = true;
-    if (coa) filter.coa = new ObjectId(coa);
+    const filter = buildFilter(searchParams, {
+      number: { type: "numberExact" },
+      coa: { type: "objectId" },
+      all: { type: "boolean", field: "all", default: false },
+    });
+
+    if (!filter.isActive && filter.all !== true) filter.isActive = true;
+    delete filter.all;
 
     const docs = await collection.find(filter).sort({ number: 1 }).toArray();
     return Response.json(docs);
   } catch (error) {
     console.error("Account GET error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return errors.internal();
   }
 }
 

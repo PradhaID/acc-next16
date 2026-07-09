@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
+import { buildFilter } from "@/lib/filter";
+import { errors } from "@/lib/api-error";
 import { recalculateMultipleBalances } from "@/lib/accounting/balance";
 import type { Transaction, TransactionDetail } from "@/lib/models";
 
@@ -37,7 +39,6 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const status = searchParams.get("status");
     const includeDetails = searchParams.get("includeDetails");
 
     const db = await getDb();
@@ -45,9 +46,7 @@ export async function GET(request: NextRequest) {
 
     if (id) {
       const txn = await transactions.findOne({ _id: new ObjectId(id) });
-      if (!txn) {
-        return Response.json({ error: "Not found." }, { status: 404 });
-      }
+      if (!txn) return errors.notFound("Transaction not found");
 
       if (includeDetails === "true") {
         const details = await db
@@ -60,8 +59,14 @@ export async function GET(request: NextRequest) {
       return Response.json(txn);
     }
 
-    const filter: Record<string, unknown> = {};
-    if (status) filter.status = status;
+    const filter = buildFilter(searchParams, {
+      code: { type: "regex" },
+      status: { type: "exact" },
+      source: { type: "exact" },
+      startDate: { type: "dateRange", startField: "effectiveDate" },
+      endDate: { type: "dateRange", endField: "effectiveDate" },
+      vendor: { type: "regex", field: "reference" },
+    });
 
     const docs = await transactions
       .find(filter)
@@ -84,23 +89,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { type, effectiveDate, reference, information, lines } = body;
+    const { type, effectiveDate, reference, information, lines, evidence } = body;
 
-    if (!lines || lines.length < 2) {
-      return Response.json({ error: "At least 2 journal lines required." }, { status: 400 });
-    }
+    if (!lines || lines.length < 2) return errors.validation("At least 2 journal lines required.");
 
     const totalDb = lines.filter((l: { position: string }) => l.position === "Db").reduce((s: number, l: { amount: number }) => s + l.amount, 0);
     const totalCr = lines.filter((l: { position: string }) => l.position === "Cr").reduce((s: number, l: { amount: number }) => s + l.amount, 0);
 
-    if (Math.abs(totalDb - totalCr) > 0.01) {
-      return Response.json({ error: "Debits must equal credits." }, { status: 400 });
-    }
+    if (Math.abs(totalDb - totalCr) > 0.01) return errors.unbalancedJournal();
 
     const db = await getDb();
     const now = new Date();
     const txnId = new ObjectId();
     const userId = new ObjectId(session.userId);
+
+    const evidenceItems = (evidence || []).map((e: any) => ({
+      url: e.url,
+      ...(e.description ? { description: e.description } : {}),
+    }));
 
     const txn: Transaction = {
       _id: txnId,
@@ -109,7 +115,7 @@ export async function POST(request: NextRequest) {
       reference,
       information,
       amount: totalDb,
-      evidence: [],
+      evidence: evidenceItems,
       status: "Pending",
       source: "ui",
       created: { at: now, by: userId },

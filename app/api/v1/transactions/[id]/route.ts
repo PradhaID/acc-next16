@@ -2,18 +2,19 @@ import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyApiKey } from "@/lib/api-auth";
+import { errors } from "@/lib/api-error";
 import { recalculateMultipleBalances } from "@/lib/accounting/balance";
 import type { Transaction, TransactionDetail } from "@/lib/models";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await verifyApiKey(request);
-    if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session) return errors.unauthorized();
 
     const { id } = await params;
     const db = await getDb();
     const txn = await db.collection<Transaction>("accountingTransactions").findOne({ _id: new ObjectId(id) });
-    if (!txn) return Response.json({ error: "Not found." }, { status: 404 });
+    if (!txn) return errors.notFound("Transaction not found");
 
     const details = await db
       .collection<TransactionDetail>("accountingTransactionDetails")
@@ -39,14 +40,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return Response.json({ ...txn, details: enrichedDetails });
   } catch (error) {
     console.error("v1 Transaction GET error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return errors.internal();
   }
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await verifyApiKey(request);
-    if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session) return errors.unauthorized();
 
     const { id } = await params;
     const body = await request.json();
@@ -56,26 +57,22 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const transactions = db.collection<Transaction>("accountingTransactions");
 
     const existing = await transactions.findOne({ _id: new ObjectId(id) });
-    if (!existing) return Response.json({ error: "Not found." }, { status: 404 });
-    if (existing.status !== "Pending") {
-      return Response.json({ error: "Only pending transactions can be edited." }, { status: 400 });
-    }
+    if (!existing) return errors.notFound("Transaction not found");
+    if (existing.status !== "Pending") return errors.notPending("edited");
 
     const userId = new ObjectId(session.userId);
 
     if (lines) {
-      if (lines.length < 2) {
-        return Response.json({ error: "At least 2 journal lines required." }, { status: 400 });
-      }
+      if (lines.length < 2) return errors.validation("At least 2 journal lines required.");
 
       const mappedLines = lines.map((line: any) => {
         if (line.debit !== undefined && line.debit > 0) {
-          return { account: line.accountId, position: "Db" as const, amount: line.debit };
+          return { account: line.accountId || line.account, position: "Db" as const, amount: line.debit };
         }
         if (line.credit !== undefined && line.credit > 0) {
-          return { account: line.accountId, position: "Cr" as const, amount: line.credit };
+          return { account: line.accountId || line.account, position: "Cr" as const, amount: line.credit };
         }
-        return { account: line.accountId, position: line.position, amount: line.amount };
+        return { account: line.accountId || line.account, position: line.position, amount: line.amount };
       });
 
       const totalDb = mappedLines
@@ -85,9 +82,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         .filter((l: { position: string }) => l.position === "Cr")
         .reduce((s: number, l: { amount: number }) => s + l.amount, 0);
 
-      if (Math.abs(totalDb - totalCr) > 0.01) {
-        return Response.json({ error: "Debits must equal credits." }, { status: 400 });
-      }
+      if (Math.abs(totalDb - totalCr) > 0.01) return errors.unbalancedJournal();
 
       await db.collection("accountingTransactionDetails").deleteMany({ transaction: existing._id });
 
@@ -119,14 +114,14 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     return Response.json({ message: "Updated." });
   } catch (error) {
     console.error("v1 Transaction PUT error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return errors.internal();
   }
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await verifyApiKey(request);
-    if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session) return errors.unauthorized();
 
     const { id } = await params;
     const { searchParams } = new URL(request.url);
@@ -135,15 +130,13 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     const db = await getDb();
     const transactions = db.collection<Transaction>("accountingTransactions");
     const existing = await transactions.findOne({ _id: new ObjectId(id) });
-    if (!existing) return Response.json({ error: "Not found." }, { status: 404 });
+    if (!existing) return errors.notFound("Transaction not found");
 
     const userId = new ObjectId(session.userId);
     const now = new Date();
 
     if (action === "confirm") {
-      if (existing.status !== "Pending") {
-        return Response.json({ error: "Only pending transactions can be confirmed." }, { status: 400 });
-      }
+      if (existing.status !== "Pending") return errors.notPending("confirmed");
 
       await transactions.updateOne(
         { _id: existing._id },
@@ -168,9 +161,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     if (action === "reject") {
-      if (existing.status !== "Pending") {
-        return Response.json({ error: "Only pending transactions can be rejected." }, { status: 400 });
-      }
+      if (existing.status !== "Pending") return errors.notPending("rejected");
 
       await transactions.updateOne(
         { _id: existing._id },
@@ -187,9 +178,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     }
 
     if (action === "cancel") {
-      if (existing.status !== "Pending") {
-        return Response.json({ error: "Only pending transactions can be cancelled." }, { status: 400 });
-      }
+      if (existing.status !== "Pending") return errors.notPending("deleted");
 
       await db.collection("accountingTransactionDetails").deleteMany({ transaction: existing._id });
       await transactions.deleteOne({ _id: existing._id });
@@ -197,9 +186,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return Response.json({ message: "Deleted." });
     }
 
-    return Response.json({ error: "Unknown action. Use confirm, reject, or cancel." }, { status: 400 });
+    return errors.validation("Unknown action. Use confirm, reject, or cancel.");
   } catch (error) {
     console.error("v1 Transaction DELETE error:", error);
-    return Response.json({ error: "Internal server error" }, { status: 500 });
+    return errors.internal();
   }
 }

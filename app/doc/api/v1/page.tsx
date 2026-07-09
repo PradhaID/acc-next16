@@ -40,13 +40,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Endpoint({ method, path, description, queryParams, requestBody, response }: {
+function Endpoint({ method, path, description, queryParams, requestBody, response, children }: {
   method: string;
   path: string;
   description: string;
   queryParams?: { name: string; type: string; required?: boolean; description: string }[];
   requestBody?: string;
   response: string;
+  children?: React.ReactNode;
 }) {
   return (
     <div className={endpointStyle}>
@@ -97,6 +98,7 @@ function Endpoint({ method, path, description, queryParams, requestBody, respons
         <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Response</p>
         <Pre>{response}</Pre>
       </div>
+      {children}
     </div>
   );
 }
@@ -152,8 +154,17 @@ export default function ApiDocsPage() {
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-1">Error Response (401)</p>
             <Pre>{`{
-  "error": "Unauthorized"
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Unauthorized"
+  }
 }`}</Pre>
+          </div>
+          <div>
+            <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-1">Structured Error Shape</p>
+            <p className="text-xs text-gray-500 mt-1">
+              All API errors return a consistent JSON shape: <Code>{"{ error: { code: string, message: string } }"}</Code>.
+            </p>
           </div>
           <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/50 rounded-xl p-3 text-xs text-yellow-700 dark:text-yellow-400">
             <strong>Note:</strong> Generate your API key from your{" "}
@@ -191,11 +202,12 @@ export default function ApiDocsPage() {
         <Endpoint
           method="GET"
           path="/api/v1/accounts"
-          description="Retrieve accounts. Optionally filter by COA or get a single account by ID."
+          description="Retrieve accounts. Supports filters and lookup by ID."
           queryParams={[
             { name: "id", type: "string", description: "Get a single account by ID." },
+            { name: "number", type: "string", description: "Filter by exact account number." },
             { name: "coa", type: "string", description: "Filter accounts by parent COA ID." },
-            { name: "all", type: "boolean", description: "Include inactive accounts." },
+            { name: "all", type: "boolean", description: "Include inactive accounts (default: active only)." },
           ]}
           response={`[
   {
@@ -218,7 +230,12 @@ export default function ApiDocsPage() {
             description="List transactions with optional filters."
             queryParams={[
               { name: "id", type: "string", description: "Get a single transaction by ID." },
+              { name: "code", type: "string", description: "Filter by transaction code (case-insensitive partial match)." },
               { name: "status", type: "string", description: "Filter by status: Pending, Confirmed, Rejected, Reversed." },
+              { name: "source", type: "string", description: "Filter by source: api, ui." },
+              { name: "startDate", type: "string (YYYY-MM-DD)", description: "Filter by effective date (inclusive start)." },
+              { name: "endDate", type: "string (YYYY-MM-DD)", description: "Filter by effective date (inclusive end)." },
+              { name: "vendor", type: "string", description: "Search by reference field (case-insensitive partial match)." },
               { name: "includeDetails", type: "boolean", description: "Include journal line details." },
             ]}
             response={`[
@@ -230,7 +247,11 @@ export default function ApiDocsPage() {
     "status": "Confirmed",
     "reference": "INV-001",
     "information": "Payment received",
-    "source": "api"
+    "source": "api",
+    "created": { "at": "...", "by": "..." },
+    "evidence": [
+      { "url": "/uploads/evidence/...", "description": "Invoice scan" }
+    ]
   }
 ]`}
           />
@@ -246,6 +267,7 @@ export default function ApiDocsPage() {
   "amount": 1000000,
   "status": "Confirmed",
   "source": "api",
+  "evidence": [],
   "details": [
     { "account": { "number": "10101", "name": "Petty Cash" }, "debit": 1000000, "credit": 0 },
     { "account": { "number": "40101", "name": "Revenue" }, "debit": 0, "credit": 1000000 }
@@ -256,12 +278,16 @@ export default function ApiDocsPage() {
           <Endpoint
             method="POST"
             path="/api/v1/transactions"
-            description="Create a new transaction. At least 2 journal lines required; debits must equal credits."
+            description="Create a new transaction. Supports dry-run, idempotency, evidence, and evidence descriptions."
             requestBody={`{
   "type": "General",
   "effectiveDate": "2026-07-01",
   "reference": "INV-001",
   "information": "Payment received",
+  "dryRun": false,
+  "evidence": [
+    { "url": "https://example.com/invoice.pdf", "description": "Invoice scan" }
+  ],
   "lines": [
     { "accountId": "...", "debit": 1000000, "credit": 0 },
     { "accountId": "...", "debit": 0, "credit": 1000000 }
@@ -273,7 +299,14 @@ export default function ApiDocsPage() {
   "status": "Pending",
   "source": "api"
 }`}
-          />
+          >
+            <p className="text-xs text-gray-500 mt-2">
+              <strong>Idempotency:</strong> Send <Code>Idempotency-Key</Code> header to prevent duplicate submissions. The server caches the response for the key and returns it on reuse.
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              <strong>Dry-run:</strong> Set <Code>dryRun: true</Code> to validate the transaction without persisting. Returns a validation summary.
+            </p>
+          </Endpoint>
 
           <Endpoint
             method="PUT"
@@ -320,6 +353,35 @@ export default function ApiDocsPage() {
             description="Hard-delete a pending transaction (removes from database)."
             response={`{
   "message": "Deleted."
+}`}
+          />
+        </div>
+      </Section>
+
+      <Section title="Evidence">
+        <div className="space-y-4">
+          <Endpoint
+            method="POST"
+            path="/api/v1/transactions/:id/evidence"
+            description="Upload an evidence file to a transaction. Supports optional description."
+            requestBody={`multipart/form-data:
+  file: (binary)
+  description: "Invoice scan" (optional)`}
+            response={`{
+  "url": "/uploads/evidence/12345-invoice.pdf",
+  "description": "Invoice scan"
+}`}
+          />
+
+          <Endpoint
+            method="DELETE"
+            path="/api/v1/transactions/:id/evidence?url=..."
+            description="Remove evidence by URL from a transaction."
+            queryParams={[
+              { name: "url", type: "string", required: true, description: "URL of the evidence to remove." },
+            ]}
+            response={`{
+  "message": "Evidence removed."
 }`}
           />
         </div>
@@ -409,21 +471,33 @@ export default function ApiDocsPage() {
 
       {/* Error Codes */}
       <Section title="Error Codes">
+        <p className="text-xs text-gray-500 mb-4">
+          All errors return the same JSON shape: <Code>{"{ error: { code: string, message: string } }"}</Code>
+        </p>
         <div className="space-y-3">
           {[
-            { code: 400, label: "Bad Request", desc: "Missing or invalid request parameters / body." },
-            { code: 401, label: "Unauthorized", desc: "Missing or invalid API key." },
-            { code: 403, label: "Forbidden", desc: "API key does not have permission for this resource." },
-            { code: 404, label: "Not Found", desc: "The requested resource does not exist." },
-            { code: 409, label: "Conflict", desc: "Conflict (e.g., duplicate transaction code, unbalanced journal)." },
-            { code: 422, label: "Unprocessable", desc: "Validation error (e.g., debits != credits)." },
+            { code: 400, label: "Bad Request", errCode: "VALIDATION_ERROR", desc: "Missing or invalid request parameters / body." },
+            { code: 401, label: "Unauthorized", errCode: "UNAUTHORIZED", desc: "Missing or invalid API key." },
+            { code: 403, label: "Forbidden", errCode: "FORBIDDEN", desc: "API key does not have permission." },
+            { code: 404, label: "Not Found", errCode: "NOT_FOUND", desc: "The requested resource does not exist." },
+            { code: 409, label: "Conflict", errCode: "IDEMPOTENCY_REPLAY", desc: "Idempotency key conflict or duplicate." },
+            { code: 500, label: "Internal", errCode: "INTERNAL_ERROR", desc: "Unexpected server error." },
           ].map((err) => (
             <div key={err.code} className="flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl px-5 py-3">
               <span className="text-sm font-mono font-bold text-red-600 dark:text-red-400 w-10">{err.code}</span>
-              <span className="text-xs font-bold text-gray-700 dark:text-gray-300 w-24">{err.label}</span>
+              <span className="text-xs font-bold text-gray-700 dark:text-gray-300 w-20">{err.label}</span>
+              <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 w-40">{err.errCode}</span>
               <span className="text-xs text-gray-500">{err.desc}</span>
             </div>
           ))}
+        </div>
+        <div className="mt-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-4">
+          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Additional Error Codes</p>
+          <div className="text-xs text-gray-500 space-y-1">
+            <p><Code>UNBALANCED_JOURNAL</Code> — Debits must equal credits (HTTP 400).</p>
+            <p><Code>NOT_PENDING</Code> — Transaction is not in Pending status (HTTP 400).</p>
+            <p><Code>ACCOUNT_NOT_FOUND</Code> — Referenced account ID does not exist (HTTP 404).</p>
+          </div>
         </div>
       </Section>
 
@@ -434,6 +508,9 @@ export default function ApiDocsPage() {
           <p><strong className="text-gray-900 dark:text-white">Regenerate periodically:</strong> You can regenerate your API key from your profile page at any time. Regenerating invalidates the previous key immediately.</p>
           <p><strong className="text-gray-900 dark:text-white">Date format:</strong> All dates should be in ISO 8601 format (<Code>YYYY-MM-DD</Code>) or ISO string (<Code>YYYY-MM-DDTHH:mm:ss.sssZ</Code>).</p>
           <p><strong className="text-gray-900 dark:text-white">Transaction source:</strong> Transactions created via the API are automatically marked with <Code>source: "api"</Code> to distinguish them from UI-created transactions.</p>
+          <p><strong className="text-gray-900 dark:text-white">Idempotency:</strong> Use the <Code>Idempotency-Key</Code> header on <Code>POST /api/v1/transactions</Code> to safely retry requests without creating duplicates. Keys expire after a period.</p>
+          <p><strong className="text-gray-900 dark:text-white">Dry-run validation:</strong> Set <Code>dryRun: true</Code> on <Code>POST /api/v1/transactions</Code> to validate journal lines, account existence, and balanced books without persisting the transaction.</p>
+          <p><strong className="text-gray-900 dark:text-white">Evidence:</strong> Upload supporting documents via <Code>POST /api/v1/transactions/:id/evidence</Code> (multipart/form-data). Optionally attach a <Code>description</Code> field. Evidence can also be provided inline during creation via the <Code>evidence</Code> array in the request body.</p>
         </div>
       </Section>
     </div>
