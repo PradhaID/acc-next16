@@ -157,6 +157,24 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       const accountIds = [...new Set(details.map((d) => d.account))];
       await recalculateMultipleBalances(accountIds);
 
+      // If this is a reversal transaction, mark the original as Reversed
+      if (existing.code.startsWith("REV-")) {
+        const originalCode = existing.reference;
+        if (originalCode) {
+          await transactions.updateOne(
+            { code: originalCode },
+            {
+              $set: {
+                status: "Reversed",
+                "reversed.at": now,
+                "reversed.by": userId,
+                updated: { at: now, by: userId },
+              },
+            }
+          );
+        }
+      }
+
       return Response.json({ message: "Confirmed." });
     }
 
@@ -220,22 +238,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       await transactions.insertOne(reversal);
       await db.collection("accountingTransactionDetails").insertMany(reversalDetails);
 
-      await transactions.updateOne(
-        { _id: existing._id },
-        {
-          $set: {
-            status: "Reversed",
-            "reversed.at": now,
-            "reversed.by": userId,
-            updated: { at: now, by: userId },
-          },
-        }
-      );
-
-      const allAccountIds = [...new Set([...details.map((d) => d.account), ...reversalDetails.map((d) => d.account)])];
-      await recalculateMultipleBalances(allAccountIds);
-
-      return Response.json({ message: "Reversed.", reversalId: reversalId.toString() });
+      return Response.json({ message: "Reversal created.", reversalId: reversalId.toString(), reversalCode: reversal.code });
     }
 
     return errors.validation("Unknown action. Use confirm, reject, cancel, or reverse.");

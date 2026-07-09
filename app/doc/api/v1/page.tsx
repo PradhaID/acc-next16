@@ -359,10 +359,11 @@ export default function ApiDocsPage() {
           <Endpoint
             method="DELETE"
             path="/api/v1/transactions/:id?action=reverse"
-            description="Reverse a confirmed transaction. Creates a reversal transaction with opposite journal lines and marks the original as Reversed."
+            description="Create a reversal for a confirmed transaction. Creates a pending reversal with opposite journal lines. The original is only marked as Reversed when the reversal transaction is confirmed."
             response={`{
-  "message": "Reversed.",
-  "reversalId": "..."
+  "message": "Reversal created.",
+  "reversalId": "...",
+  "reversalCode": "REV-GJ-20260709-123"
 }`}
           />
         </div>
