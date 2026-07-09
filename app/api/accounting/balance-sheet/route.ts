@@ -138,6 +138,12 @@ export async function GET(request: NextRequest) {
       netIncome = r.totalCr - r.totalDb;
     }
 
+    const catPosition: Record<string, "Db" | "Cr"> = {
+      Asset: "Db",
+      Liability: "Cr",
+      Equity: "Cr",
+    };
+
     const buildForCategory = (cat: string): TreeNode => {
       const coas = allCoas.filter((c) => c.category === cat);
       const children = buildTree(coas, null);
@@ -145,7 +151,7 @@ export async function GET(request: NextRequest) {
         _id: cat,
         code: "",
         name: cat.toUpperCase(),
-        position: "Db" as const,
+        position: catPosition[cat] || "Db",
         children,
         total: 0,
         accounts: [],

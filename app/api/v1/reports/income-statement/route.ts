@@ -88,11 +88,12 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const now = new Date();
-    const startDateStr = searchParams.get("startDate") || `${now.getFullYear()}-01-01`;
-    const endDateStr = searchParams.get("endDate") || now.toISOString().split("T")[0];
-
-    const startDate = new Date(startDateStr);
-    const endDate = new Date(endDateStr);
+    const startDate = searchParams.get("startDate")
+      ? new Date(searchParams.get("startDate")!)
+      : new Date(now.getFullYear(), 0, 1);
+    const endDate = searchParams.get("endDate")
+      ? new Date(searchParams.get("endDate")!)
+      : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
     const revenue = await buildTree(null, "Revenue", startDate, endDate);
     const cogs = await buildTree(null, "COGS", startDate, endDate);

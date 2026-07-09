@@ -88,8 +88,9 @@ export async function GET(request: NextRequest) {
     if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
     const { searchParams } = new URL(request.url);
-    const dateStr = searchParams.get("date") || new Date().toISOString().split("T")[0];
-    const asOfDate = new Date(dateStr);
+    const dateParam = searchParams.get("date");
+    const now = new Date();
+    const asOfDate = dateParam ? new Date(dateParam) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
     const assets = await buildTree(null, ["Asset"], asOfDate);
     const liabilities = await buildTree(null, ["Liability"], asOfDate);
