@@ -49,3 +49,5 @@ package-lock.json
 ecosystem.config.js
 
 deploy.sh
+agent
+agent/*
