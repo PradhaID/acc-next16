@@ -24,14 +24,15 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const fileName = `${Date.now()}-${file.name}`;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const fileName = `${Date.now()}-${safeName}`;
     const filePath = `public/uploads/evidence/${fileName}`;
 
     const fs = await import("fs/promises");
     await fs.mkdir("public/uploads/evidence", { recursive: true });
     await fs.writeFile(filePath, buffer);
 
-    const fileUrl = `/uploads/evidence/${fileName}`;
+    const fileUrl = `/uploads/evidence/${encodeURIComponent(fileName)}`;
     const evidenceItem = { url: fileUrl, ...(description ? { description } : {}) };
 
     const db = await getDb();

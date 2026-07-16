@@ -379,8 +379,25 @@ export default function TransactionDetailPage({
                             <span className="text-[7px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">PDF</span>
                           </div>
                         ) : (
-                          <img src={item.url} alt={`Evidence ${index + 1}`} className="w-full h-full object-cover" />
+                          <img
+                            src={item.url}
+                            alt={`Evidence ${index + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const t = e.currentTarget;
+                              if (t.dataset.fallback) return;
+                              t.dataset.fallback = "1";
+                              t.style.display = "none";
+                              t.parentElement!.querySelector(".img-fallback")?.classList.remove("hidden");
+                            }}
+                          />
                         )}
+                        <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center gap-1 p-3">
+                          <svg className="w-10 h-10 text-gray-300 dark:text-gray-600 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                          </svg>
+                          <span className="text-[9px] text-gray-400 dark:text-gray-500 font-medium text-center leading-tight truncate w-full">{item.url.split("/").pop()}</span>
+                        </div>
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <button
                             onClick={() => { setViewerUrl(item.url); setShowViewerModal(true); }}
