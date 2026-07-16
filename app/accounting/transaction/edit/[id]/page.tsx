@@ -28,9 +28,9 @@ interface TransactionDetail {
   information: string;
   amount: number;
   status: string;
-  lines: Array<{
+  details: Array<{
     _id: string;
-    account: { _id: string; code: string; name: string };
+    account: { _id: string; number: string; name: string };
     position: "Db" | "Cr";
     amount: number;
   }>;
@@ -94,10 +94,10 @@ export default function EditTransactionPage({
         setReference(txn.reference || "");
         setInformation(txn.information || "");
         setLines(
-          txn.lines.map((l) => ({
+          txn.details.map((l) => ({
             key: l._id,
-            account: typeof l.account === "string" ? l.account : l.account._id,
-            accountLabel: `${(typeof l.account === "object" ? l.account.code : "")} – ${(typeof l.account === "object" ? l.account.name : "")}`,
+            account: l.account._id,
+            accountLabel: `${l.account.number} – ${l.account.name}`,
             position: l.position,
             amount: l.amount,
           }))
