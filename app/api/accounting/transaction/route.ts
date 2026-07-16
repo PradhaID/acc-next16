@@ -53,7 +53,21 @@ export async function GET(request: NextRequest) {
           .collection<TransactionDetail>("accountingTransactionDetails")
           .find({ transaction: txn._id })
           .toArray();
-        return Response.json({ ...txn, details });
+
+        const accountIds = [...new Set(details.map((d) => d.account.toString()))];
+        const accounts = await db
+          .collection("accountingAccounts")
+          .find({ _id: { $in: accountIds.map((a) => new ObjectId(a)) } })
+          .project({ number: 1, name: 1 })
+          .toArray();
+        const accountMap = new Map(accounts.map((a: any) => [a._id.toString(), a]));
+
+        const enrichedDetails = details.map((d) => ({
+          ...d,
+          account: accountMap.get(d.account.toString()) || { number: "?", name: "?" },
+        }));
+
+        return Response.json({ ...txn, details: enrichedDetails });
       }
 
       return Response.json(txn);
