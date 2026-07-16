@@ -9,6 +9,11 @@ import { useFormatDateInTimezone, FormattedDateTime } from "@/hooks/useTimezone"
 import { usePermission } from "@/hooks/useSession";
 import { ROLES } from "@/lib/roles";
 
+interface EvidenceItem {
+  url: string;
+  description?: string;
+}
+
 interface LineItem {
   _id: string;
   account: string;
@@ -23,7 +28,7 @@ interface TransactionDetail {
   reference: string;
   information: string;
   amount: number;
-  evidence: string[];
+  evidence: EvidenceItem[];
   status: "Pending" | "Confirmed" | "Rejected" | "Reversed" | "Canceled";
   created: { at: string; by: string | null };
   updated: { at: string; by: string | null };
@@ -354,8 +359,8 @@ export default function TransactionDetailPage({
 
               {transaction.evidence && transaction.evidence.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3">
-                  {transaction.evidence.map((url: string, index: number) => {
-                    const isPdf = url.toLowerCase().endsWith(".pdf");
+                  {transaction.evidence.map((item: EvidenceItem, index: number) => {
+                    const isPdf = item.url.toLowerCase().endsWith(".pdf");
                     return (
                       <div key={index} className="group relative rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 aspect-square">
                         {isPdf ? (
@@ -366,11 +371,11 @@ export default function TransactionDetailPage({
                             <span className="text-[8px] font-black uppercase text-gray-400 text-center truncate w-full">Evidence {index + 1}</span>
                           </div>
                         ) : (
-                          <img src={url} alt={`Evidence ${index + 1}`} className="w-full h-full object-cover" />
+                          <img src={item.url} alt={`Evidence ${index + 1}`} className="w-full h-full object-cover" />
                         )}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <button
-                            onClick={() => { setViewerUrl(url); setShowViewerModal(true); }}
+                            onClick={() => { setViewerUrl(item.url); setShowViewerModal(true); }}
                             className="p-2 bg-white/20 backdrop-blur-md rounded-lg text-white hover:bg-white/40 transition-colors"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -379,7 +384,7 @@ export default function TransactionDetailPage({
                             </svg>
                           </button>
                           <button
-                            onClick={() => handleDeleteEvidence(url)}
+                            onClick={() => handleDeleteEvidence(item.url)}
                             className="p-2 bg-red-500/80 backdrop-blur-md rounded-lg text-white hover:bg-red-600 transition-colors"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -606,7 +611,7 @@ export default function TransactionDetailPage({
             </div>
 
             <div className="flex-1 bg-gray-50 dark:bg-black/20 overflow-auto p-4 flex items-center justify-center">
-              {viewerUrl.toLowerCase().endsWith(".pdf") ? (
+              {viewerUrl?.toLowerCase().endsWith(".pdf") ? (
                 <embed src={viewerUrl} type="application/pdf" className="w-full h-full rounded-xl border border-gray-200 dark:border-gray-800" />
               ) : (
                 <img src={viewerUrl} alt="Evidence" className="max-w-full max-h-full object-contain shadow-2xl rounded-xl" />
