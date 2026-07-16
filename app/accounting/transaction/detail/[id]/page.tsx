@@ -388,11 +388,12 @@ export default function TransactionDetailPage({
                               if (t.dataset.fallback) return;
                               t.dataset.fallback = "1";
                               t.style.display = "none";
-                              t.parentElement!.querySelector(".img-fallback")?.classList.remove("hidden");
+                              const fb = t.parentElement!.querySelector(".img-fallback") as HTMLElement;
+                              if (fb) fb.style.display = "flex";
                             }}
                           />
                         )}
-                        <div className="img-fallback hidden absolute inset-0 flex flex-col items-center justify-center gap-1 p-3">
+                        <div className="img-fallback absolute inset-0 flex flex-col items-center justify-center gap-1 p-3" style={{ display: "none" }}>
                           <svg className="w-10 h-10 text-gray-300 dark:text-gray-600 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                           </svg>
@@ -637,10 +638,36 @@ export default function TransactionDetailPage({
 
             <div className="flex-1 bg-gray-50 dark:bg-black/20 overflow-auto p-4 flex items-center justify-center">
               {viewerUrl?.toLowerCase().endsWith(".pdf") ? (
-                <embed src={viewerUrl} type="application/pdf" className="w-full h-full rounded-xl border border-gray-200 dark:border-gray-800" />
+                <object data={viewerUrl} type="application/pdf" className="w-full h-full rounded-xl border border-gray-200 dark:border-gray-800">
+                  <embed src={viewerUrl} type="application/pdf" className="w-full h-full rounded-xl" />
+                </object>
               ) : (
-                <img src={viewerUrl} alt="Evidence" className="max-w-full max-h-full object-contain shadow-2xl rounded-xl" />
+                <img
+                  src={viewerUrl}
+                  alt="Evidence"
+                  className="max-w-full max-h-full object-contain shadow-2xl rounded-xl"
+                  onError={(e) => {
+                    const t = e.currentTarget;
+                    if (t.dataset.fallback) return;
+                    t.dataset.fallback = "1";
+                    t.style.display = "none";
+                    const parent = t.parentElement;
+                    if (parent) {
+                      const fallback = parent.querySelector(".viewer-fallback") as HTMLElement;
+                      if (fallback) fallback.style.display = "flex";
+                    }
+                  }}
+                />
               )}
+              <div className="viewer-fallback flex-col items-center justify-center gap-3 p-8 text-center" style={{ display: "none" }}>
+                <svg className="w-16 h-16 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                </svg>
+                <p className="text-sm text-gray-400 font-medium">Preview not available</p>
+                <a href={viewerUrl} download className="px-6 py-2 bg-indigo-600 text-white rounded-2xl text-xs font-bold hover:bg-indigo-700 transition-all">
+                  Download file
+                </a>
+              </div>
             </div>
 
             <div className="p-6 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3">
