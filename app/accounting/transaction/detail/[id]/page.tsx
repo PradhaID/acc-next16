@@ -16,7 +16,7 @@ interface EvidenceItem {
 
 interface LineItem {
   _id: string;
-  account: string;
+  account: string | { _id: string; number: string; name: string };
   position: "Db" | "Cr";
   amount: number;
 }
@@ -517,7 +517,7 @@ export default function TransactionDetailPage({
                   </thead>
                   <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
                     {transaction.details.map((item, i) => {
-                      const acc = accounts.get(item.account);
+                      const acc = typeof item.account === "string" ? accounts.get(item.account) : item.account;
                       return (
                         <tr key={item._id || i} className="text-xs hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
                           <td className="px-4 py-2">
