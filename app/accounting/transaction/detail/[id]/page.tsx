@@ -14,6 +14,10 @@ interface EvidenceItem {
   description?: string;
 }
 
+function urlPath(url: string): string {
+  try { return new URL(url).pathname; } catch { return url; }
+}
+
 interface LineItem {
   _id: string;
   account: string | { _id: string; number: string; name: string };
@@ -360,7 +364,7 @@ export default function TransactionDetailPage({
               {transaction.evidence && transaction.evidence.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3">
                   {transaction.evidence.map((item: EvidenceItem, index: number) => {
-                    const isPdf = item.url.toLowerCase().endsWith(".pdf");
+                    const isPdf = urlPath(item.url).toLowerCase().endsWith(".pdf");
                     return (
                       <div key={index} className="group relative rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 aspect-square">
                         {isPdf ? (
@@ -637,7 +641,7 @@ export default function TransactionDetailPage({
             </div>
 
             <div className="flex-1 bg-gray-50 dark:bg-black/20 overflow-auto p-4 flex items-center justify-center">
-              {viewerUrl?.toLowerCase().endsWith(".pdf") ? (
+              {viewerUrl && urlPath(viewerUrl).toLowerCase().endsWith(".pdf") ? (
                 <object data={viewerUrl} type="application/pdf" className="w-full h-full rounded-xl border border-gray-200 dark:border-gray-800">
                   <embed src={viewerUrl} type="application/pdf" className="w-full h-full rounded-xl" />
                 </object>
