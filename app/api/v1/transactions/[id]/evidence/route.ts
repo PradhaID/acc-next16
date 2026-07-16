@@ -14,25 +14,30 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
+    const url = formData.get("url") as string | null;
     const description = formData.get("description") as string | null;
 
-    if (!file) return errors.validation("File is required.");
+    if (!file && !url) return errors.validation("File or url is required.");
 
     const db = await getDb();
     const txn = await db.collection<Transaction>("accountingTransactions").findOne({ _id: new ObjectId(id) });
     if (!txn) return errors.notFound("Transaction not found");
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    let fileUrl: string;
+    if (file) {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const fileName = `${Date.now()}-${safeName}`;
+      const filePath = `public/uploads/evidence/${fileName}`;
 
-    const fileName = `${Date.now()}-${file.name}`;
-    const filePath = `public/uploads/evidence/${fileName}`;
+      const fs = await import("fs/promises");
+      await fs.mkdir("public/uploads/evidence", { recursive: true });
+      await fs.writeFile(filePath, Buffer.from(await file.arrayBuffer()));
 
-    const fs = await import("fs/promises");
-    await fs.mkdir("public/uploads/evidence", { recursive: true });
-    await fs.writeFile(filePath, buffer);
-
-    const fileUrl = `/uploads/evidence/${fileName}`;
+      fileUrl = `/uploads/evidence/${encodeURIComponent(fileName)}`;
+    } else {
+      const { downloadAndStore } = await import("@/lib/accounting/evidence");
+      fileUrl = await downloadAndStore(url!);
+    }
     const evidenceItem = { url: fileUrl, ...(description ? { description } : {}) };
 
     await db.collection<Transaction>("accountingTransactions").updateOne(

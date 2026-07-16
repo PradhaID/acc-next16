@@ -185,10 +185,13 @@ export async function POST(request: NextRequest) {
     const txnId = new ObjectId();
     const userId = new ObjectId(session.userId);
 
-    const evidenceItems: EvidenceItem[] = (evidence || []).map((e: any) => ({
-      url: e.url,
-      ...(e.description ? { description: e.description } : {}),
-    }));
+    const { downloadAndStore } = await import("@/lib/accounting/evidence");
+    const evidenceItems: EvidenceItem[] = await Promise.all(
+      (evidence || []).map(async (e: any) => ({
+        url: await downloadAndStore(e.url),
+        ...(e.description ? { description: e.description } : {}),
+      }))
+    );
 
     const txn: Transaction = {
       _id: txnId,
