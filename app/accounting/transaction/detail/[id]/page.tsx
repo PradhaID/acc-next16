@@ -364,18 +364,19 @@ export default function TransactionDetailPage({
                     return (
                       <div key={index} className="group relative rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 aspect-square">
                         {isPdf ? (
-                          <div className="w-full h-full relative">
-                            <iframe
-                              src={item.url}
-                              className="w-full h-full pointer-events-none"
-                              title={item.url.split("/").pop() || `Evidence ${index + 1}`}
-                            />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-2 pb-1 pt-4">
-                              <span className="text-[9px] text-white/90 truncate block">{item.url.split("/").pop()}</span>
-                              {item.description && (
-                                <span className="text-[8px] text-white/70 truncate block">{item.description}</span>
-                              )}
-                            </div>
+                          <div
+                            className="w-full h-full flex flex-col items-center justify-center gap-1 p-3 cursor-pointer"
+                            onClick={() => { setViewerUrl(item.url); setShowViewerModal(true); }}
+                          >
+                            <svg className="w-10 h-10 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+                              <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375h1.875a5.23 5.23 0 0 1 3.434 1.279 9.039 9.039 0 0 0-6.963-6.963Z" fill="red" />
+                            </svg>
+                            <span className="text-[9px] text-gray-700 dark:text-gray-300 font-bold text-center leading-tight truncate w-full">{item.url.split("/").pop()}</span>
+                            {item.description && (
+                              <span className="text-[8px] text-gray-500 dark:text-gray-400 text-center leading-tight truncate w-full">{item.description}</span>
+                            )}
+                            <span className="text-[7px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">PDF</span>
                           </div>
                         ) : (
                           <img src={item.url} alt={`Evidence ${index + 1}`} className="w-full h-full object-cover" />
