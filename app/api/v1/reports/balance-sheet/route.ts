@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { ObjectId } from "mongodb";
+import { ObjectId, type Filter } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyApiKey } from "@/lib/api-auth";
 import type { ChartOfAccount, Account, Transaction, TransactionDetail, CoaCategory } from "@/lib/models";
@@ -25,8 +25,9 @@ async function buildTree(
   const txnCollection = db.collection<Transaction>("accountingTransactions");
   const detailCollection = db.collection<TransactionDetail>("accountingTransactionDetails");
 
+  const parentFilter = parentId ? { $in: [new ObjectId(parentId), parentId] } : null;
   const nodes = await coaCollection
-    .find({ parent: parentId ? new ObjectId(parentId) : null, category: { $in: categories }, isActive: true })
+    .find({ parent: parentFilter, category: { $in: categories }, isActive: true } as Filter<ChartOfAccount>)
     .sort({ code: 1 })
     .toArray();
 
