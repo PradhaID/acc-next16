@@ -9,6 +9,55 @@ import { formatRelativeTime } from "@/lib/time";
 import { hasAccess } from "@/lib/role-check";
 import { getDictionary, translate } from "@/lib/i18n";
 
+async function getMonthlyAssets(db: any, endOfDate: Date) {
+  const rows = await db
+    .collection("accountingTransactionDetails")
+    .aggregate([
+      {
+        $lookup: {
+          from: "accountingTransactions",
+          localField: "transaction",
+          foreignField: "_id",
+          as: "txn",
+        },
+      },
+      { $unwind: "$txn" },
+      { $match: { "txn.status": "Confirmed", "txn.effectiveDate": { $lte: endOfDate } } },
+      {
+        $lookup: {
+          from: "accountingAccounts",
+          localField: "account",
+          foreignField: "_id",
+          as: "acc",
+        },
+      },
+      { $unwind: "$acc" },
+      {
+        $lookup: {
+          from: "accountingCoa",
+          localField: "acc.coa",
+          foreignField: "_id",
+          as: "coa",
+        },
+      },
+      { $unwind: "$coa" },
+      { $match: { "coa.category": "Asset" } },
+      {
+        $group: {
+          _id: null,
+          totalDb: { $sum: { $cond: [{ $eq: ["$position", "Db"] }, "$amount", 0] } },
+          totalCr: { $sum: { $cond: [{ $eq: ["$position", "Cr"] }, "$amount", 0] } },
+        },
+      },
+    ])
+    .toArray();
+
+  if (rows.length > 0) {
+    return rows[0].totalDb - rows[0].totalCr;
+  }
+  return 0;
+}
+
 function getActivityIcon(category: string, action: string) {
   const iconClass = "w-4 h-4";
 
@@ -141,6 +190,8 @@ export default async function DashboardPage() {
   
   // Chart points for Monthly Revenue, COGS, and Expense
   let chartDataPoints: { label: string; revenue: number; cogs: number; expense: number }[] = [];
+  // Chart points for Monthly Assets
+  let assetPoints: { label: string; assets: number }[] = [];
 
   try {
     const db = await getDb();
@@ -333,6 +384,16 @@ export default async function DashboardPage() {
       return { label: m.label, revenue, cogs, expense };
     });
 
+    // 5. Query monthly total assets historically for the same months
+    for (const m of monthsList) {
+      const endOfDate = new Date(m.year, m.month, 0, 23, 59, 59, 999);
+      const assetsVal = await getMonthlyAssets(db, endOfDate);
+      assetPoints.push({
+        label: m.label,
+        assets: Math.max(0, assetsVal),
+      });
+    }
+
   } catch (error) {
     console.error("Dashboard DB direct query error:", error);
   }
@@ -418,30 +479,43 @@ export default async function DashboardPage() {
     { label: "Total Equity", value: totalEquity },
   ];
 
-  // SVG Line Chart calculation helpers
-  const svgWidth = 600;
-  const svgHeight = 240;
+  // SVG Line Chart calculation configurations
+  const svgWidth = 500;
+  const svgHeight = 220;
   const chartWidth = svgWidth - 80;
   const chartHeight = svgHeight - 60;
   const xOffset = 60;
   const yOffset = 20;
 
-  // Max value calculation for scaling
-  const maxVal = Math.max(
+  // 1. Assets Chart Coordinates Calculation
+  const maxAssetsVal = Math.max(...assetPoints.map(p => p.assets), 1000);
+  const getAssetCoordinates = (index: number, val: number) => {
+    const x = xOffset + (index / 5) * chartWidth;
+    const y = yOffset + chartHeight - (val / maxAssetsVal) * chartHeight;
+    return { x, y };
+  };
+  const getAssetPathD = () => {
+    if (assetPoints.length === 0) return "";
+    return assetPoints.map((point, index) => {
+      const { x, y } = getAssetCoordinates(index, point.assets);
+      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+    }).join(" ");
+  };
+
+  // 2. Financial Chart Coordinates Calculation
+  const maxFinanceVal = Math.max(
     ...chartDataPoints.map(p => Math.max(p.revenue, p.cogs, p.expense)),
     1000
   );
-
-  const getCoordinates = (index: number, val: number) => {
+  const getFinanceCoordinates = (index: number, val: number) => {
     const x = xOffset + (index / 5) * chartWidth;
-    const y = yOffset + chartHeight - (val / maxVal) * chartHeight;
+    const y = yOffset + chartHeight - (val / maxFinanceVal) * chartHeight;
     return { x, y };
   };
-
-  const getPathD = (dataKey: "revenue" | "cogs" | "expense") => {
+  const getFinancePathD = (dataKey: "revenue" | "cogs" | "expense") => {
     if (chartDataPoints.length === 0) return "";
     return chartDataPoints.map((point, index) => {
-      const { x, y } = getCoordinates(index, point[dataKey]);
+      const { x, y } = getFinanceCoordinates(index, point[dataKey]);
       return `${index === 0 ? "M" : "L"} ${x} ${y}`;
     }).join(" ");
   };
@@ -450,6 +524,18 @@ export default async function DashboardPage() {
 
   return (
     <div className="max-w-full mx-auto space-y-8 pb-10 overflow-hidden">
+      {/* Interactive Dot Hover Styles */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .graph-dot {
+          transition: all 0.15s ease-in-out;
+          cursor: pointer;
+        }
+        .graph-dot:hover {
+          r: 7px !important;
+          stroke-width: 3px !important;
+        }
+      `}} />
+
       {/* Welcome Header */}
       <div>
         <h1 className="text-3xl font-extrabold tracking-tight text-stone-900 dark:text-white">
@@ -506,125 +592,243 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Monthly Line Graph Section */}
-      {chartDataPoints.length > 0 && (
-        <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-stone-900 dark:text-white">Monthly Financial Analytics</h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Trends for Revenue, Cost of Goods Sold, and Expenses</p>
-            </div>
-            <div className="flex items-center gap-4 text-xs font-bold">
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-emerald-500" />
-                <span className="text-stone-600 dark:text-stone-300">Revenue</span>
+      {/* Dual Graphs Column Section */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Left Side: Monthly Total Assets Graph */}
+        {assetPoints.length > 0 && (
+          <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-stone-900 dark:text-white">Asset Valuation Trends</h3>
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Historical trend of all combined asset accounts</p>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-rose-500" />
-                <span className="text-stone-600 dark:text-stone-300">COGS</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-indigo-500" />
-                <span className="text-stone-600 dark:text-stone-300">Expense</span>
+              <div className="flex items-center gap-1.5 text-xs font-bold">
+                <span className="w-3 h-3 rounded-full bg-emerald-600" />
+                <span className="text-stone-600 dark:text-stone-300">Total Assets</span>
               </div>
             </div>
-          </div>
 
-          <div className="w-full overflow-x-auto">
-            <div className="min-w-[600px] h-[240px]">
-              <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
-                {/* Horizontal grid lines & Y labels */}
-                {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
-                  const y = yOffset + ratio * chartHeight;
-                  const labelValue = ((1 - ratio) * maxVal).toFixed(0);
-                  return (
-                    <g key={index}>
-                      <line
-                        x1={xOffset}
-                        y1={y}
-                        x2={xOffset + chartWidth}
-                        y2={y}
-                        className="stroke-stone-200 dark:stroke-stone-800/80"
-                        strokeWidth="1"
-                        strokeDasharray="4 4"
-                      />
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[450px] h-[220px]">
+                <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                  {/* Grid lines */}
+                  {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
+                    const y = yOffset + ratio * chartHeight;
+                    const labelValue = ((1 - ratio) * maxAssetsVal).toFixed(0);
+                    return (
+                      <g key={index}>
+                        <line
+                          x1={xOffset}
+                          y1={y}
+                          x2={xOffset + chartWidth}
+                          y2={y}
+                          className="stroke-stone-200 dark:stroke-stone-800/80"
+                          strokeWidth="1"
+                          strokeDasharray="4 4"
+                        />
+                        <text
+                          x={xOffset - 10}
+                          y={y + 4}
+                          textAnchor="end"
+                          className="fill-stone-400 font-mono text-[10px]"
+                        >
+                          {labelValue}
+                        </text>
+                      </g>
+                    );
+                  })}
+
+                  {/* X labels */}
+                  {assetPoints.map((point, index) => {
+                    const x = xOffset + (index / 5) * chartWidth;
+                    return (
                       <text
-                        x={xOffset - 10}
-                        y={y + 4}
-                        textAnchor="end"
-                        className="fill-stone-400 font-mono text-[10px]"
+                        key={index}
+                        x={x}
+                        y={yOffset + chartHeight + 20}
+                        textAnchor="middle"
+                        className="fill-stone-500 text-[10px] font-bold"
                       >
-                        {labelValue}
+                        {point.label}
                       </text>
-                    </g>
-                  );
-                })}
+                    );
+                  })}
 
-                {/* X labels */}
-                {chartDataPoints.map((point, index) => {
-                  const x = xOffset + (index / 5) * chartWidth;
-                  return (
-                    <text
-                      key={index}
-                      x={x}
-                      y={yOffset + chartHeight + 20}
-                      textAnchor="middle"
-                      className="fill-stone-500 text-[10px] font-bold"
-                    >
-                      {point.label}
-                    </text>
-                  );
-                })}
+                  {/* Assets trend line */}
+                  <path
+                    d={getAssetPathD()}
+                    fill="none"
+                    className="stroke-emerald-650"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
 
-                {/* Data lines */}
-                {/* Revenue line (Emerald) */}
-                <path
-                  d={getPathD("revenue")}
-                  fill="none"
-                  className="stroke-emerald-500"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-                {/* COGS line (Rose) */}
-                <path
-                  d={getPathD("cogs")}
-                  fill="none"
-                  className="stroke-rose-500"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-                {/* Expense line (Indigo) */}
-                <path
-                  d={getPathD("expense")}
-                  fill="none"
-                  className="stroke-indigo-500"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-                {/* Point dots */}
-                {chartDataPoints.map((point, index) => {
-                  const revCoord = getCoordinates(index, point.revenue);
-                  const cogsCoord = getCoordinates(index, point.cogs);
-                  const expCoord = getCoordinates(index, point.expense);
-                  return (
-                    <g key={index}>
-                      <circle cx={revCoord.x} cy={revCoord.y} r="4.5" className="fill-emerald-500 stroke-white dark:stroke-stone-900" strokeWidth="2" />
-                      <circle cx={cogsCoord.x} cy={cogsCoord.y} r="4.5" className="fill-rose-500 stroke-white dark:stroke-stone-900" strokeWidth="2" />
-                      <circle cx={expCoord.x} cy={expCoord.y} r="4.5" className="fill-indigo-500 stroke-white dark:stroke-stone-900" strokeWidth="2" />
-                    </g>
-                  );
-                })}
-              </svg>
+                  {/* Point dots */}
+                  {assetPoints.map((point, index) => {
+                    const coord = getAssetCoordinates(index, point.assets);
+                    return (
+                      <circle
+                        key={index}
+                        cx={coord.x}
+                        cy={coord.y}
+                        r="4"
+                        className="graph-dot fill-emerald-650 stroke-white dark:stroke-stone-900"
+                        strokeWidth="2"
+                      >
+                        <title>{point.label} Assets: {formatNumber(point.assets)}</title>
+                      </circle>
+                    );
+                  })}
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Right Side: Monthly Financial Analytics Graph */}
+        {chartDataPoints.length > 0 && (
+          <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-stone-900 dark:text-white">Revenue & Expenses</h3>
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Monthly values for Revenue, COGS, and Expenses</p>
+              </div>
+              <div className="flex items-center gap-3 text-[10px] font-bold flex-wrap">
+                <div className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                  <span className="text-stone-600 dark:text-stone-300">Revenue</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                  <span className="text-stone-600 dark:text-stone-300">COGS</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-indigo-505" />
+                  <span className="text-stone-600 dark:text-stone-300">Expense</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[450px] h-[220px]">
+                <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                  {/* Grid lines */}
+                  {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
+                    const y = yOffset + ratio * chartHeight;
+                    const labelValue = ((1 - ratio) * maxFinanceVal).toFixed(0);
+                    return (
+                      <g key={index}>
+                        <line
+                          x1={xOffset}
+                          y1={y}
+                          x2={xOffset + chartWidth}
+                          y2={y}
+                          className="stroke-stone-200 dark:stroke-stone-800/80"
+                          strokeWidth="1"
+                          strokeDasharray="4 4"
+                        />
+                        <text
+                          x={xOffset - 10}
+                          y={y + 4}
+                          textAnchor="end"
+                          className="fill-stone-400 font-mono text-[10px]"
+                        >
+                          {labelValue}
+                        </text>
+                      </g>
+                    );
+                  })}
+
+                  {/* X labels */}
+                  {chartDataPoints.map((point, index) => {
+                    const x = xOffset + (index / 5) * chartWidth;
+                    return (
+                      <text
+                        key={index}
+                        x={x}
+                        y={yOffset + chartHeight + 20}
+                        textAnchor="middle"
+                        className="fill-stone-500 text-[10px] font-bold"
+                      >
+                        {point.label}
+                      </text>
+                    );
+                  })}
+
+                  {/* Revenue line (Emerald) */}
+                  <path
+                    d={getFinancePathD("revenue")}
+                    fill="none"
+                    className="stroke-emerald-500"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* COGS line (Rose) */}
+                  <path
+                    d={getFinancePathD("cogs")}
+                    fill="none"
+                    className="stroke-rose-500"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Expense line (Indigo) */}
+                  <path
+                    d={getFinancePathD("expense")}
+                    fill="none"
+                    className="stroke-indigo-505"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Point dots with title tooltips */}
+                  {chartDataPoints.map((point, index) => {
+                    const revCoord = getFinanceCoordinates(index, point.revenue);
+                    const cogsCoord = getFinanceCoordinates(index, point.cogs);
+                    const expCoord = getFinanceCoordinates(index, point.expense);
+                    return (
+                      <g key={index}>
+                        <circle
+                          cx={revCoord.x}
+                          cy={revCoord.y}
+                          r="4"
+                          className="graph-dot fill-emerald-500 stroke-white dark:stroke-stone-900"
+                          strokeWidth="2"
+                        >
+                          <title>{point.label} Revenue: {formatNumber(point.revenue)}</title>
+                        </circle>
+                        <circle
+                          cx={cogsCoord.x}
+                          cy={cogsCoord.y}
+                          r="4"
+                          className="graph-dot fill-rose-500 stroke-white dark:stroke-stone-900"
+                          strokeWidth="2"
+                        >
+                          <title>{point.label} COGS: {formatNumber(point.cogs)}</title>
+                        </circle>
+                        <circle
+                          cx={expCoord.x}
+                          cy={expCoord.y}
+                          r="4"
+                          className="graph-dot fill-indigo-505 stroke-white dark:stroke-stone-900"
+                          strokeWidth="2"
+                        >
+                          <title>{point.label} Expense: {formatNumber(point.expense)}</title>
+                        </circle>
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* System Stats Cards */}
       <div className="space-y-4">
@@ -718,7 +922,7 @@ export default async function DashboardPage() {
             <h2 className="text-xs font-black uppercase tracking-widest text-stone-500 dark:text-stone-400">Activity Feed</h2>
           </div>
           {hasAccess("/system/logs", roleUrls) && (
-            <Link href="/system/logs" className="text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-450">
+            <Link href="/system/logs" className="text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-455">
               View All Logs
             </Link>
           )}
