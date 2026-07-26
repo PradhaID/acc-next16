@@ -9,18 +9,6 @@ import { formatRelativeTime } from "@/lib/time";
 import { hasAccess } from "@/lib/role-check";
 import { getDictionary, translate } from "@/lib/i18n";
 
-async function fetchJson(url: string, token: string) {
-  try {
-    const res = await fetch(url, { 
-      cache: "no-store",
-      headers: { Cookie: `${COOKIE_NAME}=${token}` }
-    });
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
-  }
-}
-
 function getActivityIcon(category: string, action: string) {
   const iconClass = "w-4 h-4";
 
@@ -134,54 +122,105 @@ export default async function DashboardPage() {
     redirect("/account/signin");
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const roleUrls = payload.roleUrls || [];
   const dict = getDictionary(payload.language);
   const t = (path: string) => translate(dict, path);
 
-  const [coas, accounts, txnsConfirmed, closingRes] = await Promise.all([
-    fetchJson(`${baseUrl}/api/accounting/coa`, token),
-    fetchJson(`${baseUrl}/api/accounting/account?all=true`, token),
-    fetchJson(`${baseUrl}/api/accounting/transaction?status=Confirmed`, token),
-    fetchJson(`${baseUrl}/api/accounting/balance-sheet`, token),
-  ]);
-
-  const coaCount = Array.isArray(coas) ? coas.length : 0;
-  const accountCount = Array.isArray(accounts) ? accounts.length : 0;
-  const confirmedCount = Array.isArray(txnsConfirmed) ? txnsConfirmed.length : 0;
-
-  const totalAssets = closingRes?.totalAssets ?? 0;
-  const totalLiabilities = closingRes?.totalLiabilities ?? 0;
-  const totalEquity = closingRes?.totalEquity ?? 0;
+  let coaCount = 0;
+  let accountCount = 0;
+  let confirmedCount = 0;
+  let totalAssets = 0;
+  let totalLiabilities = 0;
+  let totalEquity = 0;
 
   let userCount = 0;
   let groupCount = 0;
-  let recentUsers: any[] = [];
-  let recentGroups: any[] = [];
   let recentLogs: SystemLog[] = [];
-  let postCount = 0;
-  let pageCount = 0;
-  let recentPublishedContent: any[] = [];
   let activeSessionsCount = 0;
 
   try {
     const db = await getDb();
+
+    // 1. Direct counts for accounting
+    coaCount = await db.collection("accountingCoa").countDocuments();
+    accountCount = await db.collection("accountingAccounts").countDocuments();
+    confirmedCount = await db.collection("accountingTransactions").countDocuments({ status: "Confirmed" });
+
+    // 2. Direct balance aggregation for assets, liabilities, and equity
+    const accountsData = await db.collection("accountingAccounts").find({ isActive: true }).toArray();
+    const coasData = await db.collection("accountingCoa").find({ category: { $in: ["Asset", "Liability", "Equity"] } }).toArray();
+    const coaMap = new Map(coasData.map(c => [c._id.toHexString(), c]));
+
+    // Calculate dynamic Net Income (Revenue - COGS - Expense) from transaction details
+    const netIncomeRows = await db
+      .collection("accountingTransactionDetails")
+      .aggregate([
+        {
+          $lookup: {
+            from: "accountingTransactions",
+            localField: "transaction",
+            foreignField: "_id",
+            as: "txn",
+          },
+        },
+        { $unwind: "$txn" },
+        { $match: { "txn.status": "Confirmed" } },
+        {
+          $lookup: {
+            from: "accountingAccounts",
+            localField: "account",
+            foreignField: "_id",
+            as: "acc",
+          },
+        },
+        { $unwind: "$acc" },
+        {
+          $lookup: {
+            from: "accountingCoa",
+            localField: "acc.coa",
+            foreignField: "_id",
+            as: "coa",
+          },
+        },
+        { $unwind: "$coa" },
+        { $match: { "coa.category": { $in: ["Revenue", "COGS", "Expense"] } } },
+        {
+          $group: {
+            _id: null,
+            totalDb: { $sum: { $cond: [{ $eq: ["$position", "Db"] }, "$amount", 0] } },
+            totalCr: { $sum: { $cond: [{ $eq: ["$position", "Cr"] }, "$amount", 0] } },
+          },
+        },
+      ])
+      .toArray();
+
+    let netIncome = 0;
+    if (netIncomeRows.length > 0) {
+      const r = netIncomeRows[0];
+      netIncome = r.totalCr - r.totalDb;
+    }
+
+    for (const acc of accountsData) {
+      const coaId = acc.coa?.toString();
+      const coa = coaMap.get(coaId);
+      if (!coa) continue;
+      
+      const balance = acc.balance || 0;
+      if (coa.category === "Asset") {
+        totalAssets += balance;
+      } else if (coa.category === "Liability") {
+        totalLiabilities += balance;
+      } else if (coa.category === "Equity") {
+        totalEquity += balance;
+      }
+    }
+    
+    // Add Net Income to Equity total
+    totalEquity += netIncome;
+
+    // 3. User & Group data
     userCount = await db.collection("systemUsers").countDocuments();
     groupCount = await db.collection("systemGroups").countDocuments();
-
-    recentUsers = await db
-      .collection("systemUsers")
-      .find({}, { projection: { password: 0 } })
-      .sort({ "created.at": -1 })
-      .limit(5)
-      .toArray();
-
-    recentGroups = await db
-      .collection("systemGroups")
-      .find({})
-      .sort({ "created.at": -1 })
-      .limit(5)
-      .toArray();
 
     recentLogs = await db
       .collection<SystemLog>("systemLogs")
@@ -189,28 +228,6 @@ export default async function DashboardPage() {
       .sort({ "created.at": -1 })
       .limit(10)
       .toArray();
-
-    postCount = await db.collection("contentPosts").countDocuments({ status: "published" });
-    pageCount = await db.collection("contentPages").countDocuments({ status: "published" });
-
-    const recentPosts = await db
-      .collection("contentPosts")
-      .find({ status: "published" })
-      .sort({ "published.at": -1 })
-      .limit(3)
-      .toArray();
-
-    const recentPages = await db
-      .collection("contentPages")
-      .find({ status: "published" })
-      .sort({ "published.at": -1 })
-      .limit(2)
-      .toArray();
-
-    recentPublishedContent = [
-      ...recentPosts.map((p: any) => ({ ...p, type: "post" })),
-      ...recentPages.map((p: any) => ({ ...p, type: "page" })),
-    ].sort((a, b) => new Date(b.published?.at || b.created.at).getTime() - new Date(a.published?.at || a.created.at).getTime()).slice(0, 5);
 
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     activeSessionsCount = await db
@@ -220,7 +237,7 @@ export default async function DashboardPage() {
         "created.at": { $gte: oneDayAgo },
       });
   } catch (error) {
-    console.error("Dashboard DB fetch error:", error);
+    console.error("Dashboard DB direct query error:", error);
   }
 
   const financeStats = [
