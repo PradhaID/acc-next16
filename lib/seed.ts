@@ -44,6 +44,7 @@ const ROLES = {
   COA_XLSX: new ObjectId("670000000000000000000215"),
   ACCOUNT_PDF: new ObjectId("670000000000000000000216"),
   ACCOUNT_XLSX: new ObjectId("670000000000000000000217"),
+  UPLOAD_EVIDENCE: new ObjectId("670000000000000000000218"),
 };
 
 const ADMIN_GROUP = new ObjectId("670000000000000000000010");
@@ -410,6 +411,14 @@ async function seed() {
       name: "Closing",
       description: "Year-end closing",
       url: "/accounting/closing",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
+      _id: ROLES.UPLOAD_EVIDENCE,
+      parent: ROLES.TRANSACTION,
+      name: "Upload Evidence",
+      description: "Upload transaction evidence documents",
       created: { at: now, by: null },
       updated: { at: now, by: null },
     },

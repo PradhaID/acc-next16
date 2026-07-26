@@ -98,6 +98,8 @@ export default function TransactionDetailPage({
   const [actionLoading, setActionLoading] = useState(false);
   const [successBanner, setSuccessBanner] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadDescription, setUploadDescription] = useState("");
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -106,6 +108,7 @@ export default function TransactionDetailPage({
 
   const canEditTransaction = usePermission(ROLES.EDIT_TRANSACTION);
   const canConfirmTransaction = usePermission(ROLES.CONFIRM_TRANSACTION);
+  const canUploadEvidence = usePermission(ROLES.UPLOAD_EVIDENCE);
 
   useEffect(() => { document.title = "Transaction Detail - AccNext"; }, []);
 
@@ -195,6 +198,43 @@ export default function TransactionDetailPage({
       }
     } catch {
       setErrorMsg("Failed to remove evidence");
+    }
+  };
+
+  const handleUploadEvidence = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!canUploadEvidence) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setErrorMsg("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("transactionId", id);
+      if (uploadDescription.trim()) {
+        formData.append("description", uploadDescription.trim());
+      }
+
+      const res = await fetch("/api/accounting/transaction/evidence", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        refetch();
+        setUploadDescription("");
+        setSuccessBanner("Evidence uploaded successfully.");
+      } else {
+        const d = await res.json();
+        setErrorMsg(d.error || "Failed to upload evidence.");
+      }
+    } catch {
+      setErrorMsg("Failed to upload evidence.");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -442,6 +482,44 @@ export default function TransactionDetailPage({
                 </div>
               )}
               </div>
+
+              {/* Upload evidence section */}
+              {canUploadEvidence && (
+                <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
+                  <p className="text-[9px] font-black uppercase tracking-wider text-gray-400 mb-2">Upload New Evidence</p>
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      placeholder="Description (optional)..."
+                      value={uploadDescription}
+                      onChange={(e) => setUploadDescription(e.target.value)}
+                      className="w-full px-3 py-1.5 text-xs bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                    <label className="flex items-center justify-center gap-2 px-4 py-2 border border-dashed border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-xl cursor-pointer hover:bg-white dark:hover:bg-gray-900/50 transition-all text-xs font-bold text-gray-500 hover:text-indigo-600 dark:text-gray-400">
+                      {uploading ? (
+                        <>
+                          <div className="h-3 w-3 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+                          </svg>
+                          Choose File
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        className="hidden"
+                        onChange={handleUploadEvidence}
+                        disabled={uploading}
+                        accept="image/*,application/pdf"
+                      />
+                    </label>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Audit Trail */}
