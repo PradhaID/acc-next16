@@ -1134,7 +1134,7 @@ export default async function DashboardPage() {
                     </span>
                   </div>
                   {log.detail && (
-                    <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-0.5 break-words line-clamp-2">
+                    <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-0.5 whitespace-normal break-all">
                       {log.detail}
                     </p>
                   )}
