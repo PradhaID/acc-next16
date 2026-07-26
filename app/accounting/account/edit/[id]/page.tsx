@@ -27,7 +27,7 @@ const categories = ["Asset", "Liability", "Equity", "Revenue", "COGS", "Expense"
 const categoryColors: Record<string, string> = {
   Asset: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Liability: "bg-amber-50 border-amber-100 text-amber-600 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-400",
-  Equity: "bg-blue-50 border-blue-100 text-blue-600 dark:bg-blue-950/20 dark:border-blue-800 dark:text-blue-400",
+  Equity: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Revenue: "bg-violet-50 border-violet-100 text-violet-600 dark:bg-violet-950/20 dark:border-violet-800 dark:text-violet-400",
   Expense: "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800 dark:text-red-400",
 };
@@ -122,7 +122,7 @@ export default function EditAccountPage() {
   if (pageLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
       </div>
     );
   }
@@ -136,7 +136,7 @@ export default function EditAccountPage() {
         subtitle={
           account ? (
             <>
-              Editing: <span className="font-bold text-indigo-600">{account.number} – {account.name}</span>
+              Editing: <span className="font-bold text-emerald-600">{account.number} – {account.name}</span>
             </>
           ) : undefined
         }
@@ -152,7 +152,7 @@ export default function EditAccountPage() {
               type="submit"
               form="account-edit-form"
               disabled={submitLoading}
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -227,7 +227,7 @@ export default function EditAccountPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   placeholder="Enter account name"
                   required
                 />
@@ -241,7 +241,7 @@ export default function EditAccountPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
                   placeholder="Optional description"
                   rows={3}
                 />
@@ -274,7 +274,7 @@ export default function EditAccountPage() {
         {/* Right column — info cards */}
         <div className="space-y-4">
           <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-3">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3">
               Category Info
             </h3>
             <p className="text-gray-500 leading-relaxed italic text-xs mb-3">
@@ -284,10 +284,10 @@ export default function EditAccountPage() {
               {categories.map((cat) => (
                 <div key={cat} className={`flex items-center justify-between py-1 px-2 rounded-lg ${
                   cat === (selectedCoa?.category || "")
-                    ? "bg-indigo-50 dark:bg-indigo-500/10 ring-1 ring-indigo-200 dark:ring-indigo-800"
+                    ? "bg-emerald-50 dark:bg-emerald-500/10 ring-1 ring-emerald-200 dark:ring-emerald-800"
                     : "bg-gray-50 dark:bg-gray-800/50"
                 }`}>
-                  <span className={`font-medium ${cat === (selectedCoa?.category || "") ? "text-indigo-700 dark:text-indigo-300" : "text-gray-700 dark:text-gray-300"}`}>
+                  <span className={`font-medium ${cat === (selectedCoa?.category || "") ? "text-emerald-700 dark:text-emerald-300" : "text-gray-700 dark:text-gray-300"}`}>
                     {cat}
                   </span>
                 </div>
@@ -296,7 +296,7 @@ export default function EditAccountPage() {
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm text-xs">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-3">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3">
               Account Details
             </h3>
             <dl className="space-y-2 text-gray-500">

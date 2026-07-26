@@ -8,7 +8,7 @@ import Link from "next/link";
 const endpointStyle = "bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-6";
 
 const methodColors: Record<string, string> = {
-  GET: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  GET: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
   POST: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
   PUT: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
   PATCH: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
@@ -24,7 +24,7 @@ function MethodBadge({ method }: { method: string }) {
 }
 
 function Code({ children }: { children: React.ReactNode }) {
-  return <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-indigo-600 dark:text-indigo-400">{children}</code>;
+  return <code className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-emerald-600 dark:text-emerald-400">{children}</code>;
 }
 
 function Pre({ children }: { children: React.ReactNode }) {
@@ -75,7 +75,7 @@ function Endpoint({ method, path, description, queryParams, requestBody, respons
               <tbody>
                 {queryParams.map((p) => (
                   <tr key={p.name} className="border-b border-gray-100 dark:border-gray-800">
-                    <td className="py-1.5 pr-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">{p.name}</td>
+                    <td className="py-1.5 pr-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">{p.name}</td>
                     <td className="py-1.5 pr-3 text-gray-500">{p.type}</td>
                     <td className="py-1.5 pr-3">{p.required ? <Badge color="bg-red-100 text-red-600">Required</Badge> : <Badge color="bg-gray-100 text-gray-500">Optional</Badge>}</td>
                     <td className="py-1.5 text-gray-700 dark:text-gray-300">{p.description}</td>
@@ -130,7 +130,7 @@ export default function ApiDocsPage() {
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 mb-2">
-          <Link href="/dashboard" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-bold">&larr; Dashboard</Link>
+          <Link href="/dashboard" className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-bold">&larr; Dashboard</Link>
         </div>
         <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">API v1 Reference</h1>
         <p className="text-sm text-gray-500">
@@ -497,7 +497,7 @@ export default function ApiDocsPage() {
             <div key={err.code} className="flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl px-5 py-3">
               <span className="text-sm font-mono font-bold text-red-600 dark:text-red-400 w-10">{err.code}</span>
               <span className="text-xs font-bold text-gray-700 dark:text-gray-300 w-20">{err.label}</span>
-              <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 w-40">{err.errCode}</span>
+              <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 w-40">{err.errCode}</span>
               <span className="text-xs text-gray-500">{err.desc}</span>
             </div>
           ))}

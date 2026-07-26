@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
+import { logAction, logError } from "@/lib/log";
 import type { SystemGroup, SystemRole } from "@/lib/models";
 
 export async function GET(request: NextRequest) {
@@ -34,9 +35,23 @@ export async function GET(request: NextRequest) {
     }
 
     const docs = await groups.find().sort({ name: 1 }).toArray();
-    return Response.json(docs);
+
+    const groupIds = docs.map((g) => g._id);
+    const roleCounts = await db.collection("systemGroupHasRole").aggregate([
+      { $match: { groupId: { $in: groupIds } } },
+      { $group: { _id: "$groupId", count: { $sum: 1 } } },
+    ]).toArray();
+    const countMap = new Map(roleCounts.map((r: any) => [r._id.toString(), r.count]));
+
+    const docsWithCounts = docs.map((g) => ({
+      ...g,
+      roleCount: countMap.get(g._id.toString()) || 0,
+    }));
+
+    return Response.json(docsWithCounts);
   } catch (error) {
     console.error("Groups GET error:", error);
+    await logError(request, "LIST_GROUP", "system:groups", error, "GROUP");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -71,9 +86,20 @@ export async function POST(request: NextRequest) {
     };
 
     await groups.insertOne(doc);
+
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "CREATE_GROUP",
+      category: "GROUP",
+      target: `group:${name}`,
+      detail: `Created group "${name}"`,
+    });
+
     return Response.json(doc, { status: 201 });
   } catch (error) {
     console.error("Groups POST error:", error);
+    await logError(request, "CREATE_GROUP", "system:groups", error, "GROUP");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -126,9 +152,19 @@ export async function PUT(request: NextRequest) {
       }
     }
 
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "EDIT_GROUP",
+      category: "GROUP",
+      target: `group:${_id}`,
+      detail: `Updated group ${_id}${roleIds ? ` (${roleIds.length} roles)` : ""}`,
+    });
+
     return Response.json({ message: "Updated." });
   } catch (error) {
     console.error("Groups PUT error:", error);
+    await logError(request, "EDIT_GROUP", "system:groups", error, "GROUP");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -148,9 +184,20 @@ export async function DELETE(request: NextRequest) {
     await db.collection<SystemGroup>("systemGroups").deleteOne({ _id: new ObjectId(id) });
     await db.collection("systemGroupHasRole").deleteMany({ groupId: new ObjectId(id) });
 
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "DELETE_GROUP",
+      category: "GROUP",
+      target: `group:${id}`,
+      detail: `Deleted group ${id}`,
+      level: "WARN",
+    });
+
     return Response.json({ message: "Deleted." });
   } catch (error) {
     console.error("Groups DELETE error:", error);
+    await logError(request, "DELETE_GROUP", "system:groups", error, "GROUP");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

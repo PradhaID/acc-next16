@@ -44,7 +44,7 @@ const fm = (v: number) => formatNumber(v, 0);
 const sectionColors: Record<string, { text: string; bg: string; border: string; badge: string }> = {
   Assets: { text: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/10", border: "border-emerald-200 dark:border-emerald-500/20", badge: "bg-emerald-600" },
   Liabilities: { text: "text-red-600 dark:text-red-400", bg: "bg-red-50 dark:bg-red-500/10", border: "border-red-200 dark:border-red-500/20", badge: "bg-red-600" },
-  Equity: { text: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-500/10", border: "border-blue-200 dark:border-blue-500/20", badge: "bg-blue-600" },
+  Equity: { text: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/10", border: "border-emerald-200 dark:border-emerald-500/20", badge: "bg-emerald-600" },
 };
 
 function TreeItems({
@@ -358,8 +358,8 @@ export default function BalanceSheetPage() {
           onClick={() => setShowCode(!showCode)}
           className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border ${
             showCode
-              ? "bg-indigo-600 text-white border-indigo-600"
-              : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300"
+              ? "bg-emerald-600 text-white border-emerald-600"
+              : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-emerald-300"
           }`}
         >
           Code
@@ -367,7 +367,7 @@ export default function BalanceSheetPage() {
         {canPrintPdf && (
           <button
             onClick={() => { generatePdf(); }}
-            className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300"
+            className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-emerald-300"
           >
             Print PDF
           </button>
@@ -376,7 +376,7 @@ export default function BalanceSheetPage() {
           <button
             onClick={handleDownloadXLSX}
             disabled={!data || loading}
-            className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-emerald-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Excel
           </button>
@@ -391,7 +391,7 @@ export default function BalanceSheetPage() {
 
       {loading && (
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl py-20 text-center shadow-sm">
-          <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
       )}
 
@@ -478,7 +478,7 @@ export default function BalanceSheetPage() {
                   colors={sectionColors.Equity}
                 />
                 </div>
-                <div className={`flex items-center justify-between px-4 py-2.5 text-sm font-bold ${data.netIncome >= 0 ? "text-blue-600 dark:text-blue-400" : "text-red-600"}`}>
+                <div className={`flex items-center justify-between px-4 py-2.5 text-sm font-bold ${data.netIncome >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600"}`}>
                   <span>Current Year Earnings</span>
                   <span className="font-mono text-sm font-black">{fm(data.netIncome)}</span>
                 </div>
@@ -534,7 +534,7 @@ export default function BalanceSheetPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => { const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }); window.open(URL.createObjectURL(blob)); }}
-                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-black uppercase tracking-tight transition-all"
+                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-tight transition-all"
                 >
                   Download
                 </button>

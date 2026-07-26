@@ -13,6 +13,10 @@ interface SessionUser {
 
 let cachedSession: SessionUser | null | undefined = undefined;
 
+export function clearSessionCache() {
+  cachedSession = undefined;
+}
+
 export function useSession() {
   const [session, setSession] = useState<SessionUser | null | undefined>(cachedSession);
   const [loading, setLoading] = useState(cachedSession === undefined);

@@ -51,7 +51,7 @@ function getDepth(parentId: string | null, allNodes: COA[]): number {
 const categoryColors: Record<string, string> = {
   Asset: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Liability: "bg-amber-50 border-amber-100 text-amber-600 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-400",
-  Equity: "bg-blue-50 border-blue-100 text-blue-600 dark:bg-blue-950/20 dark:border-blue-800 dark:text-blue-400",
+  Equity: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Revenue: "bg-violet-50 border-violet-100 text-violet-600 dark:bg-violet-950/20 dark:border-violet-800 dark:text-violet-400",
   Expense: "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800 dark:text-red-400",
 };
@@ -275,7 +275,7 @@ export default function AccountListPage() {
             {usePermission(ROLES.ADD_ACCOUNT) && (
               <Link
                 href="/accounting/account/add"
-                className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -334,7 +334,7 @@ export default function AccountListPage() {
 
         <button
           onClick={resetFilters}
-          className="px-4 py-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+          className="px-4 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
         >
           Reset
         </button>
@@ -344,12 +344,12 @@ export default function AccountListPage() {
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl overflow-hidden shadow-sm">
         {loading ? (
           <div className="py-20 text-center space-y-4">
-            <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="py-20 text-center">
             <p className="text-gray-500 font-medium">No accounts match your criteria.</p>
-            <button onClick={resetFilters} className="mt-4 text-indigo-600 font-bold hover:underline">
+            <button onClick={resetFilters} className="mt-4 text-emerald-600 font-bold hover:underline">
               Clear filters
             </button>
           </div>
@@ -370,7 +370,7 @@ export default function AccountListPage() {
                 {filtered.map((a) => {
                   const coa = typeof a.coa === "string" ? coaMap.get(a.coa) : (a.coa as COA);
                   return (
-                    <tr key={a._id} className="group hover:bg-indigo-50/40 dark:hover:bg-indigo-500/5 transition-all cursor-pointer">
+                    <tr key={a._id} className="group hover:bg-emerald-50/40 dark:hover:bg-emerald-500/5 transition-all cursor-pointer">
                       {/* Number */}
                       <td className="px-4 py-3 whitespace-nowrap">
                         <span className="font-mono font-medium text-xs text-gray-600 dark:text-gray-300">
@@ -394,7 +394,7 @@ export default function AccountListPage() {
                           {canEditAccount && (
                             <Link
                               href={`/accounting/account/edit/${a._id}`}
-                              className="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 text-[10px] font-black uppercase tracking-wider"
+                              className="text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300 text-[10px] font-black uppercase tracking-wider"
                             >
                               Edit
                             </Link>
@@ -463,7 +463,7 @@ export default function AccountListPage() {
             <div className="p-6 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3">
               <button
                 onClick={() => window.open(URL.createObjectURL(new Blob([pdfBytes as BlobPart], { type: "application/pdf" })))}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20"
+                className="px-6 py-3 bg-emerald-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/20"
               >
                 Download
               </button>

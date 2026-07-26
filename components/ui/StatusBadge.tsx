@@ -12,7 +12,7 @@ const styles: Record<string, string> = {
   Rejected:
     "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800 dark:text-red-400",
   Reversed:
-    "bg-blue-50 border-blue-100 text-blue-600 dark:bg-blue-950/20 dark:border-blue-800 dark:text-blue-400",
+    "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {

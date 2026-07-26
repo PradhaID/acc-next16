@@ -171,7 +171,7 @@ export default function LedgerPage() {
                     key={acc._id}
                     type="button"
                     onClick={() => selectAccount(acc)}
-                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
+                    className="w-full text-left px-4 py-2.5 text-sm hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
                   >
                     <div className="font-bold text-gray-900 dark:text-white">{acc.number} – {acc.name}</div>
                   </button>
@@ -207,7 +207,7 @@ export default function LedgerPage() {
         <button
           onClick={handleView}
           disabled={loading || !accountId}
-          className="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all hover:scale-105 active:scale-95"
+          className="px-5 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all hover:scale-105 active:scale-95"
         >
           {loading ? "Loading…" : "View"}
         </button>
@@ -234,7 +234,7 @@ export default function LedgerPage() {
 
       {loading && (
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl py-20 text-center shadow-sm">
-          <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
       )}
 
@@ -294,7 +294,7 @@ export default function LedgerPage() {
                   {data.rows.map((row, i) => (
                     <tr
                       key={`${row.code}-${i}`}
-                      className="group hover:bg-indigo-50/40 dark:hover:bg-indigo-500/5 transition-all"
+                      className="group hover:bg-emerald-50/40 dark:hover:bg-emerald-500/5 transition-all"
                     >
                       <td className="px-4 py-3 text-xs font-medium text-gray-700 dark:text-gray-300">
                         {formatDate(row.date)}

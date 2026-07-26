@@ -3,9 +3,17 @@ import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { createNotification } from "@/lib/notification";
+import { logAction, logError } from "@/lib/log";
+import { sendPasswordChangedEmail } from "@/lib/email";
+import { rateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import type { SystemUser } from "@/lib/models";
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request);
+  const rl = rateLimit(`password:${ip}`, RATE_LIMITS.password);
+  if (!rl.success) return rateLimitResponse(rl.resetMs);
+
   try {
     const token = request.cookies.get(COOKIE_NAME)?.value;
     const session = token ? await verifyToken(token) : null;
@@ -45,9 +53,28 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "CHANGE_PASSWORD",
+      category: "PROFILE",
+      target: `user:${session.username}`,
+      detail: "Password changed",
+    });
+
+    await createNotification({
+      userId: session.userId,
+      type: "SUCCESS",
+      title: "Password changed",
+      message: "Your password was successfully updated.",
+    });
+
+    sendPasswordChangedEmail(user.email, user.fullName || user.username).catch(() => {});
+
     return Response.json({ message: "Password updated successfully." });
   } catch (error) {
     console.error("Password POST error:", error);
+    await logError(request, "CHANGE_PASSWORD", `user:${request.cookies.get(COOKIE_NAME)?.value || "unknown"}`, error, "PROFILE");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

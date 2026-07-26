@@ -204,7 +204,7 @@ export default function AddTransactionPage() {
               type="submit"
               form="txn-form"
               disabled={submitting}
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -236,7 +236,7 @@ export default function AddTransactionPage() {
                     value={type}
                     onChange={(e) => setType(e.target.value)}
                     disabled={submitting}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold appearance-none cursor-pointer transition-colors"
+                    className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold appearance-none cursor-pointer transition-colors"
                   >
                     {typeOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -255,7 +255,7 @@ export default function AddTransactionPage() {
                     value={effectiveDate}
                     onChange={(e) => setEffectiveDate(e.target.value)}
                     disabled={submitting}
-                    className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white transition-colors"
+                    className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white transition-colors"
                   />
                   {errors.effectiveDate && (
                     <p className="text-[10px] text-red-600 font-bold ml-1">{errors.effectiveDate}</p>
@@ -273,7 +273,7 @@ export default function AddTransactionPage() {
                   onChange={(e) => setReference(e.target.value)}
                   placeholder="—"
                   disabled={submitting}
-                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                 />
               </div>
 
@@ -286,7 +286,7 @@ export default function AddTransactionPage() {
                   onChange={(e) => setInformation(e.target.value)}
                   placeholder="Memo or description"
                   disabled={submitting}
-                  className="flex-1 w-full px-4 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
+                  className="flex-1 w-full px-4 py-2 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
                 />
               </div>
             </div>
@@ -302,7 +302,7 @@ export default function AddTransactionPage() {
                     key={opt.value}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-colors ${
                       type === opt.value
-                        ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                        ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
                         : "bg-gray-50 dark:bg-gray-800/30 text-gray-500 dark:text-gray-400"
                     }`}
                   >
@@ -347,7 +347,7 @@ export default function AddTransactionPage() {
                           if (res && res.length > 0) setShowDropdown((prev) => ({ ...prev, [line.key]: true }));
                         }}
                         disabled={submitting}
-                        className="w-full bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm font-bold focus:ring-2 focus:ring-emerald-500 outline-none"
                       />
                       {showDropdown[line.key] && accountResults[line.key]?.length > 0 && (
                         <>
@@ -358,7 +358,7 @@ export default function AddTransactionPage() {
                                 key={acc._id}
                                 type="button"
                                 onClick={() => selectAccount(acc, line.key)}
-                                className="w-full text-left px-4 py-2.5 text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
+                                className="w-full text-left px-4 py-2.5 text-sm hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
                               >
                                 <div className="font-bold text-gray-900 dark:text-white">{acc.number} – {acc.name}</div>
                               </button>
@@ -398,7 +398,7 @@ export default function AddTransactionPage() {
                         onFocus={() => handleAmountFocus(line.key)}
                         onBlur={() => handleAmountBlur(line.key)}
                         disabled={submitting}
-                        className="w-full pl-6 pr-3 py-1.5 bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-black text-right focus:ring-2 focus:ring-indigo-500 outline-none"
+                        className="w-full pl-6 pr-3 py-1.5 bg-transparent border border-gray-200 dark:border-gray-700 rounded-lg text-sm font-black text-right focus:ring-2 focus:ring-emerald-500 outline-none"
                       />
                     </div>
                     {errors[`line-${lines.indexOf(line)}-amount`] && (
@@ -439,7 +439,7 @@ export default function AddTransactionPage() {
               type="button"
               onClick={addLine}
               disabled={submitting}
-              className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tighter text-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 px-4 py-2 rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition-all"
+              className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tighter text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-all"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -450,11 +450,11 @@ export default function AddTransactionPage() {
             <div className="flex gap-6">
               <div className="text-right">
                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Debits</p>
-                <p className="text-lg font-black text-indigo-600">{totalDb.toLocaleString()}</p>
+                <p className="text-lg font-black text-emerald-600">{totalDb.toLocaleString()}</p>
               </div>
               <div className="text-right">
                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Credits</p>
-                <p className="text-lg font-black text-indigo-600">{totalCr.toLocaleString()}</p>
+                <p className="text-lg font-black text-emerald-600">{totalCr.toLocaleString()}</p>
               </div>
               <div className="w-px h-8 bg-gray-200 dark:bg-gray-700 hidden md:block" />
               <div className="text-right">

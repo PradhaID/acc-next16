@@ -4,6 +4,10 @@ export type {
   SystemGroup,
   SystemRole,
   SystemGroupHasRole,
+  SystemLog,
+  RedirectRule,
+  RedirectType,
+  RedirectLog,
 } from "./system";
 export type { ChartOfAccount, CoaCategory, CoaPosition } from "./accounting/coa";
 export type { Account } from "./accounting/account";

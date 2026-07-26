@@ -4,14 +4,16 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
-import SearchInput from "@/components/ui/SearchInput";
 import { FormattedDateTime } from "@/hooks/useTimezone";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface Group {
   _id: string;
   name: string;
   description?: string;
   isActive?: boolean;
+  roleCount?: number;
   created: { at: string; by: string | null };
   updated: { at: string; by: string | null };
 }
@@ -25,10 +27,14 @@ export default function GroupListPage() {
   const [search, setSearch] = useState("");
   const [showAlert, setShowAlert] = useState(true);
 
+  const canAddGroup = usePermission(ROLES.ADD_GROUP);
+  const canEditGroup = usePermission(ROLES.EDIT_GROUP);
+  const canManageRoles = usePermission(ROLES.ROLE_GROUP_MANAGEMENT);
+
   const success = searchParams.get("success");
 
   useEffect(() => {
-    document.title = "Groups - AccNext";
+    document.title = "Groups - Boilerplate";
   }, []);
 
   useEffect(() => {
@@ -66,20 +72,22 @@ export default function GroupListPage() {
   };
 
   return (
-    <div className="max-w-full mx-auto space-y-6 pb-10">
+    <div className="max-w-full mx-auto space-y-4 pb-10">
       <PageHeader
         title="Groups"
         subtitle="Manage user groups and their role assignments"
         actions={
-          <Link
-            href="/system/group/add"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-xs text-white px-4 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Group
-          </Link>
+          canAddGroup && (
+            <Link
+              href="/system/group/add"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Group
+            </Link>
+          )
         }
       />
 
@@ -93,66 +101,98 @@ export default function GroupListPage() {
         </div>
       )}
 
-      <SearchInput value={search} onChange={handleSearch} placeholder="Search groups..." />
+      {/* Filter bar */}
+      <div className="flex flex-col md:flex-row md:items-center gap-2 bg-white dark:bg-stone-900/80 p-2 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm">
+        <div className="relative flex-1">
+          <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search by name, description…"
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 bg-transparent outline-none text-sm focus:ring-0"
+          />
+        </div>
+        <button
+          onClick={() => handleSearch("")}
+          className="px-4 py-1.5 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+        >
+          Reset
+        </button>
+      </div>
 
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl overflow-hidden shadow-sm">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 dark:divide-gray-800">
+      <div className="bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl overflow-hidden shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 dark:divide-stone-700/30">
           {loading ? (
             <div className="col-span-full py-20 flex items-center justify-center">
-              <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="col-span-full py-16 text-center">
-              <svg className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
+              <svg className="w-12 h-12 mx-auto text-gray-300 dark:text-stone-400 mb-3" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
               </svg>
               <p className="text-sm text-gray-500 font-medium">No groups found</p>
               {search && (
-                <button onClick={() => setSearch("")} className="mt-2 text-xs text-indigo-600 hover:text-indigo-700 font-bold">
+                <button onClick={() => setSearch("")} className="mt-2 text-xs text-orange-600 hover:text-orange-700 font-bold">
                   Clear search
                 </button>
               )}
             </div>
           ) : (
             filtered.map((group) => (
-              <div key={group._id} className="p-5 flex flex-col justify-between hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+              <div key={group._id} className="p-5 flex flex-col justify-between hover:bg-gray-50 dark:hover:bg-stone-800/40/50 transition-colors">
                 <div>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
                     {group.name}
                     <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border ${
                       group.isActive !== false
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400"
-                        : "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400"
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-400"
+                        : "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:border-red-800 dark:text-red-400"
                     }`}>
                       {group.isActive !== false ? "Active" : "Disabled"}
                     </span>
                   </h3>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-4">
+                  <p className="text-xs text-gray-500 dark:text-stone-400 line-clamp-2 mb-4">
                     {group.description || <span className="italic">No description</span>}
                   </p>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.087 4.113" />
-                    </svg>
-                    <span>Created <FormattedDateTime date={group.created.at} /></span>
+                  <div className="flex items-center gap-4 text-[10px] text-gray-400 dark:text-stone-500 font-bold uppercase tracking-widest">
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.087 4.113" />
+                      </svg>
+                      <span>Created <FormattedDateTime date={group.created.at} /></span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                      </svg>
+                      <span>{group.roleCount || 0} role{(group.roleCount || 0) !== 1 ? "s" : ""}</span>
+                    </div>
                   </div>
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => router.push(`/system/group/role/${group._id}`)}
-                      className="flex-1 text-center py-2 bg-gray-100 dark:bg-gray-800 hover:bg-indigo-600 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
-                    >
-                      Manage Roles
-                    </button>
-                    <button
-                      onClick={() => router.push(`/system/group/edit/${group._id}`)}
-                      className="px-3 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all text-gray-500 dark:text-gray-400"
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                      </svg>
-                    </button>
+                    {canManageRoles && (
+                      <button
+                        onClick={() => router.push(`/system/group/role/${group._id}`)}
+                        className="flex-1 text-center py-2 bg-gray-100 dark:bg-stone-800/40 hover:bg-orange-600 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+                      >
+                        Manage Roles
+                      </button>
+                    )}
+                    {canEditGroup && (
+                      <button
+                        onClick={() => router.push(`/system/group/edit/${group._id}`)}
+                        className="px-3 py-2 bg-gray-100 dark:bg-stone-800/40 hover:bg-gray-200 dark:hover:bg-stone-700 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all text-gray-500 dark:text-stone-400"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                        </svg>
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -160,6 +200,12 @@ export default function GroupListPage() {
           )}
         </div>
       </div>
+
+      {!loading && (
+        <p className="text-xs text-gray-400 font-bold px-1">
+          {filtered.length} group{filtered.length !== 1 ? "s" : ""}
+        </p>
+      )}
     </div>
   );
 }

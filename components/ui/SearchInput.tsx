@@ -46,7 +46,7 @@ export default function SearchInput({
         defaultValue={value}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm font-bold text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-700/50 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500"
+        className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm font-bold text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700/50 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500"
       />
     </div>
   );

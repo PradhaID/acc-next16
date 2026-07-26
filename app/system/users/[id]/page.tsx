@@ -5,12 +5,17 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import { FormattedDateTime } from "@/hooks/useTimezone";
+import { usePermission } from "@/hooks/useSession";
+import { ROLES } from "@/lib/roles";
 
 interface User {
   _id: string;
   username: string;
   fullName: string;
   email: string;
+  phone?: string | null;
+  language?: string;
+  image?: string | null;
   emailVerified: boolean;
   groupId: string | null;
   timezone: string;
@@ -21,7 +26,7 @@ interface User {
 }
 
 const avatarColors = [
-  "bg-indigo-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500",
+  "bg-emerald-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500",
   "bg-violet-500", "bg-cyan-500", "bg-orange-500", "bg-teal-500",
 ];
 
@@ -42,12 +47,14 @@ export default function UserDetailPage() {
   const [loading, setLoading] = useState(true);
   const [successMsg, setSuccessMsg] = useState("");
 
+  const canEditUser = usePermission(ROLES.EDIT_USER);
+
   useEffect(() => {
     if (searchParams.get("created") === "true") setSuccessMsg("User created successfully");
     else if (searchParams.get("updated") === "true") setSuccessMsg("User updated successfully");
   }, [searchParams]);
 
-  useEffect(() => { document.title = "User Detail - AccNext"; }, []);
+  useEffect(() => { document.title = "User Detail - Boilerplate"; }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,7 +81,7 @@ export default function UserDetailPage() {
   if (loading || !user) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
       </div>
     );
   }
@@ -87,26 +94,28 @@ export default function UserDetailPage() {
         title="User Detail"
         subtitle={
           <>
-            Viewing: <span className="font-bold text-indigo-600">{user.fullName}</span>
+            Viewing: <span className="font-bold text-orange-600">{user.fullName}</span>
           </>
         }
         actions={
           <div className="flex items-center gap-2">
             <Link
               href="/system/users"
-              className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/50 text-xs px-4 py-2 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+              className="bg-white dark:bg-stone-800/40 border border-gray-200 dark:border-stone-700/50 text-xs px-4 py-2 rounded-xl font-bold hover:bg-gray-50 dark:hover:bg-stone-700 transition-all"
             >
               Back
             </Link>
-            <Link
-              href={`/system/users/edit/${id}`}
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-              </svg>
-              Edit User
-            </Link>
+            {canEditUser && (
+              <Link
+                href={`/system/users/edit/${id}`}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2 rounded-xl font-bold text-xs shadow-md shadow-orange-500/10 transition-all hover:scale-105 active:scale-95"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                </svg>
+                Edit User
+              </Link>
+            )}
           </div>
         }
       />
@@ -123,12 +132,16 @@ export default function UserDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left — Avatar + Key Info */}
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm p-6 text-center">
-            <div className={`w-20 h-20 rounded-full ${getAvatarColor(user.fullName)} flex items-center justify-center text-white text-3xl font-bold mx-auto`}>
-              {user.fullName.charAt(0).toUpperCase()}
-            </div>
-            <h2 className="text-xl font-extrabold text-gray-900 dark:text-white mt-4">{user.fullName}</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">@{user.username}</p>
+          <div className="bg-white dark:bg-stone-900/80 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm p-6 text-center">
+            {user.image ? (
+              <img src={user.image} alt="" className="w-20 h-20 rounded-full object-cover mx-auto ring-4 ring-white dark:ring-stone-900/80 shadow-lg" />
+            ) : (
+              <div className={`w-20 h-20 rounded-full ${getAvatarColor(user.fullName || user.username)} flex items-center justify-center text-white text-3xl font-bold mx-auto`}>
+                {(user.fullName || user.username || "?").charAt(0).toUpperCase()}
+              </div>
+            )}
+            <h2 className="text-xl font-extrabold text-gray-900 dark:text-white mt-4">{user.fullName || user.username}</h2>
+            <p className="text-sm text-gray-500 dark:text-stone-400">@{user.username}</p>
 
             <div className="mt-6 space-y-3 text-left">
               <div className="flex justify-between text-xs">
@@ -155,11 +168,11 @@ export default function UserDetailPage() {
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-gray-400">Group</span>
-                <span className="font-bold text-gray-700 dark:text-gray-300">{groupName || "None"}</span>
+                <span className="font-bold text-gray-700 dark:text-stone-300">{groupName || "None"}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-gray-400">Timezone</span>
-                <span className="font-bold text-gray-700 dark:text-gray-300">{user.timezone || "—"}</span>
+                <span className="font-bold text-gray-700 dark:text-stone-300">{user.timezone || "—"}</span>
               </div>
             </div>
           </div>
@@ -167,16 +180,16 @@ export default function UserDetailPage() {
 
         {/* Right — Details */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm p-6">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-5">Account Information</h3>
+          <div className="bg-white dark:bg-stone-900/80 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm p-6">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-655 mb-5">Account Information</h3>
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">User ID</dt>
-                <dd className="mt-1 font-mono text-sm font-bold text-gray-700 dark:text-gray-300">{user._id}</dd>
+                <dd className="mt-1 font-mono text-sm font-bold text-gray-700 dark:text-stone-300">{user._id}</dd>
               </div>
               <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Username</dt>
-                <dd className="mt-1 font-mono text-sm font-bold text-gray-700 dark:text-gray-300">{user.username}</dd>
+                <dd className="mt-1 font-mono text-sm font-bold text-gray-700 dark:text-stone-300">{user.username}</dd>
               </div>
               <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Full Name</dt>
@@ -187,35 +200,43 @@ export default function UserDetailPage() {
                 <dd className="mt-1 text-sm font-bold text-gray-900 dark:text-white">{user.email}</dd>
               </div>
               <div>
+                <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Phone</dt>
+                <dd className="mt-1 text-sm font-bold text-gray-900 dark:text-white">{user.phone || "—"}</dd>
+              </div>
+              <div>
+                <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Language</dt>
+                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-stone-300">{user.language || "—"}</dd>
+              </div>
+              <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Group</dt>
-                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-gray-300">{groupName || "None"}</dd>
+                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-stone-300">{groupName || "None"}</dd>
               </div>
               <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Timezone</dt>
-                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-gray-300">{user.timezone || "—"}</dd>
+                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-stone-300">{user.timezone || "—"}</dd>
               </div>
             </dl>
           </div>
 
           {user.biography && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm p-6">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-3">Biography</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{user.biography}</p>
+            <div className="bg-white dark:bg-stone-900/80 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm p-6">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-655 mb-3">Biography</h3>
+              <p className="text-sm text-gray-700 dark:text-stone-300 whitespace-pre-wrap">{user.biography}</p>
             </div>
           )}
 
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm p-6">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-5">Audit Trail</h3>
+          <div className="bg-white dark:bg-stone-900/80 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm p-6">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-655 mb-5">Audit Trail</h3>
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Created At</dt>
-                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-gray-300">
+                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-stone-300">
                   <FormattedDateTime date={user.created.at} />
                 </dd>
               </div>
               <div>
                 <dt className="text-[10px] font-black uppercase tracking-widest text-gray-400">Updated At</dt>
-                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-gray-300">
+                <dd className="mt-1 text-sm font-bold text-gray-700 dark:text-stone-300">
                   {user.updated?.at ? <FormattedDateTime date={user.updated.at} /> : "—"}
                 </dd>
               </div>

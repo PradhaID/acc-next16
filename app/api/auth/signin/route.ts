@@ -1,12 +1,19 @@
 import { getDb } from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
-import { signToken, COOKIE_NAME, COOKIE_OPTIONS } from "@/lib/auth";
+import { signToken, COOKIE_NAME, COOKIE_OPTIONS, getCookieMaxAge } from "@/lib/auth";
+import { createNotification } from "@/lib/notification";
+import { logAction, logError } from "@/lib/log";
+import { rateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import type { SystemUser } from "@/lib/models";
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const rl = rateLimit(`signin:${ip}`, RATE_LIMITS.signin);
+  if (!rl.success) return rateLimitResponse(rl.resetMs);
+
   try {
     const body = await request.json();
-    const { identifier, password } = body;
+    const { identifier, password, rememberMe } = body;
 
     if (!identifier || !password) {
       return Response.json(
@@ -44,6 +51,15 @@ export async function POST(request: Request) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
+      await logAction({
+        userId: user._id,
+        username: user.username,
+        action: "LOGIN_FAILED",
+        category: "AUTH",
+        target: `user:${user.username}`,
+        detail: "Invalid password",
+        level: "WARN",
+      });
       return Response.json(
         { error: "Invalid credentials." },
         { status: 401 }
@@ -51,6 +67,15 @@ export async function POST(request: Request) {
     }
 
     if (user.isActive === false) {
+      await logAction({
+        userId: user._id,
+        username: user.username,
+        action: "LOGIN_FAILED",
+        category: "AUTH",
+        target: `user:${user.username}`,
+        detail: "Account disabled",
+        level: "WARN",
+      });
       return Response.json(
         { error: "Your account has been disabled. Please contact your administrator." },
         { status: 403 }
@@ -77,6 +102,7 @@ export async function POST(request: Request) {
     }
 
     const tz = user.timezone || "Asia/Jakarta";
+    const lang = user.language || "en_US";
 
     const token = await signToken({
       userId: user._id.toString(),
@@ -84,11 +110,29 @@ export async function POST(request: Request) {
       fullName: user.fullName,
       email: user.email,
       timezone: tz,
+      language: lang,
       roleUrls,
       roleIds,
-    });
+    }, rememberMe === true);
 
     const secureFlag = COOKIE_OPTIONS.secure ? "; Secure" : "";
+    const maxAge = getCookieMaxAge(rememberMe === true);
+
+    await logAction({
+      userId: user._id,
+      username: user.username,
+      action: "LOGIN",
+      category: "AUTH",
+      target: `user:${user.username}`,
+      detail: "Signed in successfully",
+    });
+
+    await createNotification({
+      userId: user._id.toString(),
+      type: "INFO",
+      title: "New sign-in",
+      message: `Signed in from ${ip}`,
+    });
 
     return Response.json(
       {
@@ -101,13 +145,15 @@ export async function POST(request: Request) {
       },
       {
         headers: [
-          ["Set-Cookie", `${COOKIE_NAME}=${token}; HttpOnly${secureFlag}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=${COOKIE_OPTIONS.path}; Max-Age=${COOKIE_OPTIONS.maxAge}`],
-          ["Set-Cookie", `tz=${tz}${secureFlag}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=/; Max-Age=${COOKIE_OPTIONS.maxAge}`],
+          ["Set-Cookie", `${COOKIE_NAME}=${token}; HttpOnly${secureFlag}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=${COOKIE_OPTIONS.path}; Max-Age=${maxAge}`],
+          ["Set-Cookie", `tz=${tz}${secureFlag}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=/; Max-Age=${maxAge}`],
+          ["Set-Cookie", `session_active=1; SameSite=${COOKIE_OPTIONS.sameSite}; Path=/; Max-Age=${maxAge}`],
         ],
       }
     );
   } catch (error) {
     console.error("Signin error:", error);
+    await logError(request, "LOGIN", "auth:signin", error, "AUTH");
     return Response.json(
       { error: "An unexpected error occurred. Please try again." },
       { status: 500 }

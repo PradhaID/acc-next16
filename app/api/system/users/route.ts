@@ -3,6 +3,8 @@ import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import bcrypt from "bcryptjs";
+import { createNotification } from "@/lib/notification";
+import { logAction, logError } from "@/lib/log";
 import type { SystemUser } from "@/lib/models";
 
 export async function GET(request: NextRequest) {
@@ -35,9 +37,21 @@ export async function GET(request: NextRequest) {
       .sort({ username: 1 })
       .toArray();
 
-    return Response.json(docs);
+    const groupIds = [...new Set(docs.map((u) => u.groupId).filter(Boolean))] as ObjectId[];
+    const groups = groupIds.length > 0
+      ? await db.collection("systemGroups").find({ _id: { $in: groupIds } }).toArray()
+      : [];
+    const groupNameMap = new Map(groups.map((g: any) => [g._id.toString(), g.name]));
+
+    const docsWithGroup = docs.map((u) => ({
+      ...u,
+      groupName: u.groupId ? groupNameMap.get(u.groupId.toString()) || null : null,
+    }));
+
+    return Response.json(docsWithGroup);
   } catch (error) {
     console.error("Users GET error:", error);
+    await logError(request, "LIST_USER", "system:users", error, "USER");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -49,7 +63,7 @@ export async function POST(request: NextRequest) {
     if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await request.json();
-    const { username, fullName, email, password, groupId, timezone, biography } = body;
+    const { username, fullName, email, password, groupId, timezone, biography, phone, language } = body;
 
     if (!username || !fullName || !email || !password) {
       return Response.json({ error: "Username, full name, email, and password are required." }, { status: 400 });
@@ -75,10 +89,12 @@ export async function POST(request: NextRequest) {
       username: username.toLowerCase(),
       fullName: fullName.trim(),
       email: email.toLowerCase(),
+      phone: phone?.trim() || null,
       password: hashedPassword,
       emailVerified: true,
       groupId: groupId ? new ObjectId(groupId) : null,
       timezone: timezone || "Asia/Jakarta",
+      language: language || "en_US",
       biography: biography || "",
       isActive: true,
       created: { at: now, by: adminId },
@@ -86,9 +102,27 @@ export async function POST(request: NextRequest) {
     });
 
     const createdUser = await users.findOne({ _id: userId }, { projection: { password: 0 } });
+
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "CREATE_USER",
+      category: "USER",
+      target: `user:${username.toLowerCase()}`,
+      detail: `Created user "${fullName}" (${email})`,
+    });
+
+    await createNotification({
+      userId: userId.toString(),
+      type: "INFO",
+      title: "Account created",
+      message: `Your account was created by ${session.username}`,
+    });
+
     return Response.json(createdUser, { status: 201 });
   } catch (error) {
     console.error("Users POST error:", error);
+    await logError(request, "CREATE_USER", "system:users", error, "USER");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -113,9 +147,12 @@ export async function PUT(request: NextRequest) {
 
     if (updateFields.fullName) setData.fullName = updateFields.fullName.trim();
     if (updateFields.email) setData.email = updateFields.email.toLowerCase();
+    if (updateFields.phone !== undefined) setData.phone = updateFields.phone?.trim() || null;
     if (updateFields.groupId !== undefined) setData.groupId = updateFields.groupId ? new ObjectId(updateFields.groupId) : null;
     if (updateFields.timezone !== undefined) setData.timezone = updateFields.timezone;
+    if (updateFields.language !== undefined) setData.language = updateFields.language || "en_US";
     if (updateFields.biography !== undefined) setData.biography = updateFields.biography;
+    if (updateFields.image !== undefined) setData.image = updateFields.image || null;
     if (updateFields.isActive !== undefined) setData.isActive = updateFields.isActive;
     if (updateFields.password) setData.password = await bcrypt.hash(updateFields.password, 12);
 
@@ -128,9 +165,19 @@ export async function PUT(request: NextRequest) {
       return Response.json({ error: "Not found." }, { status: 404 });
     }
 
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "EDIT_USER",
+      category: "USER",
+      target: `user:${_id}`,
+      detail: `Updated user ${_id}`,
+    });
+
     return Response.json({ message: "Updated." });
   } catch (error) {
     console.error("Users PUT error:", error);
+    await logError(request, "EDIT_USER", "system:users", error, "USER");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -149,9 +196,20 @@ export async function DELETE(request: NextRequest) {
     const db = await getDb();
     await db.collection<SystemUser>("systemUsers").deleteOne({ _id: new ObjectId(id) });
 
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "DELETE_USER",
+      category: "USER",
+      target: `user:${id}`,
+      detail: `Deleted user ${id}`,
+      level: "WARN",
+    });
+
     return Response.json({ message: "Deleted." });
   } catch (error) {
     console.error("Users DELETE error:", error);
+    await logError(request, "DELETE_USER", "system:users", error, "USER");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

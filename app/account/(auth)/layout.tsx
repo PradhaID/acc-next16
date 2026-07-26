@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ObjectId } from "mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
+import { getDb } from "@/lib/mongodb";
 import Sidebar from "@/components/Sidebar";
 
 export default async function AuthAccountLayout({
@@ -21,6 +23,12 @@ export default async function AuthAccountLayout({
     redirect("/account/signin");
   }
 
+  const db = await getDb();
+  const userDoc = await db.collection("systemUsers").findOne(
+    { _id: new ObjectId(payload.userId) },
+    { projection: { image: 1 } }
+  );
+
   return (
     <div className="flex min-h-screen bg-zinc-50 dark:bg-black">
       <Sidebar
@@ -28,6 +36,7 @@ export default async function AuthAccountLayout({
           username: payload.username,
           fullName: payload.fullName,
           email: payload.email,
+          image: userDoc?.image || null,
           roleUrls: payload.roleUrls || [],
         }}
       />

@@ -5,10 +5,13 @@ export interface SystemUser {
   username: string;
   fullName: string;
   email: string;
+  phone?: string | null;
+  image?: string | null;
   password: string;
   emailVerified: boolean;
   groupId: ObjectId | null;
   timezone: string;
+  language: string;
   biography?: string;
   isActive?: boolean;
   apiKey?: string;

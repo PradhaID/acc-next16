@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
+import { logAction, logError } from "@/lib/log";
 import crypto from "crypto";
 
 export async function POST(request: NextRequest) {
@@ -25,9 +26,19 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    await logAction({
+      userId: session.userId,
+      username: session.username,
+      action: "GENERATE_API_KEY",
+      category: "API_KEY",
+      target: `user:${session.username}`,
+      detail: "API key regenerated",
+    });
+
     return Response.json({ apiKey });
   } catch (error) {
     console.error("API key generate error:", error);
+    await logError(request, "GENERATE_API_KEY", `user:${request.cookies.get(COOKIE_NAME)?.value || "unknown"}`, error, "API_KEY");
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

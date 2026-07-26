@@ -199,7 +199,7 @@ export default function EditCOAPage() {
   if (pageLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
       </div>
     );
   }
@@ -215,7 +215,7 @@ export default function EditCOAPage() {
         subtitle={
           coa ? (
             <>
-              Editing: <span className="font-bold text-indigo-600">{coa.code} – {coa.name}</span>
+              Editing: <span className="font-bold text-emerald-600">{coa.code} – {coa.name}</span>
             </>
           ) : undefined
         }
@@ -231,7 +231,7 @@ export default function EditCOAPage() {
               type="submit"
               form="coa-edit-form"
               disabled={submitLoading || isDuplicateCode}
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-4 py-2 rounded-xl font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -261,7 +261,7 @@ export default function EditCOAPage() {
                 <select
                   value={parent}
                   onChange={(e) => handleParentChange(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold appearance-none cursor-pointer transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold appearance-none cursor-pointer transition-colors"
                 >
                   <option value="">— Top-level (Level 1) —</option>
                   {flattenCoa(parents, null, id).map((p) => {
@@ -312,7 +312,7 @@ export default function EditCOAPage() {
                   className={`w-full px-4 py-2.5 rounded-xl outline-none text-sm font-bold appearance-none transition-colors ${
                     parent
                       ? "bg-gray-100 dark:bg-gray-800 opacity-70 cursor-not-allowed"
-                      : "bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 cursor-pointer"
+                      : "bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 cursor-pointer"
                   }`}
                 >
                   {categories.map((cat) => (
@@ -352,7 +352,7 @@ export default function EditCOAPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   placeholder="Enter account name"
                   required
                 />
@@ -366,7 +366,7 @@ export default function EditCOAPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-indigo-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border border-transparent focus:border-emerald-500 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
                   placeholder="Optional description"
                   rows={3}
                 />
@@ -399,7 +399,7 @@ export default function EditCOAPage() {
         {/* Right column — info cards */}
         <div className="space-y-4">
           <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-3">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3">
               Category Logic
             </h3>
             <p className="text-gray-500 leading-relaxed italic text-xs mb-3">
@@ -416,7 +416,7 @@ export default function EditCOAPage() {
               ].map(({ digit, cat, pos }) => (
                 <div key={digit} className="flex items-center justify-between py-1 px-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{digit}xx</span>
+                    <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">{digit}xx</span>
                     <span className="text-gray-700 dark:text-gray-300 font-medium">{cat}</span>
                   </div>
                   <span className={`text-[9px] font-black uppercase px-1.5 py-0.5 rounded ${
@@ -432,7 +432,7 @@ export default function EditCOAPage() {
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-4 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm text-xs">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-indigo-600 mb-3">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3">
               Edit Information
             </h3>
             <p className="text-gray-500 leading-relaxed italic mb-3">

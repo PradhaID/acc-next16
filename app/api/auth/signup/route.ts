@@ -3,12 +3,19 @@ import { getDb } from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import { generateOtp, storeOtp } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/email";
+import { createNotification } from "@/lib/notification";
+import { logAction, logError } from "@/lib/log";
+import { rateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import type { SystemUser } from "@/lib/models";
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const rl = rateLimit(`signup:${ip}`, RATE_LIMITS.signup);
+  if (!rl.success) return rateLimitResponse(rl.resetMs);
+
   try {
     const body = await request.json();
-    const { username, fullName, email, password } = body;
+    const { username, fullName, email, phone, password } = body;
 
     if (!username || !fullName || !email || !password) {
       return Response.json(
@@ -85,10 +92,12 @@ export async function POST(request: Request) {
       username: trimmedUsername,
       fullName: trimmedFullName,
       email: trimmedEmail,
+      phone: phone?.trim() || null,
       password: hashedPassword,
       emailVerified: false,
       groupId: null,
       timezone: "Asia/Jakarta",
+      language: "en_US",
       created: { at: now, by: null },
       updated: { at: now, by: _id },
     });
@@ -97,6 +106,22 @@ export async function POST(request: Request) {
     const otp = generateOtp();
     await storeOtp(trimmedEmail, otp);
     await sendOtpEmail(trimmedEmail, otp);
+
+    await logAction({
+      userId: _id,
+      username: trimmedUsername,
+      action: "REGISTER",
+      category: "AUTH",
+      target: `user:${trimmedUsername}`,
+      detail: `New account registered: ${trimmedEmail}`,
+    });
+
+    await createNotification({
+      userId: _id.toString(),
+      type: "SUCCESS",
+      title: "Welcome aboard!",
+      message: "Your account has been created. Please verify your email to get started.",
+    });
 
     return Response.json(
       {
@@ -118,6 +143,7 @@ export async function POST(request: Request) {
     }
 
     console.error("Signup error:", error);
+    await logError(request, "REGISTER", "auth:signup", error, "AUTH");
     return Response.json(
       { error: "An unexpected error occurred. Please try again." },
       { status: 500 }

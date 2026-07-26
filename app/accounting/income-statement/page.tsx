@@ -433,7 +433,7 @@ export default function IncomeStatementPage() {
         <button
           onClick={handleView}
           disabled={loading}
-          className="px-5 py-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all hover:scale-105 active:scale-95"
+          className="px-5 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all hover:scale-105 active:scale-95"
         >
           {loading ? "Loading\u2026" : "View"}
         </button>
@@ -442,7 +442,7 @@ export default function IncomeStatementPage() {
           onClick={() => setShowCode((c) => !c)}
           className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all ${
             showCode
-              ? "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+              ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
               : "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           }`}
         >
@@ -474,7 +474,7 @@ export default function IncomeStatementPage() {
 
       {loading && (
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl py-20 text-center shadow-sm">
-          <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
       )}
 
@@ -539,7 +539,7 @@ export default function IncomeStatementPage() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => { const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }); window.open(URL.createObjectURL(blob)); }}
-                  className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[10px] font-black uppercase tracking-tight transition-all"
+                  className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[10px] font-black uppercase tracking-tight transition-all"
                 >
                   Download
                 </button>

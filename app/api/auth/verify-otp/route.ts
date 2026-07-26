@@ -1,9 +1,16 @@
 import { getDb } from "@/lib/mongodb";
 import { verifyOtp } from "@/lib/otp";
 import { signToken, COOKIE_NAME, COOKIE_OPTIONS } from "@/lib/auth";
+import { logAction, logError } from "@/lib/log";
+import { sendWelcomeEmail } from "@/lib/email";
+import { rateLimit, getClientIp, rateLimitResponse, RATE_LIMITS } from "@/lib/rate-limit";
 import type { SystemUser } from "@/lib/models";
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const rl = rateLimit(`otp:${ip}`, RATE_LIMITS.otp);
+  if (!rl.success) return rateLimitResponse(rl.resetMs);
+
   try {
     const body = await request.json();
     const { email, otp } = body;
@@ -69,6 +76,7 @@ export async function POST(request: Request) {
     }
 
     const tz = user.timezone || "Asia/Jakarta";
+    const lang = user.language || "en_US";
 
     const token = await signToken({
       userId: user._id.toString(),
@@ -76,9 +84,21 @@ export async function POST(request: Request) {
       fullName: user.fullName,
       email: user.email,
       timezone: tz,
+      language: lang,
       roleUrls,
       roleIds,
     });
+
+    await logAction({
+      userId: user._id,
+      username: user.username,
+      action: "EMAIL_VERIFY",
+      category: "AUTH",
+      target: `user:${user.username}`,
+      detail: `Email verified: ${trimmedEmail}`,
+    });
+
+    sendWelcomeEmail(trimmedEmail, user.fullName || user.username).catch(() => {});
 
     return Response.json(
       {
@@ -94,11 +114,13 @@ export async function POST(request: Request) {
         headers: [
           ["Set-Cookie", `${COOKIE_NAME}=${token}; HttpOnly; Secure=${COOKIE_OPTIONS.secure}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=${COOKIE_OPTIONS.path}; Max-Age=${COOKIE_OPTIONS.maxAge}`],
           ["Set-Cookie", `tz=${tz}; Secure=${COOKIE_OPTIONS.secure}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=/; Max-Age=${COOKIE_OPTIONS.maxAge}`],
+          ["Set-Cookie", `session_active=1; Secure=${COOKIE_OPTIONS.secure}; SameSite=${COOKIE_OPTIONS.sameSite}; Path=/; Max-Age=${COOKIE_OPTIONS.maxAge}`],
         ],
       }
     );
   } catch (error) {
     console.error("Verify OTP error:", error);
+    await logError(request, "EMAIL_VERIFY", "auth:verify-otp", error, "AUTH");
     return Response.json(
       { error: "An unexpected error occurred. Please try again." },
       { status: 500 }

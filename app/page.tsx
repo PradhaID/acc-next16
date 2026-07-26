@@ -112,13 +112,13 @@ export default function Home() {
           <nav className="flex items-center gap-4">
             <Link
               href="/doc/api/v1"
-              className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline"
             >
               API Docs
             </Link>
             <Link
               href="/account/signin"
-              className="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl transition-all"
+              className="text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl transition-all"
             >
               Sign In
             </Link>
@@ -128,7 +128,7 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-gray-200 dark:border-gray-800">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-white dark:from-indigo-950/10 dark:to-black" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-white dark:from-emerald-950/10 dark:to-black" />
         <div className="relative max-w-4xl mx-auto px-6 py-24 sm:py-32 text-center">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             Double-Entry Accounting
@@ -140,7 +140,7 @@ export default function Home() {
           <div className="mt-8 flex items-center justify-center gap-3">
             <Link
               href="/account/signin"
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/20 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
             >
               Sign In
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -149,7 +149,7 @@ export default function Home() {
             </Link>
             <Link
               href="/doc/api/v1"
-              className="inline-flex items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-700 text-gray-700 dark:text-gray-300 px-6 py-2.5 rounded-xl font-bold text-sm transition-all"
+              className="inline-flex items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 text-gray-700 dark:text-gray-300 px-6 py-2.5 rounded-xl font-bold text-sm transition-all"
             >
               API Documentation
             </Link>
@@ -167,10 +167,10 @@ export default function Home() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors"
+              className="bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors"
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
                   {f.icon}
                 </div>
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white">{f.title}</h3>
