@@ -35,20 +35,63 @@ export async function verifyToken(
     if (!userId) return null;
 
     const db = await getDb();
-    const user = await db.collection("systemUsers").findOne({ _id: new ObjectId(userId) });
+    let userQueryId: any = userId;
+    try {
+      if (ObjectId.isValid(userId)) {
+        userQueryId = new ObjectId(userId);
+      }
+    } catch {}
+    
+    const user = await db.collection("systemUsers").findOne({
+      $or: [
+        { _id: userId },
+        { _id: userQueryId }
+      ]
+    });
     if (!user || user.isActive === false) return null;
 
     let roleUrls: string[] = [];
     let roleIds: string[] = [];
 
     if (user.groupId) {
-      const groupDoc = await db.collection("systemGroups").findOne({ _id: user.groupId });
+      let groupQueryId: any = user.groupId;
+      try {
+        if (ObjectId.isValid(user.groupId)) {
+          groupQueryId = new ObjectId(user.groupId);
+        }
+      } catch {}
+
+      const groupDoc = await db.collection("systemGroups").findOne({
+        $or: [
+          { _id: user.groupId },
+          { _id: groupQueryId }
+        ]
+      });
+
       if (groupDoc && groupDoc.isActive !== false) {
-        const joins = await db.collection("systemGroupHasRole").find({ groupId: user.groupId }).toArray();
+        const joins = await db.collection("systemGroupHasRole").find({
+          $or: [
+            { groupId: groupDoc._id },
+            { groupId: groupDoc._id.toString() },
+            { groupId: user.groupId }
+          ]
+        }).toArray();
         const joinedRoleIds = joins.map((j) => j.roleId);
         roleIds = joinedRoleIds.map((id) => id.toString());
         if (joinedRoleIds.length > 0) {
-          const roleDocList = await db.collection("systemRoles").find({ _id: { $in: roleIds as unknown as ObjectId[] } }).toArray();
+          const roleObjectIds = joinedRoleIds.map(id => {
+            try {
+              return ObjectId.isValid(id.toString()) ? new ObjectId(id.toString()) : id;
+            } catch {
+              return id;
+            }
+          });
+          const roleDocList = await db.collection("systemRoles").find({
+            $or: [
+              { _id: { $in: joinedRoleIds } },
+              { _id: { $in: roleObjectIds } }
+            ]
+          }).toArray();
           roleUrls = roleDocList.filter((r) => r.url).map((r) => r.url);
         }
       }

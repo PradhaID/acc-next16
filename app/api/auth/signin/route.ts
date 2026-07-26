@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 import { signToken, COOKIE_NAME, COOKIE_OPTIONS, getCookieMaxAge } from "@/lib/auth";
 import { createNotification } from "@/lib/notification";
@@ -85,19 +86,53 @@ export async function POST(request: Request) {
     let roleUrls: string[] = [];
     let roleIds: string[] = [];
     if (user.groupId) {
-      const groupDoc = await db.collection("systemGroups").findOne({ _id: user.groupId });
+      let groupQueryId: any = user.groupId;
+      try {
+        if (ObjectId.isValid(user.groupId)) {
+          groupQueryId = new ObjectId(user.groupId);
+        }
+      } catch {}
+
+      const groupDoc = await db.collection("systemGroups").findOne({
+        $or: [
+          { _id: user.groupId },
+          { _id: groupQueryId }
+        ]
+      });
+
       if (groupDoc && groupDoc.isActive === false) {
         return Response.json(
           { error: "Your account has been disabled. Please contact your administrator." },
           { status: 403 }
         );
       }
-      const joins = await db.collection("systemGroupHasRole").find({ groupId: user.groupId }).toArray();
-      const joinedRoleIds = joins.map((j) => j.roleId);
-      roleIds = joinedRoleIds.map((id) => id.toString());
-      if (joinedRoleIds.length > 0) {
-        const roleDocList = await db.collection("systemRoles").find({ _id: { $in: joinedRoleIds } }).toArray();
-        roleUrls = roleDocList.filter((r) => r.url).map((r) => r.url);
+
+      if (groupDoc) {
+        const joins = await db.collection("systemGroupHasRole").find({
+          $or: [
+            { groupId: groupDoc._id },
+            { groupId: groupDoc._id.toString() },
+            { groupId: user.groupId }
+          ]
+        }).toArray();
+        const joinedRoleIds = joins.map((j) => j.roleId);
+        roleIds = joinedRoleIds.map((id) => id.toString());
+        if (joinedRoleIds.length > 0) {
+          const roleObjectIds = joinedRoleIds.map(id => {
+            try {
+              return ObjectId.isValid(id.toString()) ? new ObjectId(id.toString()) : id;
+            } catch {
+              return id;
+            }
+          });
+          const roleDocList = await db.collection("systemRoles").find({
+            $or: [
+              { _id: { $in: joinedRoleIds } },
+              { _id: { $in: roleObjectIds } }
+            ]
+          }).toArray();
+          roleUrls = roleDocList.filter((r) => r.url).map((r) => r.url);
+        }
       }
     }
 
