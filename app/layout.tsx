@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings();
-  const name = s.app_name || "boilerplate-next16";
+  const name = s.app_name || "Pradha Finance";
   const url = s.app_url || "http://localhost:3000";
   const desc = s.app_description || "A modern SaaS boilerplate built with Next.js 16, Tailwind CSS v4, MongoDB, and RBAC.";
 
@@ -96,9 +96,9 @@ export default async function RootLayout({
   const s = await getSettings();
   console.log("RootLayout settings keys:", Object.keys(s), "app_name value:", s.app_name);
   const settings = {
-    app_name: s.app_name || "boilerplate-next16",
+    app_name: s.app_name || "Pradha Finance",
     app_url: s.app_url || "http://localhost:3000",
-    app_title: s.app_title || "boilerplate-next16",
+    app_title: s.app_title || "Pradha Finance",
     app_description: s.app_description || "",
     app_slogan: s.app_slogan || "",
     app_keywords: Array.isArray(s.app_keywords) ? s.app_keywords : [],

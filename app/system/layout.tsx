@@ -25,8 +25,20 @@ export default async function SystemLayout({
   }
 
   const db = await getDb();
+  let userQueryId: any = payload.userId;
+  try {
+    if (ObjectId.isValid(payload.userId)) {
+      userQueryId = new ObjectId(payload.userId);
+    }
+  } catch {}
+  
   const userDoc = await db.collection("systemUsers").findOne(
-    { _id: new ObjectId(payload.userId) },
+    {
+      $or: [
+        { _id: payload.userId },
+        { _id: userQueryId }
+      ]
+    },
     { projection: { image: 1 } }
   );
 

@@ -39,7 +39,7 @@ export async function generateOgImage(opts: {
     imageUrl?: string;
     brand?: string;
 }): Promise<Buffer> {
-    const { title, siteName = "boilerplate-next16", imageUrl, brand = "B" } = opts;
+    const { title, siteName = "Pradha Finance", imageUrl, brand = "B" } = opts;
     const lines = wrapTitle(title);
 
     const titleSvg = lines

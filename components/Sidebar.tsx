@@ -227,7 +227,7 @@ export default function Sidebar({ user }: SidebarProps) {
         <div className={`flex items-center justify-between border-b border-zinc-200 py-4 dark:border-white/[0.08] ${collapsed ? "md:justify-center md:px-0" : "px-4"}`}>
           <Link href="/" className="flex items-center">
             <img src="/img/logo.webp" alt="Logo" width="32" height="32" className="h-8 w-8 rounded-lg object-contain shrink-0" />
-            {!collapsed && <span className="ml-3 text-sm font-bold text-stone-900 dark:text-white">{settings.app_name || process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}</span>}
+            {!collapsed && <span className="ml-3 text-sm font-bold text-stone-900 dark:text-white">{settings.app_name || process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}</span>}
           </Link>
           {!collapsed && (
             <div className="flex items-center gap-1">

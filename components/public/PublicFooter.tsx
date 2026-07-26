@@ -29,7 +29,7 @@ export default async function PublicFooter() {
           <Link href="/" className="flex items-center gap-3">
             <img src="/img/logo.webp" alt="Logo" width="32" height="32" className="h-8 w-8 rounded-lg object-contain shadow-sm" />
             <span className="text-sm font-bold text-stone-900 dark:text-white">
-              {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
+              {process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
             </span>
           </Link>
           <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-stone-500 dark:text-stone-400">
@@ -46,7 +46,7 @@ export default async function PublicFooter() {
         </div>
         <div className="mt-8 border-t border-stone-100 dark:border-stone-800 pt-6 text-center">
           <p className="text-xs text-stone-400 dark:text-stone-500">
-            &copy; {year} {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}. All rights reserved.
+            &copy; {year} {process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}. All rights reserved.
           </p>
         </div>
       </div>

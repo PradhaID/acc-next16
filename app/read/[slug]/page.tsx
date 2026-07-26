@@ -96,7 +96,7 @@ export default async function ReadPostPage({
       : undefined,
     publisher: {
       "@type": "Organization",
-      name: s.app_name || "boilerplate-next16",
+      name: s.app_name || "Pradha Finance",
     },
     keywords: post.tags?.join(", ") || undefined,
     articleSection: post.categories?.map((c: any) => c.name) || undefined,

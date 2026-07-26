@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
     const buf = await generateOgImage({
         title,
-        siteName: s.app_name || "boilerplate-next16",
+        siteName: s.app_name || "Pradha Finance",
         imageUrl: img,
         brand: "B",
     });

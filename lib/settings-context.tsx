@@ -28,9 +28,9 @@ export interface AppSettings {
 }
 
 const defaultSettings: AppSettings = {
-  app_name: "boilerplate-next16",
+  app_name: "Pradha Finance",
   app_url: "http://localhost:3000",
-  app_title: "boilerplate-next16",
+  app_title: "Pradha Finance",
   app_description: "",
   app_slogan: "",
   app_keywords: [],
