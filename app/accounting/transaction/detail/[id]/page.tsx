@@ -100,6 +100,9 @@ export default function TransactionDetailPage({
   const [errorMsg, setErrorMsg] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadDescription, setUploadDescription] = useState("");
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -201,17 +204,29 @@ export default function TransactionDetailPage({
     }
   };
 
-  const handleUploadEvidence = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!canUploadEvidence) return;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setSelectedFile(file);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    if (file.type.startsWith("image/")) {
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setPreviewUrl("");
+    }
+  };
+
+  const handleUploadEvidence = async () => {
+    if (!canUploadEvidence || !selectedFile) return;
 
     setUploading(true);
     setErrorMsg("");
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", selectedFile);
       formData.append("transactionId", id);
       if (uploadDescription.trim()) {
         formData.append("description", uploadDescription.trim());
@@ -224,7 +239,7 @@ export default function TransactionDetailPage({
 
       if (res.ok) {
         refetch();
-        setUploadDescription("");
+        closeUploadModal();
         setSuccessBanner("Evidence uploaded successfully.");
       } else {
         const d = await res.json();
@@ -234,8 +249,17 @@ export default function TransactionDetailPage({
       setErrorMsg("Failed to upload evidence.");
     } finally {
       setUploading(false);
-      e.target.value = "";
     }
+  };
+
+  const closeUploadModal = () => {
+    setShowUploadModal(false);
+    setSelectedFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl("");
+    }
+    setUploadDescription("");
   };
 
   const totals = (transaction?.details || []).reduce(
@@ -486,38 +510,15 @@ export default function TransactionDetailPage({
               {/* Upload evidence section */}
               {canUploadEvidence && (
                 <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/20">
-                  <p className="text-[9px] font-black uppercase tracking-wider text-gray-400 mb-2">Upload New Evidence</p>
-                  <div className="space-y-2">
-                    <input
-                      type="text"
-                      placeholder="Description (optional)..."
-                      value={uploadDescription}
-                      onChange={(e) => setUploadDescription(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                    />
-                    <label className="flex items-center justify-center gap-2 px-4 py-2 border border-dashed border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-xl cursor-pointer hover:bg-white dark:hover:bg-gray-900/50 transition-all text-xs font-bold text-gray-500 hover:text-indigo-600 dark:text-gray-400">
-                      {uploading ? (
-                        <>
-                          <div className="h-3 w-3 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
-                          Uploading...
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-                          </svg>
-                          Choose File
-                        </>
-                      )}
-                      <input
-                        type="file"
-                        className="hidden"
-                        onChange={handleUploadEvidence}
-                        disabled={uploading}
-                        accept="image/*,application/pdf"
-                      />
-                    </label>
-                  </div>
+                  <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+                    </svg>
+                    Upload New Evidence
+                  </button>
                 </div>
               )}
             </div>
@@ -772,6 +773,106 @@ export default function TransactionDetailPage({
                 className="px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Modal Upload Evidence */}
+      {showUploadModal && (
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-lg w-full p-6 overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-700/50">
+              <h3 className="text-lg font-bold text-gray-905 dark:text-white">Upload New Evidence</h3>
+              <button onClick={closeUploadModal} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-gray-400 hover:text-gray-600">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 space-y-4">
+              {/* File Dropzone/Input */}
+              {!selectedFile ? (
+                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-2xl p-8 cursor-pointer hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-all text-center">
+                  <svg className="w-10 h-10 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+                  </svg>
+                  <span className="text-sm font-bold text-gray-700 dark:text-gray-300">Choose file or drag & drop</span>
+                  <span className="text-xs text-gray-400 mt-1">Image or PDF up to 10MB</span>
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    accept="image/*,application/pdf"
+                  />
+                </label>
+              ) : (
+                <div className="space-y-4">
+                  {/* File preview card */}
+                  <div className="relative rounded-2xl border border-gray-200 dark:border-gray-700 p-4 bg-gray-50 dark:bg-gray-800/50 flex items-center gap-3">
+                    {previewUrl ? (
+                      <div className="w-16 h-16 rounded-xl overflow-hidden border border-gray-150 dark:border-gray-700 shrink-0">
+                        <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                    ) : (
+                      <div className="w-16 h-16 rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/50 flex items-center justify-center shrink-0">
+                        <svg className="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+                          <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375h1.875a5.23 5.23 0 0 1 3.434 1.279 9.039 9.039 0 0 0-6.963-6.963Z" fill="red" />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{selectedFile.name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                    </div>
+                    <button
+                      onClick={() => { setSelectedFile(null); setPreviewUrl(""); }}
+                      className="p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Description Input */}
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-black uppercase tracking-wider text-gray-400">Description</label>
+                    <textarea
+                      placeholder="Add description for this evidence..."
+                      value={uploadDescription}
+                      onChange={(e) => setUploadDescription(e.target.value)}
+                      rows={3}
+                      className="w-full px-4 py-2.5 text-xs bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-4 border-t border-gray-100 dark:border-gray-700/50 flex gap-3">
+              <button
+                onClick={handleUploadEvidence}
+                disabled={uploading || !selectedFile}
+                className="flex-1 bg-indigo-600 text-white py-3 rounded-2xl font-bold hover:bg-indigo-700 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {uploading ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Uploading...
+                  </>
+                ) : (
+                  "Submit Evidence"
+                )}
+              </button>
+              <button
+                onClick={closeUploadModal}
+                disabled={uploading}
+                className="flex-1 bg-gray-100 dark:bg-gray-700 py-3 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-all active:scale-95 text-gray-700 dark:text-gray-300"
+              >
+                Cancel
               </button>
             </div>
           </div>
