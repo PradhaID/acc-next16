@@ -467,21 +467,21 @@ export default async function DashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0 pt-1 overflow-hidden">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-bold text-stone-900 dark:text-stone-100 break-words">
+                      <span className="text-sm font-bold text-stone-900 dark:text-stone-100 break-all">
                         {formatActionLabel(log.action)}
                       </span>
-                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border ${getActivityColor(log.category, log.level)}`}>
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border ${getActivityColor(log.category, log.level)} shrink-0`}>
                         {log.category}
                       </span>
                     </div>
                     {log.detail && (
-                      <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 break-words">
+                      <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 break-all">
                         {log.detail}
                       </p>
                     )}
                     <div className="mt-1.5 flex items-center gap-3 text-[10px] text-stone-400 dark:text-stone-500 flex-wrap">
-                      <span className="font-medium">@{log.username}</span>
-                      <span>{formatRelativeTime(log.created.at)}</span>
+                      <span className="font-medium break-all">@{log.username}</span>
+                      <span className="shrink-0">{formatRelativeTime(log.created.at)}</span>
                     </div>
                   </div>
                 </div>
