@@ -2,14 +2,122 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
 import { formatCurrency } from "@/lib/format";
+import { getDb } from "@/lib/mongodb";
+import Link from "next/link";
+import type { SystemLog } from "@/lib/models/system/log";
+import { formatRelativeTime } from "@/lib/time";
+import { hasAccess } from "@/lib/role-check";
+import { getDictionary, translate } from "@/lib/i18n";
 
-async function fetchJson(url: string) {
+async function fetchJson(url: string, token: string) {
   try {
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, { 
+      cache: "no-store",
+      headers: { Cookie: `${COOKIE_NAME}=${token}` }
+    });
     return res.ok ? await res.json() : null;
   } catch {
     return null;
   }
+}
+
+function getActivityIcon(category: string, action: string) {
+  const iconClass = "w-4 h-4";
+
+  switch (category) {
+    case "AUTH":
+      if (action === "LOGIN" || action === "LOGIN_FAILED") {
+        return (
+          <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+          </svg>
+        );
+      }
+      if (action === "REGISTER") {
+        return (
+          <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3M2.25 12a9.75 9.75 0 1 1 19.5 0 9.75 9.75 0 0 1-19.5 0Z" />
+          </svg>
+        );
+      }
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+        </svg>
+      );
+
+    case "USER":
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+        </svg>
+      );
+
+    case "GROUP":
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.97 5.97 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+        </svg>
+      );
+
+    case "CONTENT":
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v3.75m-18 0A2.25 2.25 0 0 0 5.25 12h13.5M3 9.75h18" />
+        </svg>
+      );
+
+    case "SETTINGS":
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c-.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+      );
+
+    case "REDIRECT":
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+      );
+
+    default:
+      return (
+        <svg className={iconClass} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>
+      );
+  }
+}
+
+function getActivityColor(category: string, level: string) {
+  if (level === "ERROR") return "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 border-red-200 dark:border-red-800/50";
+  if (level === "WARN") return "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400 border-amber-200 dark:border-amber-800/50";
+
+  switch (category) {
+    case "AUTH":
+      return "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50";
+    case "USER":
+      return "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50";
+    case "GROUP":
+      return "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50";
+    case "CONTENT":
+      return "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50";
+    case "SETTINGS":
+      return "bg-stone-100 text-stone-600 dark:bg-stone-500/10 dark:text-stone-400 border-stone-200 dark:border-stone-700/50";
+    case "REDIRECT":
+      return "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50";
+    default:
+      return "bg-stone-100 text-stone-600 dark:bg-stone-500/10 dark:text-stone-400 border-stone-200 dark:border-stone-700/50";
+  }
+}
+
+function formatActionLabel(action: string): string {
+  return action
+    .split("_")
+    .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
+    .join(" ");
 }
 
 export default async function DashboardPage() {
@@ -27,13 +135,15 @@ export default async function DashboardPage() {
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const headers = { Cookie: `session=${token}` };
+  const roleUrls = payload.roleUrls || [];
+  const dict = getDictionary(payload.language);
+  const t = (path: string) => translate(dict, path);
 
   const [coas, accounts, txnsConfirmed, closingRes] = await Promise.all([
-    fetchJson(`${baseUrl}/api/accounting/coa`),
-    fetchJson(`${baseUrl}/api/accounting/account?all=true`),
-    fetchJson(`${baseUrl}/api/accounting/transaction?status=Confirmed`),
-    fetchJson(`${baseUrl}/api/accounting/balance-sheet`),
+    fetchJson(`${baseUrl}/api/accounting/coa`, token),
+    fetchJson(`${baseUrl}/api/accounting/account?all=true`, token),
+    fetchJson(`${baseUrl}/api/accounting/transaction?status=Confirmed`, token),
+    fetchJson(`${baseUrl}/api/accounting/balance-sheet`, token),
   ]);
 
   const coaCount = Array.isArray(coas) ? coas.length : 0;
@@ -44,7 +154,76 @@ export default async function DashboardPage() {
   const totalLiabilities = closingRes?.totalLiabilities ?? 0;
   const totalEquity = closingRes?.totalEquity ?? 0;
 
-  const stats = [
+  let userCount = 0;
+  let groupCount = 0;
+  let recentUsers: any[] = [];
+  let recentGroups: any[] = [];
+  let recentLogs: SystemLog[] = [];
+  let postCount = 0;
+  let pageCount = 0;
+  let recentPublishedContent: any[] = [];
+  let activeSessionsCount = 0;
+
+  try {
+    const db = await getDb();
+    userCount = await db.collection("systemUsers").countDocuments();
+    groupCount = await db.collection("systemGroups").countDocuments();
+
+    recentUsers = await db
+      .collection("systemUsers")
+      .find({}, { projection: { password: 0 } })
+      .sort({ "created.at": -1 })
+      .limit(5)
+      .toArray();
+
+    recentGroups = await db
+      .collection("systemGroups")
+      .find({})
+      .sort({ "created.at": -1 })
+      .limit(5)
+      .toArray();
+
+    recentLogs = await db
+      .collection<SystemLog>("systemLogs")
+      .find({})
+      .sort({ "created.at": -1 })
+      .limit(10)
+      .toArray();
+
+    postCount = await db.collection("contentPosts").countDocuments({ status: "published" });
+    pageCount = await db.collection("contentPages").countDocuments({ status: "published" });
+
+    const recentPosts = await db
+      .collection("contentPosts")
+      .find({ status: "published" })
+      .sort({ "published.at": -1 })
+      .limit(3)
+      .toArray();
+
+    const recentPages = await db
+      .collection("contentPages")
+      .find({ status: "published" })
+      .sort({ "published.at": -1 })
+      .limit(2)
+      .toArray();
+
+    recentPublishedContent = [
+      ...recentPosts.map((p: any) => ({ ...p, type: "post" })),
+      ...recentPages.map((p: any) => ({ ...p, type: "page" })),
+    ].sort((a, b) => new Date(b.published?.at || b.created.at).getTime() - new Date(a.published?.at || a.created.at).getTime()).slice(0, 5);
+
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    activeSessionsCount = await db
+      .collection("systemLogs")
+      .countDocuments({
+        action: "LOGIN",
+        "created.at": { $gte: oneDayAgo },
+      });
+  } catch (error) {
+    console.error("Dashboard DB fetch error:", error);
+  }
+
+  const financeStats = [
     {
       label: "Chart of Accounts",
       value: coaCount,
@@ -54,6 +233,7 @@ export default async function DashboardPage() {
         </svg>
       ),
       color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
+      description: "Standard bookkeeping codes",
     },
     {
       label: "Accounts",
@@ -64,6 +244,7 @@ export default async function DashboardPage() {
         </svg>
       ),
       color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
+      description: "Financial ledger accounts",
     },
     {
       label: "Confirmed Transactions",
@@ -74,56 +255,240 @@ export default async function DashboardPage() {
         </svg>
       ),
       color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
+      description: "Verified journal postings",
     },
   ];
 
-  const financialStats = [
-    { label: "Total Assets", value: totalAssets, color: "text-sky-600" },
-    { label: "Total Liabilities", value: totalLiabilities, color: "text-emerald-600" },
-    { label: "Total Equity", value: totalEquity, color: "text-violet-600" },
+  const systemStats = [
+    {
+      label: "System Users",
+      labelKey: "dashboard.stats.users",
+      value: userCount,
+      description: "Registered accounts",
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.947 11.947 0 0 1 12 20.25a11.947 11.947 0 0 1-3-1.013v-.11c0-1.112-.285-2.16-.786-3.07M12 19.125v-.003c0-1.113-.285-2.16-.786-3.07M12 19.125A12.134 12.134 0 0 0 14.25 15m0 0a8.961 8.961 0 0 0 3-2.924M14.25 15a8.961 8.961 0 0 1-3-2.924M11.25 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM18.6 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM12 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+      ),
+      color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
+    },
+    {
+      label: "Active Groups",
+      labelKey: "dashboard.stats.groups",
+      value: groupCount,
+      description: "Permission groupings",
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.97 5.97 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+        </svg>
+      ),
+      color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
+    },
+    {
+      label: "Active Sessions",
+      labelKey: "dashboard.stats.sessions",
+      value: activeSessionsCount,
+      description: "Logins in last 24h",
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+        </svg>
+      ),
+      color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
+    },
+  ];
+
+  const balanceStats = [
+    { label: "Total Assets", value: totalAssets, color: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Total Liabilities", value: totalLiabilities, color: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Total Equity", value: totalEquity, color: "text-emerald-600 dark:text-emerald-400" },
   ];
 
   return (
-    <div className="max-w-full mx-auto space-y-6">
+    <div className="max-w-full mx-auto space-y-8 pb-10 overflow-hidden">
+      {/* Welcome Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-white">
+        <h1 className="text-3xl font-extrabold tracking-tight text-stone-900 dark:text-white">
           Welcome, {payload.fullName}
         </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Here&apos;s an overview of your accounting data.
+        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+          Here is a unified overview of your system reports and financial statements.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {stats.map((stat) => (
-          <div key={stat.label} className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className={`flex items-center justify-center w-12 h-12 rounded-xl ${stat.color}`}>
-                {stat.icon}
+      {/* Financial Reports Summary Stats */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-black uppercase tracking-widest text-stone-500 dark:text-stone-400">Financial Reports Overview</h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {financeStats.map((stat) => (
+            <div key={stat.label} className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm flex flex-col justify-between">
+              <div className="flex items-center gap-4">
+                <div className={`flex items-center justify-center w-12 h-12 rounded-xl ${stat.color}`}>
+                  {stat.icon}
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">{stat.label}</p>
+                  <p className="text-3xl font-black text-stone-900 dark:text-white mt-0.5">
+                    {stat.value}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{stat.label}</p>
-                <p className="text-3xl font-black text-gray-900 dark:text-white mt-0.5">
-                  {stat.value}
-                </p>
-              </div>
+              <p className="text-[10px] text-stone-500 mt-3">{stat.description}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700/50 shadow-sm">
-        <h2 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-4">Balance Snapshot</h2>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {financialStats.map((stat) => (
-            <div key={stat.label}>
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{stat.label}</p>
-              <p className={`text-xl font-black mt-0.5 font-mono ${stat.color}`}>
+      {/* Balance Snapshot */}
+      <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
+        <h2 className="text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-4">Balance Sheet Snapshot</h2>
+        <div className="grid gap-6 sm:grid-cols-3">
+          {balanceStats.map((stat) => (
+            <div key={stat.label} className="border-l-4 border-emerald-500 pl-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">{stat.label}</p>
+              <p className={`text-2xl font-black mt-1 font-mono ${stat.color}`}>
                 {formatCurrency(stat.value)}
               </p>
             </div>
           ))}
         </div>
+      </div>
+
+      {/* System Stats Cards */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-black uppercase tracking-widest text-stone-500 dark:text-stone-400">System Activity Overview</h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {systemStats.map((stat) => (
+            <div key={stat.label} className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm flex flex-col justify-between">
+              <div className="flex items-center justify-between gap-4 mb-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-stone-400 truncate">{t(stat.labelKey)}</span>
+                <div className={`flex items-center justify-center w-8 h-8 rounded-lg ${stat.color} shrink-0`}>
+                  {stat.icon}
+                </div>
+              </div>
+              <div>
+                <p className="text-2xl font-black text-stone-900 dark:text-white">{stat.value}</p>
+                <p className="text-[10px] text-stone-500 mt-1 truncate">{stat.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-white dark:bg-stone-900/80 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
+        <h2 className="text-xs font-black uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-4">Quick Shortcuts</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {hasAccess("/accounting/transaction/add", roleUrls) && (
+            <Link
+              href="/accounting/transaction/add"
+              className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-700/50 hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group"
+            >
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-stone-700 dark:text-stone-300">Add Transaction</span>
+            </Link>
+          )}
+          {hasAccess("/accounting/coa/add", roleUrls) && (
+            <Link
+              href="/accounting/coa/add"
+              className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-700/50 hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group"
+            >
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-stone-700 dark:text-stone-300">New CoA Code</span>
+            </Link>
+          )}
+          {hasAccess("/system/users/add", roleUrls) && (
+            <Link
+              href="/system/users/add"
+              className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-700/50 hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group"
+            >
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-stone-700 dark:text-stone-300">Add User</span>
+            </Link>
+          )}
+          {hasAccess("/system/logs", roleUrls) && (
+            <Link
+              href="/system/logs"
+              className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-700/50 hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group"
+            >
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-stone-700 dark:text-stone-300">System Logs</span>
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Activity Feed */}
+      <div className="bg-white dark:bg-stone-900/80 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
+        <div className="flex items-center justify-between pb-4 border-b border-stone-200 dark:border-stone-700/50 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10">
+              <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </div>
+            <h2 className="text-xs font-black uppercase tracking-widest text-stone-500 dark:text-stone-400">Activity Feed</h2>
+          </div>
+          {hasAccess("/system/logs", roleUrls) && (
+            <Link href="/system/logs" className="text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-450">
+              View All Logs
+            </Link>
+          )}
+        </div>
+
+        {recentLogs.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-sm text-stone-500 dark:text-stone-400">No recent activity</p>
+          </div>
+        ) : (
+          <div className="relative">
+            <div className="absolute left-5 top-0 bottom-0 w-px bg-stone-200 dark:bg-stone-700/50" />
+            <div className="space-y-1">
+              {recentLogs.map((log) => (
+                <div key={log._id.toString()} className="relative flex items-start gap-4 py-3 px-2 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group">
+                  <div className={`relative z-10 flex items-center justify-center w-10 h-10 rounded-full border-2 ${getActivityColor(log.category, log.level)} shrink-0`}>
+                    {getActivityIcon(log.category, log.action)}
+                  </div>
+                  <div className="flex-1 min-w-0 pt-1 overflow-hidden">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-bold text-stone-900 dark:text-stone-100 break-words">
+                        {formatActionLabel(log.action)}
+                      </span>
+                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border ${getActivityColor(log.category, log.level)}`}>
+                        {log.category}
+                      </span>
+                    </div>
+                    {log.detail && (
+                      <p className="mt-1 text-xs text-stone-500 dark:text-stone-400 break-words">
+                        {log.detail}
+                      </p>
+                    )}
+                    <div className="mt-1.5 flex items-center gap-3 text-[10px] text-stone-400 dark:text-stone-500 flex-wrap">
+                      <span className="font-medium">@{log.username}</span>
+                      <span>{formatRelativeTime(log.created.at)}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
