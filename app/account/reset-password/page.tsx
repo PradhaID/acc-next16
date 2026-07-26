@@ -5,12 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import PasswordStrength from "@/components/ui/PasswordStrength";
+import { useSettings } from "@/lib/settings-context";
 
 const DIGIT_COUNT = 6;
 
 function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const settings = useSettings();
   const identifier = searchParams.get("identifier") || "";
   const method = searchParams.get("method") || "email";
 
@@ -169,7 +171,7 @@ function ResetPasswordForm() {
           <Link href="/" className="flex items-center gap-3">
             <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
             <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
-              {process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
+              {settings.app_name || process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
             </span>
           </Link>
         </div>

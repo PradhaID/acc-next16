@@ -7,10 +7,12 @@ import { UserIcon, LockClosedIcon, EnvelopeIcon } from "@heroicons/react/24/soli
 import PhoneInput from "@/components/ui/PhoneInput";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 import { useT } from "@/components/LanguageProvider";
+import { useSettings } from "@/lib/settings-context";
 
 export default function SignUpPage() {
   const router = useRouter();
   const t = useT();
+  const settings = useSettings();
   const [signupAllowed, setSignupAllowed] = useState<boolean | null>(null);
   const [form, setForm] = useState({
     username: "",
@@ -77,7 +79,7 @@ export default function SignUpPage() {
         <Link href="/" className="flex items-center gap-3">
           <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
           <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
-            {process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
+            {settings.app_name || process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
           </span>
         </Link>
       </div>

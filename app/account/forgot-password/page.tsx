@@ -4,10 +4,12 @@ import { useState, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useT } from "@/components/LanguageProvider";
+import { useSettings } from "@/lib/settings-context";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const t = useT();
+  const settings = useSettings();
   const [identifier, setIdentifier] = useState("");
   const [method, setMethod] = useState<"email" | "whatsapp">("email");
   const [error, setError] = useState("");
@@ -69,7 +71,7 @@ export default function ForgotPasswordPage() {
         <Link href="/" className="flex items-center gap-3">
           <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
           <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
-            {process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
+            {settings.app_name || process.env.NEXT_PUBLIC_APP_NAME || "Pradha Finance"}
           </span>
         </Link>
       </div>
