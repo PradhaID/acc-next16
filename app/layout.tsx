@@ -94,6 +94,7 @@ export default async function RootLayout({
   const locale = isLocale(session?.language) ? session!.language : DEFAULT_LOCALE;
 
   const s = await getSettings();
+  console.log("RootLayout settings keys:", Object.keys(s), "app_name value:", s.app_name);
   const settings = {
     app_name: s.app_name || "boilerplate-next16",
     app_url: s.app_url || "http://localhost:3000",
