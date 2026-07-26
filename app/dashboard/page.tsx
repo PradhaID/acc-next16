@@ -1096,7 +1096,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ═══════════════ ACTIVITY FEED ═══════════════ */}
-      <div className="rounded-2xl bg-white dark:bg-stone-900/80 border border-stone-200/60 dark:border-stone-700/40 p-6">
+      <div className="rounded-2xl bg-white dark:bg-stone-900/80 border border-stone-200/60 dark:border-stone-700/40 p-6 overflow-hidden">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center">
@@ -1120,7 +1120,7 @@ export default async function DashboardPage() {
         ) : (
           <div className="space-y-0.5">
             {recentLogs.map((log) => (
-              <div key={log._id.toString()} className="flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group">
+              <div key={log._id.toString()} className="flex items-start gap-3 py-2.5 px-3 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group">
                 <div className={`flex items-center justify-center w-7 h-7 rounded-full border ${getActivityColor(log.category, log.level)} shrink-0`}>
                   {getActivityIcon(log.category, log.action)}
                 </div>
@@ -1134,7 +1134,7 @@ export default async function DashboardPage() {
                     </span>
                   </div>
                   {log.detail && (
-                    <p className="text-[10px] text-stone-400 dark:text-stone-500 truncate mt-0.5 break-all">
+                    <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-0.5 break-words line-clamp-2">
                       {log.detail}
                     </p>
                   )}
