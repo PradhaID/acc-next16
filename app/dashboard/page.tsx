@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyToken, COOKIE_NAME } from "@/lib/auth";
-import { formatCurrency } from "@/lib/format";
+import { formatNumber } from "@/lib/format";
 import { getDb } from "@/lib/mongodb";
 import Link from "next/link";
 import type { SystemLog } from "@/lib/models/system/log";
@@ -132,26 +132,28 @@ export default async function DashboardPage() {
   let totalAssets = 0;
   let totalLiabilities = 0;
   let totalEquity = 0;
+  let grossProfitLessExpense = 0;
 
   let userCount = 0;
   let groupCount = 0;
   let recentLogs: SystemLog[] = [];
   let activeSessionsCount = 0;
+  
+  // Chart points for Monthly Revenue, COGS, and Expense
+  let chartDataPoints: { label: string; revenue: number; cogs: number; expense: number }[] = [];
 
   try {
     const db = await getDb();
 
-    // 1. Direct counts for accounting
     coaCount = await db.collection("accountingCoa").countDocuments();
     accountCount = await db.collection("accountingAccounts").countDocuments();
     confirmedCount = await db.collection("accountingTransactions").countDocuments({ status: "Confirmed" });
 
-    // 2. Direct balance aggregation for assets, liabilities, and equity
     const accountsData = await db.collection("accountingAccounts").find({ isActive: true }).toArray();
     const coasData = await db.collection("accountingCoa").find({ category: { $in: ["Asset", "Liability", "Equity"] } }).toArray();
     const coaMap = new Map(coasData.map(c => [c._id.toHexString(), c]));
 
-    // Calculate dynamic Net Income (Revenue - COGS - Expense) from transaction details
+    // Query Revenue, COGS, and Expenses
     const netIncomeRows = await db
       .collection("accountingTransactionDetails")
       .aggregate([
@@ -186,7 +188,7 @@ export default async function DashboardPage() {
         { $match: { "coa.category": { $in: ["Revenue", "COGS", "Expense"] } } },
         {
           $group: {
-            _id: null,
+            _id: "$coa.category",
             totalDb: { $sum: { $cond: [{ $eq: ["$position", "Db"] }, "$amount", 0] } },
             totalCr: { $sum: { $cond: [{ $eq: ["$position", "Cr"] }, "$amount", 0] } },
           },
@@ -194,11 +196,21 @@ export default async function DashboardPage() {
       ])
       .toArray();
 
-    let netIncome = 0;
-    if (netIncomeRows.length > 0) {
-      const r = netIncomeRows[0];
-      netIncome = r.totalCr - r.totalDb;
+    let revenueTotal = 0;
+    let cogsTotal = 0;
+    let expenseTotal = 0;
+
+    for (const r of netIncomeRows) {
+      if (r._id === "Revenue") {
+        revenueTotal = r.totalCr - r.totalDb;
+      } else if (r._id === "COGS") {
+        cogsTotal = r.totalDb - r.totalCr;
+      } else if (r._id === "Expense") {
+        expenseTotal = r.totalDb - r.totalCr;
+      }
     }
+
+    grossProfitLessExpense = (revenueTotal - cogsTotal) - expenseTotal;
 
     for (const acc of accountsData) {
       const coaId = acc.coa?.toString();
@@ -215,8 +227,8 @@ export default async function DashboardPage() {
       }
     }
     
-    // Add Net Income to Equity total
-    totalEquity += netIncome;
+    // Add net income to equity total
+    totalEquity += grossProfitLessExpense;
 
     // 3. User & Group data
     userCount = await db.collection("systemUsers").countDocuments();
@@ -236,6 +248,91 @@ export default async function DashboardPage() {
         action: "LOGIN",
         "created.at": { $gte: oneDayAgo },
       });
+
+    // 4. Monthly analytics for line chart (Last 6 Months)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+    sixMonthsAgo.setDate(1);
+    sixMonthsAgo.setHours(0,0,0,0);
+
+    const monthlyStatsRows = await db
+      .collection("accountingTransactionDetails")
+      .aggregate([
+        {
+          $lookup: {
+            from: "accountingTransactions",
+            localField: "transaction",
+            foreignField: "_id",
+            as: "txn",
+          },
+        },
+        { $unwind: "$txn" },
+        { $match: { "txn.status": "Confirmed", "txn.effectiveDate": { $gte: sixMonthsAgo } } },
+        {
+          $lookup: {
+            from: "accountingAccounts",
+            localField: "account",
+            foreignField: "_id",
+            as: "acc",
+          },
+        },
+        { $unwind: "$acc" },
+        {
+          $lookup: {
+            from: "accountingCoa",
+            localField: "acc.coa",
+            foreignField: "_id",
+            as: "coa",
+          },
+        },
+        { $unwind: "$coa" },
+        { $match: { "coa.category": { $in: ["Revenue", "COGS", "Expense"] } } },
+        {
+          $group: {
+            _id: {
+              year: { $year: "$txn.effectiveDate" },
+              month: { $month: "$txn.effectiveDate" },
+              category: "$coa.category"
+            },
+            totalDb: { $sum: { $cond: [{ $eq: ["$position", "Db"] }, "$amount", 0] } },
+            totalCr: { $sum: { $cond: [{ $eq: ["$position", "Cr"] }, "$amount", 0] } },
+          },
+        },
+      ])
+      .toArray();
+
+    const monthsList: { year: number; month: number; label: string }[] = [];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      d.setMonth(d.getMonth() - i);
+      monthsList.push({
+        year: d.getFullYear(),
+        month: d.getMonth() + 1,
+        label: `${monthNames[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`
+      });
+    }
+
+    chartDataPoints = monthsList.map((m) => {
+      let revenue = 0;
+      let cogs = 0;
+      let expense = 0;
+
+      for (const row of monthlyStatsRows) {
+        if (row._id.year === m.year && row._id.month === m.month) {
+          if (row._id.category === "Revenue") {
+            revenue = Math.max(0, row.totalCr - row.totalDb);
+          } else if (row._id.category === "COGS") {
+            cogs = Math.max(0, row.totalDb - row.totalCr);
+          } else if (row._id.category === "Expense") {
+            expense = Math.max(0, row.totalDb - row.totalCr);
+          }
+        }
+      }
+
+      return { label: m.label, revenue, cogs, expense };
+    });
+
   } catch (error) {
     console.error("Dashboard DB direct query error:", error);
   }
@@ -316,10 +413,40 @@ export default async function DashboardPage() {
   ];
 
   const balanceStats = [
-    { label: "Total Assets", value: totalAssets, color: "text-emerald-600 dark:text-emerald-400" },
-    { label: "Total Liabilities", value: totalLiabilities, color: "text-emerald-600 dark:text-emerald-400" },
-    { label: "Total Equity", value: totalEquity, color: "text-emerald-600 dark:text-emerald-400" },
+    { label: "Total Assets", value: totalAssets },
+    { label: "Total Liabilities", value: totalLiabilities },
+    { label: "Total Equity", value: totalEquity },
   ];
+
+  // SVG Line Chart calculation helpers
+  const svgWidth = 600;
+  const svgHeight = 240;
+  const chartWidth = svgWidth - 80;
+  const chartHeight = svgHeight - 60;
+  const xOffset = 60;
+  const yOffset = 20;
+
+  // Max value calculation for scaling
+  const maxVal = Math.max(
+    ...chartDataPoints.map(p => Math.max(p.revenue, p.cogs, p.expense)),
+    1000
+  );
+
+  const getCoordinates = (index: number, val: number) => {
+    const x = xOffset + (index / 5) * chartWidth;
+    const y = yOffset + chartHeight - (val / maxVal) * chartHeight;
+    return { x, y };
+  };
+
+  const getPathD = (dataKey: "revenue" | "cogs" | "expense") => {
+    if (chartDataPoints.length === 0) return "";
+    return chartDataPoints.map((point, index) => {
+      const { x, y } = getCoordinates(index, point[dataKey]);
+      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
+    }).join(" ");
+  };
+
+  const isNetNegative = grossProfitLessExpense < 0;
 
   return (
     <div className="max-w-full mx-auto space-y-8 pb-10 overflow-hidden">
@@ -357,19 +484,147 @@ export default async function DashboardPage() {
       </div>
 
       {/* Balance Snapshot */}
-      <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
-        <h2 className="text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-4">Balance Sheet Snapshot</h2>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {balanceStats.map((stat) => (
-            <div key={stat.label} className="border-l-4 border-emerald-500 pl-4">
-              <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">{stat.label}</p>
-              <p className={`text-2xl font-black mt-1 font-mono ${stat.color}`}>
-                {formatCurrency(stat.value)}
+      <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm space-y-6">
+        <div>
+          <h2 className="text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-4">Balance Sheet Snapshot</h2>
+          <div className="grid gap-6 sm:grid-cols-4">
+            {balanceStats.map((stat) => (
+              <div key={stat.label} className="border-l-4 border-emerald-500 pl-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">{stat.label}</p>
+                <p className="text-2xl font-black mt-1 font-mono text-stone-850 dark:text-stone-100">
+                  {formatNumber(stat.value)}
+                </p>
+              </div>
+            ))}
+            <div className="border-l-4 border-emerald-600 pl-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Gross Profit — Total Expenses</p>
+              <p className={`text-2xl font-black mt-1 font-mono ${isNetNegative ? "text-red-500 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+                {formatNumber(grossProfitLessExpense)}
               </p>
             </div>
-          ))}
+          </div>
         </div>
       </div>
+
+      {/* Monthly Line Graph Section */}
+      {chartDataPoints.length > 0 && (
+        <div className="bg-white dark:bg-stone-900 p-6 rounded-2xl border border-stone-200 dark:border-stone-700/50 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <h3 className="text-sm font-black uppercase tracking-widest text-stone-900 dark:text-white">Monthly Financial Analytics</h3>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Trends for Revenue, Cost of Goods Sold, and Expenses</p>
+            </div>
+            <div className="flex items-center gap-4 text-xs font-bold">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                <span className="text-stone-600 dark:text-stone-300">Revenue</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-rose-500" />
+                <span className="text-stone-600 dark:text-stone-300">COGS</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-indigo-500" />
+                <span className="text-stone-600 dark:text-stone-300">Expense</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full overflow-x-auto">
+            <div className="min-w-[600px] h-[240px]">
+              <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${svgWidth} ${svgHeight}`}>
+                {/* Horizontal grid lines & Y labels */}
+                {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
+                  const y = yOffset + ratio * chartHeight;
+                  const labelValue = ((1 - ratio) * maxVal).toFixed(0);
+                  return (
+                    <g key={index}>
+                      <line
+                        x1={xOffset}
+                        y1={y}
+                        x2={xOffset + chartWidth}
+                        y2={y}
+                        className="stroke-stone-200 dark:stroke-stone-800/80"
+                        strokeWidth="1"
+                        strokeDasharray="4 4"
+                      />
+                      <text
+                        x={xOffset - 10}
+                        y={y + 4}
+                        textAnchor="end"
+                        className="fill-stone-400 font-mono text-[10px]"
+                      >
+                        {labelValue}
+                      </text>
+                    </g>
+                  );
+                })}
+
+                {/* X labels */}
+                {chartDataPoints.map((point, index) => {
+                  const x = xOffset + (index / 5) * chartWidth;
+                  return (
+                    <text
+                      key={index}
+                      x={x}
+                      y={yOffset + chartHeight + 20}
+                      textAnchor="middle"
+                      className="fill-stone-500 text-[10px] font-bold"
+                    >
+                      {point.label}
+                    </text>
+                  );
+                })}
+
+                {/* Data lines */}
+                {/* Revenue line (Emerald) */}
+                <path
+                  d={getPathD("revenue")}
+                  fill="none"
+                  className="stroke-emerald-500"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                {/* COGS line (Rose) */}
+                <path
+                  d={getPathD("cogs")}
+                  fill="none"
+                  className="stroke-rose-500"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                {/* Expense line (Indigo) */}
+                <path
+                  d={getPathD("expense")}
+                  fill="none"
+                  className="stroke-indigo-500"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                {/* Point dots */}
+                {chartDataPoints.map((point, index) => {
+                  const revCoord = getCoordinates(index, point.revenue);
+                  const cogsCoord = getCoordinates(index, point.cogs);
+                  const expCoord = getCoordinates(index, point.expense);
+                  return (
+                    <g key={index}>
+                      <circle cx={revCoord.x} cy={revCoord.y} r="4.5" className="fill-emerald-500 stroke-white dark:stroke-stone-900" strokeWidth="2" />
+                      <circle cx={cogsCoord.x} cy={cogsCoord.y} r="4.5" className="fill-rose-500 stroke-white dark:stroke-stone-900" strokeWidth="2" />
+                      <circle cx={expCoord.x} cy={expCoord.y} r="4.5" className="fill-indigo-500 stroke-white dark:stroke-stone-900" strokeWidth="2" />
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* System Stats Cards */}
       <div className="space-y-4">
@@ -427,7 +682,7 @@ export default async function DashboardPage() {
               href="/system/users/add"
               className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-700/50 hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-450 group-hover:scale-110 transition-transform">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
@@ -440,7 +695,7 @@ export default async function DashboardPage() {
               href="/system/logs"
               className="flex items-center gap-3 p-3 rounded-xl border border-stone-200 dark:border-stone-700/50 hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors group"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-650 dark:text-emerald-455 group-hover:scale-110 transition-transform">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
