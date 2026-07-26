@@ -124,7 +124,7 @@ export default function Toggle({
 
         /* Checked state */
         .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle:before {
-          background: #ea580c; /* emerald-600 */
+          background: #059669; /* emerald-600 */
         }
 
         .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span {
@@ -132,14 +132,14 @@ export default function Toggle({
         }
 
         .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span path {
-          stroke: #ea580c; /* emerald-600 */
+          stroke: #059669; /* emerald-600 */
           stroke-dasharray: 25;
           stroke-dashoffset: 25;
         }
 
         /* Indeterminate state */
         .checkbox-wrapper-51 input[type="checkbox"]:indeterminate + .toggle:before {
-          background: #f59e0b; /* emerald-500 */
+          background: #10b981; /* emerald-500 */
         }
 
         .checkbox-wrapper-51 input[type="checkbox"]:indeterminate + .toggle span {
@@ -147,7 +147,7 @@ export default function Toggle({
         }
 
         .checkbox-wrapper-51 input[type="checkbox"]:indeterminate + .toggle span path {
-          stroke: #f59e0b; /* emerald-500 */
+          stroke: #10b981; /* emerald-500 */
           stroke-dasharray: 24;
           stroke-dashoffset: 12;
         }
