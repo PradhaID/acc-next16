@@ -26,11 +26,11 @@ const modules: Module[] = [
     visual: (
       <div className="rounded-2xl border border-stone-200/80 bg-stone-50/60 p-5 dark:border-stone-700/50 dark:bg-stone-900/60 shadow-sm">
         <div className="rounded-xl border border-stone-200/80 bg-white p-4 dark:border-stone-700/50 dark:bg-stone-900/80">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-orange-600 dark:text-orange-400">Sign In</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Sign In</p>
           <div className="mt-3 space-y-2">
             <div className="h-8 rounded-lg bg-stone-100 dark:bg-stone-800/60" />
             <div className="h-8 rounded-lg bg-stone-100 dark:bg-stone-800/60" />
-            <div className="h-8 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600" />
+            <div className="h-8 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600" />
           </div>
           <div className="mt-3 flex items-center justify-between text-[9px] text-stone-400">
             <span className="flex items-center gap-1">
@@ -41,7 +41,7 @@ const modules: Module[] = [
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
           {["JWT", "bcrypt", "OTP"].map((t) => (
-            <div key={t} className="rounded-lg bg-orange-50 py-1.5 text-center text-[9px] font-bold text-orange-700 dark:bg-orange-950/40 dark:text-orange-400">
+            <div key={t} className="rounded-lg bg-emerald-50 py-1.5 text-center text-[9px] font-bold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
               {t}
             </div>
           ))}
@@ -74,13 +74,13 @@ const modules: Module[] = [
           <div className="h-2.5 w-full rounded bg-stone-100 dark:bg-stone-800/60" />
           <div className="h-2.5 w-full rounded bg-stone-100 dark:bg-stone-800/60" />
           <div className="h-2.5 w-4/5 rounded bg-stone-100 dark:bg-stone-800/60" />
-          <div className="mt-2 h-16 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/40 dark:to-orange-950/40 flex items-center justify-center text-[9px] font-bold text-orange-700 dark:text-orange-400">
+          <div className="mt-2 h-16 rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-100 dark:from-emerald-950/40 dark:to-emerald-950/40 flex items-center justify-center text-[9px] font-bold text-emerald-700 dark:text-emerald-400">
             Featured Image
           </div>
         </div>
         <div className="mt-3 flex items-center gap-2 text-[9px]">
           <span className="rounded bg-emerald-50 px-1.5 py-0.5 font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">Draft</span>
-          <span className="rounded bg-amber-50 px-1.5 py-0.5 font-semibold text-amber-700 dark:bg-amber-950/40 dark:text-amber-400">Auto-saved</span>
+          <span className="rounded bg-emerald-50 px-1.5 py-0.5 font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">Auto-saved</span>
         </div>
       </div>
     ),
@@ -101,7 +101,7 @@ const modules: Module[] = [
     visual: (
       <div className="rounded-2xl border border-stone-200/80 bg-stone-50/60 p-5 dark:border-stone-700/50 dark:bg-stone-900/60 shadow-sm">
         <div className="rounded-xl border border-stone-200/80 bg-white p-3 dark:border-stone-700/50 dark:bg-stone-900/80">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-rose-600 dark:text-rose-400">Admin Group</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Admin Group</p>
           <div className="mt-2 space-y-1.5">
             {["/dashboard", "/content/*", "/system/users", "/system/settings"].map((r) => (
               <div key={r} className="flex items-center justify-between rounded-lg bg-stone-100 px-2 py-1 text-[9px] dark:bg-stone-800/60">
@@ -113,7 +113,7 @@ const modules: Module[] = [
         </div>
         <div className="mt-3 flex items-center gap-2 text-[9px] text-stone-400">
           <span className="flex items-center gap-1">
-            <span className="h-2.5 w-2.5 rounded-full bg-rose-500" /> Protected
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" /> Protected
           </span>
           <span>RoleGuard active</span>
         </div>
@@ -148,10 +148,10 @@ const modules: Module[] = [
             </div>
           ))}
         </div>
-        <div className="mt-2 h-12 rounded-lg bg-gradient-to-r from-amber-200/60 to-orange-200/60 dark:from-amber-900/30 dark:to-orange-900/30" />
+        <div className="mt-2 h-12 rounded-lg bg-gradient-to-r from-emerald-200/60 to-emerald-200/60 dark:from-emerald-900/30 dark:to-emerald-900/30" />
         <div className="mt-2 flex items-center justify-between rounded-lg bg-stone-100 px-2 py-1 text-[9px] dark:bg-stone-800/60">
           <span>system.settings.updated</span>
-          <span className="text-orange-600 dark:text-orange-400">view</span>
+          <span className="text-emerald-600 dark:text-emerald-400">view</span>
         </div>
       </div>
     ),
@@ -186,12 +186,12 @@ const modules: Module[] = [
         </div>
         <div className="mt-3 flex items-end gap-1 h-12">
           {[40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88].map((h, i) => (
-            <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-amber-500 to-orange-500" style={{ height: `${h}%` }} />
+            <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-emerald-500 to-emerald-500" style={{ height: `${h}%` }} />
           ))}
         </div>
         <div className="mt-2 flex items-center justify-between rounded-lg bg-stone-100 px-2 py-1 text-[9px] dark:bg-stone-800/60">
           <span>/blog/getting-started</span>
-          <span className="font-bold text-orange-600 dark:text-orange-400">2.4k views</span>
+          <span className="font-bold text-emerald-600 dark:text-emerald-400">2.4k views</span>
         </div>
       </div>
     ),
@@ -214,12 +214,12 @@ const modules: Module[] = [
         <div className="rounded-xl border border-stone-200/80 bg-stone-900 p-3 font-mono text-[9px] text-stone-300 dark:border-stone-700/50">
           <p><span className="text-emerald-400">GET</span> /api/v1/content/post</p>
           <p className="text-stone-500">Authorization: Bearer &lt;api_key&gt;</p>
-          <p className="mt-1 text-amber-300">200 OK</p>
+          <p className="mt-1 text-emerald-300">200 OK</p>
           <p className="text-cyan-300">{`{ "data": [ ... ] }`}</p>
         </div>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {["EN", "ID", "Light", "Dark", "XLSX", "SEO"].map((t) => (
-            <span key={t} className="rounded bg-orange-50 px-1.5 py-0.5 text-[9px] font-semibold text-orange-700 dark:bg-orange-950/40 dark:text-orange-400">
+            <span key={t} className="rounded bg-emerald-50 px-1.5 py-0.5 text-[9px] font-semibold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
               {t}
             </span>
           ))}
@@ -239,7 +239,7 @@ export default function ModuleShowcase() {
         >
           {/* Text */}
           <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-            <p className="text-sm font-bold uppercase tracking-widest text-orange-600 dark:text-orange-400">
+            <p className="text-sm font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
               {m.eyebrow}
             </p>
             <h3 className="mt-3 text-2xl font-extrabold tracking-tight text-stone-900 dark:text-white sm:text-3xl">
@@ -267,7 +267,7 @@ export default function ModuleShowcase() {
         </div>
       ))}
 
-      <div className="rounded-3xl border border-stone-200/80 bg-gradient-to-br from-amber-50 to-orange-50 p-8 text-center dark:border-stone-700/50 dark:from-amber-950/30 dark:to-orange-950/30">
+      <div className="rounded-3xl border border-stone-200/80 bg-gradient-to-br from-emerald-50 to-emerald-50 p-8 text-center dark:border-stone-700/50 dark:from-emerald-950/30 dark:to-emerald-950/30">
         <h3 className="text-xl font-extrabold text-stone-900 dark:text-white">
           Plus SEO, Sitemaps & Public Pages
         </h3>
@@ -278,7 +278,7 @@ export default function ModuleShowcase() {
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           {["robots.txt", "sitemap.xml", "JSON-LD", "OpenGraph", "Canonical", "Blog", "Categories", "Tags"].map((t) => (
-            <span key={t} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-orange-700 shadow-sm dark:bg-stone-900/80 dark:text-orange-400">
+            <span key={t} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm dark:bg-stone-900/80 dark:text-emerald-400">
               {t}
             </span>
           ))}

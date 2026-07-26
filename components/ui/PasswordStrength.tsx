@@ -24,8 +24,8 @@ function getScore(password: string): number {
 
 function getLevel(score: number): { label: string; color: string; barColor: string } {
   if (score <= 1) return { label: "Weak", color: "text-red-500", barColor: "bg-red-500" };
-  if (score <= 2) return { label: "Fair", color: "text-orange-400", barColor: "bg-orange-400" };
-  if (score <= 3) return { label: "Good", color: "text-amber-500", barColor: "bg-amber-500" };
+  if (score <= 2) return { label: "Fair", color: "text-emerald-400", barColor: "bg-emerald-400" };
+  if (score <= 3) return { label: "Good", color: "text-emerald-500", barColor: "bg-emerald-500" };
   if (score <= 4) return { label: "Strong", color: "text-emerald-500", barColor: "bg-emerald-500" };
   return { label: "Very Strong", color: "text-emerald-600", barColor: "bg-emerald-600" };
 }

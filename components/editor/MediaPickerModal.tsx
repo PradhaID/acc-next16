@@ -78,7 +78,7 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect }: {
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Media Assets</h3>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600">Content Integrator</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">Content Integrator</p>
                         </div>
                         <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-stone-800/40 rounded-full transition-colors">
                             <XMarkIcon className="w-6 h-6" />
@@ -88,13 +88,13 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect }: {
                     <div className="flex gap-4">
                         <button
                             onClick={() => setTab('library')}
-                            className={`pb-2 text-sm font-bold transition-all border-b-2 ${tab === 'library' ? 'border-orange-600 text-orange-600' : 'border-transparent text-gray-400'}`}
+                            className={`pb-2 text-sm font-bold transition-all border-b-2 ${tab === 'library' ? 'border-emerald-600 text-emerald-600' : 'border-transparent text-gray-400'}`}
                         >
                             Browse Library
                         </button>
                         <button
                             onClick={() => setTab('upload')}
-                            className={`pb-2 text-sm font-bold transition-all border-b-2 ${tab === 'upload' ? 'border-orange-600 text-orange-600' : 'border-transparent text-gray-400'}`}
+                            className={`pb-2 text-sm font-bold transition-all border-b-2 ${tab === 'upload' ? 'border-emerald-600 text-emerald-600' : 'border-transparent text-gray-400'}`}
                         >
                             Quick Upload
                         </button>
@@ -110,9 +110,9 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect }: {
                             ) : (
                                 media.map((item) => (
                                     <div key={item._id} onClick={() => onSelect(item.path)} className="group cursor-pointer space-y-2">
-                                        <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-stone-800/40 border-2 border-transparent group-hover:border-orange-500 transition-all shadow-sm group-hover:shadow-xl relative">
+                                        <div className="aspect-square rounded-2xl overflow-hidden bg-white dark:bg-stone-800/40 border-2 border-transparent group-hover:border-emerald-500 transition-all shadow-sm group-hover:shadow-xl relative">
                                             <img src={item.path} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                                            <div className="absolute inset-0 bg-orange-600/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                            <div className="absolute inset-0 bg-emerald-600/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                                 <CheckCircleIcon className="w-8 h-8 text-white" />
                                             </div>
                                         </div>
@@ -126,17 +126,17 @@ export default function MediaPickerModal({ isOpen, onClose, onSelect }: {
                             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="w-full max-w-md aspect-video border-2 border-dashed border-gray-300 dark:border-stone-700/50 rounded-[2rem] flex flex-col items-center justify-center gap-4 hover:border-orange-500 hover:bg-orange-50/50 transition-all cursor-pointer group"
+                                className="w-full max-w-md aspect-video border-2 border-dashed border-gray-300 dark:border-stone-700/50 rounded-[2rem] flex flex-col items-center justify-center gap-4 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all cursor-pointer group"
                             >
                                 {uploading ? (
                                     <div className="flex flex-col items-center gap-2">
-                                        <div className="w-8 h-8 border-4 border-orange-600 border-t-transparent rounded-full animate-spin" />
-                                        <p className="text-sm font-bold text-orange-600">Uploading to Library...</p>
+                                        <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+                                        <p className="text-sm font-bold text-emerald-600">Uploading to Library...</p>
                                     </div>
                                 ) : (
                                     <>
-                                        <div className="p-4 bg-orange-50 dark:bg-stone-800/40 rounded-2xl group-hover:scale-110 transition-transform">
-                                            <CloudArrowUpIcon className="w-10 h-10 text-orange-600" />
+                                        <div className="p-4 bg-emerald-50 dark:bg-stone-800/40 rounded-2xl group-hover:scale-110 transition-transform">
+                                            <CloudArrowUpIcon className="w-10 h-10 text-emerald-600" />
                                         </div>
                                         <div className="text-center">
                                             <p className="text-sm font-bold text-gray-900 dark:text-white">Click to upload image</p>

@@ -108,7 +108,7 @@ export default function ContentPage() {
                     canCreate && (
                         <Link
                             href="/content/page/add"
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all"
                         >
                             <PlusIcon className="w-4 h-4 stroke-[3px]" />
                             {t("content.createNewPage")}
@@ -125,7 +125,7 @@ export default function ContentPage() {
                         <button
                             key={s}
                             onClick={() => { setStatus(s); setPage(1); }}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${status === s ? 'bg-white dark:bg-stone-700 text-orange-600 shadow-sm' : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'}`}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${status === s ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm' : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'}`}
                         >
                             {s.toUpperCase()}
                         </button>
@@ -148,7 +148,7 @@ export default function ContentPage() {
                 {/* Stats pills */}
                     <div className="flex items-center gap-2 shrink-0 text-[10px] font-black md:pl-2">
                         <span className="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg">{stats.published} {t("content.publishedAbbr")}</span>
-                        <span className="px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-lg">{stats.draft} {t("content.draftAbbr")}</span>
+                        <span className="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg">{stats.draft} {t("content.draftAbbr")}</span>
                         <span className="px-2.5 py-1.5 bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 rounded-lg">{totalItems} {t("content.totalAbbr")}</span>
                     </div>
             </div>
@@ -157,7 +157,7 @@ export default function ContentPage() {
             <div className="bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-2xl overflow-hidden shadow-sm dark:shadow-stone-950/30">
                 {loading ? (
                     <div className="py-20 text-center">
-                        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                             <p className="text-stone-400 dark:text-stone-500 text-sm">{t("content.loadingPages")}</p>
                          </div>
                      ) : pages.length === 0 ? (
@@ -166,7 +166,7 @@ export default function ContentPage() {
                              <p className="text-stone-500 dark:text-stone-400 text-sm font-medium">No pages match your criteria.</p>
                              <button
                                  onClick={() => { setSearch(""); setStatus("all"); }}
-                                 className="mt-3 text-orange-600 text-xs font-bold hover:underline"
+                                 className="mt-3 text-emerald-600 text-xs font-bold hover:underline"
                              >
                                  {t("content.clearFilters")}
                              </button>
@@ -182,13 +182,13 @@ export default function ContentPage() {
                                             type="checkbox"
                                             checked={selection.isSelected(p._id)}
                                             onChange={() => selection.toggle(p._id)}
-                                            className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-orange-600 focus:ring-orange-500 cursor-pointer mt-1 shrink-0"
+                                            className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-emerald-600 focus:ring-emerald-500 cursor-pointer mt-1 shrink-0"
                                         />
-                                        <div className="h-10 w-10 rounded-xl bg-orange-50 dark:bg-orange-950/20 flex-shrink-0 overflow-hidden border border-orange-100 dark:border-orange-900 flex items-center justify-center">
+                                        <div className="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex-shrink-0 overflow-hidden border border-emerald-100 dark:border-emerald-900 flex items-center justify-center">
                                             {p.featuredImage?.url ? (
                                                 <img src={p.featuredImage.url} className="w-full h-full object-cover" alt={p.title || "Page thumbnail"} />
                                             ) : (
-                                                <DocumentIcon className="w-5 h-5 text-orange-500" />
+                                                <DocumentIcon className="w-5 h-5 text-emerald-500" />
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
@@ -201,7 +201,7 @@ export default function ContentPage() {
                                                         ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                         : p.status === 'archived'
                                                             ? 'bg-gray-100 text-gray-500 dark:bg-stone-800/40 dark:text-stone-400'
-                                                            : 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+                                                            : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                 }`}>
                                                     {p.status}
                                                 </span>
@@ -229,7 +229,7 @@ export default function ContentPage() {
                                                      </Link>
                                                     <Link
                                                         href={`/content/page/edit/${p._id}`}
-                                                        className="px-2.5 py-1 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all"
+                                                        className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all"
                                                     >
                                                          {t("actions.edit")}
                                                      </Link>
@@ -251,7 +251,7 @@ export default function ContentPage() {
                                                 type="checkbox"
                                                 checked={selection.isAllSelected}
                                                 onChange={selection.toggleAll}
-                                                className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                                                className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                             />
                                         </th>
                                         <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-stone-400">{t("content.page")}</th>
@@ -269,16 +269,16 @@ export default function ContentPage() {
                                                     type="checkbox"
                                                     checked={selection.isSelected(p._id)}
                                                     onChange={() => selection.toggle(p._id)}
-                                                    className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                                                    className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                                 />
                                             </td>
                                             <td className="px-4 py-3 max-w-xs">
                                                 <div className="flex items-start gap-3">
-                                                    <div className="h-10 w-10 mr-1 rounded-xl bg-orange-50 dark:bg-orange-950/20 flex-shrink-0 overflow-hidden border border-orange-100 dark:border-orange-900 flex items-center justify-center">
+                                                    <div className="h-10 w-10 mr-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex-shrink-0 overflow-hidden border border-emerald-100 dark:border-emerald-900 flex items-center justify-center">
                                                         {p.featuredImage?.url ? (
                                                             <img src={p.featuredImage.url} className="w-full h-full object-cover" alt={p.title || "Page thumbnail"} />
                                                         ) : (
-                                                            <DocumentIcon className="w-5 h-5 text-orange-500" />
+                                                            <DocumentIcon className="w-5 h-5 text-emerald-500" />
                                                         )}
                                                     </div>
                                                     <div className="min-w-0">
@@ -288,7 +288,7 @@ export default function ContentPage() {
                                                          <div className="flex items-center gap-3 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                              <Link
                                                                  href={`/content/page/detail/${p._id}`}
-                                                                 className="flex items-center gap-1 text-orange-600 dark:text-orange-400 text-[10px] font-black uppercase tracking-wider hover:underline"
+                                                                 className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider hover:underline"
                                                              >
                                                                  <EyeIcon className="w-3 h-3" /> View
                                                              </Link>
@@ -337,7 +337,7 @@ export default function ContentPage() {
                                                         ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                         : p.status === 'archived'
                                                             ? 'bg-gray-100 text-gray-500 dark:bg-stone-800/40 dark:text-stone-400'
-                                                            : 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+                                                            : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                 }`}>
                                                     {p.status}
                                                 </span>

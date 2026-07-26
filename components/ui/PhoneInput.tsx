@@ -155,7 +155,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Phone numbe
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search country..."
-                className="w-full px-3 py-1.5 text-xs bg-gray-50 dark:bg-stone-800/40 border border-gray-200 dark:border-stone-700/50 rounded-lg outline-none focus:border-orange-500"
+                className="w-full px-3 py-1.5 text-xs bg-gray-50 dark:bg-stone-800/40 border border-gray-200 dark:border-stone-700/50 rounded-lg outline-none focus:border-emerald-500"
                 autoFocus
               />
             </div>
@@ -164,7 +164,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Phone numbe
                 key={country.code}
                 type="button"
                 onClick={() => handleCountrySelect(country)}
-                className={`flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors ${selected.code === country.code ? "bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400 font-bold" : "text-gray-700 dark:text-stone-300"}`}
+                className={`flex items-center gap-2.5 w-full px-3 py-2 text-left text-xs hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-colors ${selected.code === country.code ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 font-bold" : "text-gray-700 dark:text-stone-300"}`}
               >
                 <span className="text-base">{country.flag}</span>
                 <span className="flex-1 truncate">{country.name}</span>
@@ -185,7 +185,7 @@ export default function PhoneInput({ value, onChange, placeholder = "Phone numbe
         value={phoneOnly}
         onChange={handlePhoneChange}
         placeholder={placeholder}
-        className="flex-1 min-w-0 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-gray-200 dark:border-stone-700/50 rounded-r-xl outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+        className="flex-1 min-w-0 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-gray-200 dark:border-stone-700/50 rounded-r-xl outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
       />
     </div>
   );

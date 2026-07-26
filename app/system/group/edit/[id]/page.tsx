@@ -69,7 +69,7 @@ export default function EditGroupPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function EditGroupPage() {
         subtitle={
           group ? (
             <>
-              Editing: <span className="font-bold text-orange-600">{group.name}</span>
+              Editing: <span className="font-bold text-emerald-600">{group.name}</span>
             </>
           ) : undefined
         }
@@ -133,7 +133,7 @@ export default function EditGroupPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   required
                 />
               </FormField>
@@ -142,7 +142,7 @@ export default function EditGroupPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
                   rows={4}
                 />
               </FormField>
@@ -198,7 +198,7 @@ export default function EditGroupPage() {
             <div className="mt-3 pt-3 border-t border-gray-100 dark:border-stone-700/50">
               <Link
                 href={`/system/group/role/${id}`}
-                className="flex items-center justify-center gap-1.5 py-2 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 dark:hover:bg-orange-500/20 text-orange-700 dark:text-orange-300 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                className="flex items-center justify-center gap-1.5 py-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 1 1 9 0v3.75M3.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H3.75a2.25 2.25 0 0 0-2.25 2.25v6.75c0 1.24 1.01 2.25 2.25 2.25Z" />

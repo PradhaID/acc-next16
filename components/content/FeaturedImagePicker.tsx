@@ -54,13 +54,13 @@ export default function FeaturedImagePicker({ value, alt, onChange, onImageChose
     return (
         <div className="bg-white dark:bg-stone-800/40 p-6 rounded-3xl border border-gray-200 dark:border-stone-700/50 shadow-sm">
             <h3 className="font-bold mb-4 flex items-center gap-2">
-                <PhotoIcon className="w-5 h-5 text-orange-500" /> Cover Image
+                <PhotoIcon className="w-5 h-5 text-emerald-500" /> Cover Image
             </h3>
 
             <div className="space-y-4">
                 <div
                     onClick={() => setIsOpen(true)}
-                    className="group relative aspect-video w-full overflow-hidden rounded-2xl border-2 border-dashed bg-gray-50 border-gray-200 dark:bg-stone-900/80 dark:border-stone-700/50 hover:border-orange-400 hover:bg-orange-50/30 transition-all cursor-pointer"
+                    className="group relative aspect-video w-full overflow-hidden rounded-2xl border-2 border-dashed bg-gray-50 border-gray-200 dark:bg-stone-900/80 dark:border-stone-700/50 hover:border-emerald-400 hover:bg-emerald-50/30 transition-all cursor-pointer"
                 >
                     {value ? (
                         <>
@@ -96,14 +96,14 @@ export default function FeaturedImagePicker({ value, alt, onChange, onImageChose
                         value={alt}
                         onChange={(e) => onChange({ url: value, alt: e.target.value })}
                         placeholder="SEO description for image..."
-                        className="w-full text-xs p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+                        className="w-full text-xs p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
                     />
                     {hasGeminiKey && (
                         <button
                             type="button"
                             onClick={handleGenerateImage}
                             disabled={generating}
-                            className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-black bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 transition-all disabled:opacity-50"
+                            className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-black bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 transition-all disabled:opacity-50"
                         >
                             {generating ? (
                                 <>

@@ -4,14 +4,14 @@ export default function HeroSection() {
   return (
     <section className="text-center lg:text-left lg:grid lg:grid-cols-12 lg:gap-8 items-center">
       <div className="lg:col-span-6 flex flex-col justify-center">
-        <div className="inline-flex mx-auto lg:mx-0 w-fit items-center gap-2 rounded-full border border-orange-200/60 bg-orange-50/50 px-3 py-1 text-xs font-semibold text-orange-750 backdrop-blur-sm dark:border-orange-500/20 dark:bg-orange-950/30 dark:text-orange-450">
-          <span className="flex h-2 w-2 rounded-full bg-orange-500 dark:bg-orange-400 animate-pulse" />
+        <div className="inline-flex mx-auto lg:mx-0 w-fit items-center gap-2 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-3 py-1 text-xs font-semibold text-orange-750 backdrop-blur-sm dark:border-emerald-500/20 dark:bg-emerald-950/30 dark:text-orange-450">
+          <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
           Next.js 16 + Tailwind CSS v4 + MongoDB
         </div>
 
         <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white sm:text-5xl lg:text-6xl leading-[1.1]">
           The Complete{" "}
-          <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-transparent dark:from-amber-400 dark:via-orange-450 dark:to-rose-450">
+          <span className="bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500 bg-clip-text text-transparent dark:from-emerald-400 dark:via-orange-450 dark:to-rose-450">
             SaaS Boilerplate
           </span>{" "}
           for Modern Web Apps
@@ -26,7 +26,7 @@ export default function HeroSection() {
         <div className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-4">
           <Link
             href="/account/signup"
-            className="inline-flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-6 font-semibold text-white shadow-md shadow-orange-500/15 transition hover:from-amber-600 hover:to-orange-700"
+            className="inline-flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 font-semibold text-white shadow-md shadow-emerald-500/15 transition hover:from-emerald-600 hover:to-emerald-700"
           >
             Get Started Now
           </Link>
@@ -62,8 +62,8 @@ export default function HeroSection() {
 
       {/* Enhanced Dashboard Mock */}
       <div id="dashboard-preview" className="mt-16 lg:mt-0 lg:col-span-6 flex justify-center w-full">
-        <div className="relative w-full max-w-[580px] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-50/50 p-3 shadow-xl dark:border-stone-700/50 dark:bg-stone-900/80 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:border-orange-500/30 group">
-          <div className="absolute -inset-px -z-10 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+        <div className="relative w-full max-w-[580px] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-50/50 p-3 shadow-xl dark:border-stone-700/50 dark:bg-stone-900/80 backdrop-blur-sm transition-all duration-300 hover:shadow-2xl hover:border-emerald-500/30 group">
+          <div className="absolute -inset-px -z-10 rounded-2xl bg-gradient-to-tr from-emerald-500 via-emerald-500 to-emerald-500 opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
 
           {/* Browser Chrome */}
           <div className="flex items-center gap-2 border-b border-stone-200/80 pb-3 px-2 dark:border-stone-700/50">
@@ -79,8 +79,8 @@ export default function HeroSection() {
           <div className="flex h-[360px] pt-3 gap-3 overflow-hidden text-xs">
             {/* Sidebar */}
             <div className="hidden md:flex w-40 shrink-0 flex-col gap-1 border-r border-stone-200/60 pr-3 dark:border-stone-700/50">
-              <div className="h-7 w-full rounded-md bg-orange-50 dark:bg-orange-950/30 text-orange-650 dark:text-orange-400 flex items-center gap-2 px-2.5 font-semibold">
-                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 dark:bg-orange-400" />
+              <div className="h-7 w-full rounded-md bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 flex items-center gap-2 px-2.5 font-semibold">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                 Overview
               </div>
               <div className="h-7 w-full rounded-md text-stone-500 dark:text-stone-400 flex items-center gap-2 px-2.5">
@@ -150,7 +150,7 @@ export default function HeroSection() {
               <div className="flex-1 rounded-xl border border-stone-200/80 bg-white dark:border-stone-700/50 dark:bg-stone-900/80 overflow-hidden flex flex-col shadow-sm">
                 <div className="bg-stone-50 border-b border-stone-200/80 px-3 py-1.5 flex justify-between items-center dark:bg-stone-800/40 dark:border-stone-700/50">
                   <span className="font-semibold text-stone-700 dark:text-stone-300 text-[10px]">Recent Content</span>
-                  <span className="text-[9px] text-orange-600 dark:text-orange-400">View All</span>
+                  <span className="text-[9px] text-emerald-600 dark:text-emerald-400">View All</span>
                 </div>
                 <div className="flex-1 overflow-y-auto divide-y divide-stone-100 dark:divide-stone-700/30">
                   <div className="px-3 py-1.5 flex items-center justify-between hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors">
@@ -172,7 +172,7 @@ export default function HeroSection() {
                       <p className="font-medium text-stone-800 dark:text-stone-200 truncate">Product Launch Draft</p>
                       <p className="text-[9px] text-stone-400">Post &middot; 1 day ago</p>
                     </div>
-                    <span className="inline-flex items-center rounded-full bg-amber-50 px-1.5 py-0.5 text-[9px] font-medium text-amber-700 dark:bg-amber-950/40 dark:text-amber-400">Draft</span>
+                    <span className="inline-flex items-center rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">Draft</span>
                   </div>
                   <div className="px-3 py-1.5 flex items-center justify-between hover:bg-stone-50 dark:hover:bg-stone-800/40 transition-colors">
                     <div className="min-w-0">

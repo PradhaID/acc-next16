@@ -100,7 +100,7 @@ export default async function AuthorPage({
                 />
               </div>
             ) : (
-              <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-orange-100 text-4xl font-bold text-orange-600 shadow-lg dark:border-stone-800 dark:bg-orange-500/20 dark:text-orange-400">
+              <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-emerald-100 text-4xl font-bold text-emerald-600 shadow-lg dark:border-stone-800 dark:bg-emerald-500/20 dark:text-emerald-400">
                 {initials}
               </div>
             )}
@@ -179,7 +179,7 @@ export default async function AuthorPage({
                               loading="lazy"
                             />
                             {cat && (
-                              <span className="absolute left-3 top-3 rounded-full bg-orange-600/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                              <span className="absolute left-3 top-3 rounded-full bg-emerald-600/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-sm">
                                 {cat.name}
                               </span>
                             )}
@@ -196,7 +196,7 @@ export default async function AuthorPage({
                               </>
                             )}
                           </div>
-                          <h3 className="text-base font-bold leading-snug text-stone-900 transition-colors group-hover:text-orange-600 dark:text-white dark:group-hover:text-orange-400">
+                          <h3 className="text-base font-bold leading-snug text-stone-900 transition-colors group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-400">
                             {post.title}
                           </h3>
                           {post.excerpt && (
@@ -205,7 +205,7 @@ export default async function AuthorPage({
                             </p>
                           )}
                           {!thumb && cat && (
-                            <span className="mt-3 inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
+                            <span className="mt-3 inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
                               {cat.name}
                             </span>
                           )}

@@ -152,7 +152,7 @@ function ResetPasswordForm() {
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-stone-50 via-white to-stone-50 p-4 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
         <div className="rounded-2xl border border-stone-200 bg-white p-8 dark:border-white/[0.08] dark:bg-white/[0.03]">
           <p className="text-stone-500 dark:text-stone-400">No identifier provided.</p>
-          <Link href="/account/forgot-password" className="mt-3 block text-sm text-orange-600 font-bold">Go back</Link>
+          <Link href="/account/forgot-password" className="mt-3 block text-sm text-emerald-600 font-bold">Go back</Link>
         </div>
       </div>
     );
@@ -161,13 +161,13 @@ function ResetPasswordForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-stone-50 via-white to-stone-50 p-4 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-orange-600/10 blur-[120px] dark:bg-orange-600/15" />
+        <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-600/10 blur-[120px] dark:bg-emerald-600/15" />
       </div>
 
       <div className="relative w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-orange-500/25" />
+            <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
             <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
               {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
             </span>
@@ -176,7 +176,7 @@ function ResetPasswordForm() {
 
         <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-2xl backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-orange-500/20">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/20">
               {step === "otp" ? (
                 <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.981l7.5-4.039a2.25 2.25 0 012.134 0l7.5 4.039a2.25 2.25 0 011.183 1.98V19.5z" />
@@ -222,7 +222,7 @@ function ResetPasswordForm() {
                       onChange={(e) => handleChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
                       onPaste={index === 0 ? handlePaste : undefined}
-                      className="flex h-14 w-full items-center justify-center rounded-lg border border-stone-200 bg-stone-50 text-center text-xl font-semibold text-zinc-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white sm:h-16"
+                      className="flex h-14 w-full items-center justify-center rounded-lg border border-stone-200 bg-stone-50 text-center text-xl font-semibold text-zinc-900 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white sm:h-16"
                       aria-label={`Digit ${index + 1}`}
                     />
                   ))}
@@ -230,7 +230,7 @@ function ResetPasswordForm() {
               </fieldset>
               <div className="text-center space-y-3">
                 <button type="button" onClick={handleResend} disabled={resending || loading}
-                  className="text-sm text-orange-600 font-bold transition hover:text-orange-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-orange-400 dark:hover:text-orange-300">
+                  className="text-sm text-emerald-600 font-bold transition hover:text-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400 dark:hover:text-emerald-300">
                   {resending ? "Sending…" : "Resend code"}
                 </button>
                 <div>
@@ -248,7 +248,7 @@ function ResetPasswordForm() {
                     New Password
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                       <LockClosedIcon className="h-5 w-5" />
                     </div>
                     <input
@@ -260,10 +260,10 @@ function ResetPasswordForm() {
                       value={password}
                       onChange={(e) => { setPassword(e.target.value); setError(""); }}
                       placeholder="Enter new password"
-                      className="w-full pl-11 pr-10 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
+                      className="w-full pl-11 pr-10 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 dark:text-stone-500 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
+                      className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 dark:text-stone-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors">
                       {showPassword ? (
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
@@ -284,7 +284,7 @@ function ResetPasswordForm() {
                     Confirm Password
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                       <LockClosedIcon className="h-5 w-5" />
                     </div>
                     <input
@@ -296,13 +296,13 @@ function ResetPasswordForm() {
                       value={confirmPassword}
                       onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
                       placeholder="Confirm new password"
-                      className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
+                      className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
                     />
                   </div>
                 </div>
 
                 <button type="submit"
-                  className="w-full mt-2 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-orange-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer">
+                  className="w-full mt-2 bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-emerald-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer">
                   {loading ? "Resetting..." : "Reset password"}
                 </button>
               </fieldset>
@@ -318,7 +318,7 @@ export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-stone-50 via-white to-stone-50 p-4 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
       </div>
     }>
       <ResetPasswordForm />

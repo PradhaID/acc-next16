@@ -73,13 +73,13 @@ export default async function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
       ),
-      color: "text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/10",
+      color: "text-emerald-600 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-500/10",
     },
   ];
 
   const financialStats = [
     { label: "Total Assets", value: totalAssets, color: "text-sky-600" },
-    { label: "Total Liabilities", value: totalLiabilities, color: "text-orange-600" },
+    { label: "Total Liabilities", value: totalLiabilities, color: "text-emerald-600" },
     { label: "Total Equity", value: totalEquity, color: "text-violet-600" },
   ];
 

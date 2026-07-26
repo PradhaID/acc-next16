@@ -94,7 +94,7 @@ export default function ContentCategoryPage() {
                     canCreate && (
                         <Link
                             href="/content/category/add"
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all"
                         >
                             <PlusIcon className="w-4 h-4 stroke-[3px]" />
                             {t("content.addCategory")}
@@ -117,7 +117,7 @@ export default function ContentCategoryPage() {
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                             {stat.label}
                         </p>
-                        <p className="text-xl font-black text-orange-600 mt-0.5">
+                        <p className="text-xl font-black text-emerald-600 mt-0.5">
                             {stat.value}
                         </p>
                     </div>
@@ -130,7 +130,7 @@ export default function ContentCategoryPage() {
                     type="checkbox"
                     checked={selection.isAllSelected}
                     onChange={selection.toggleAll}
-                    className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer shrink-0 ml-1"
+                    className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0 ml-1"
                 />
                 <SearchInput
                     value={search}
@@ -143,7 +143,7 @@ export default function ContentCategoryPage() {
             <div className="bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl overflow-hidden shadow-sm">
                 {loading ? (
                     <div className="py-20 text-center">
-                        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                         <p className="text-gray-400 font-medium text-xs">{t("content.loadingCategories")}</p>
                     </div>
                 ) : paginated.length === 0 ? (
@@ -165,13 +165,13 @@ export default function ContentCategoryPage() {
                                             type="checkbox"
                                             checked={selection.isSelected(cat._id)}
                                             onChange={() => selection.toggle(cat._id)}
-                                            className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer shrink-0"
+                                            className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0"
                                         />
-                                        <div className="w-9 h-9 rounded-xl bg-orange-50 dark:bg-orange-950/20 flex-shrink-0 flex items-center justify-center border border-orange-100 dark:border-orange-900/50">
+                                        <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex-shrink-0 flex items-center justify-center border border-emerald-100 dark:border-emerald-900/50">
                                                     {cat.structuredData?.image ? (
                                                         <img src={cat.structuredData.image} className="w-full h-full object-cover rounded-xl" alt="" />
                                                     ) : (
-                                                        <FolderIcon className="w-5 h-5 text-orange-600" />
+                                                        <FolderIcon className="w-5 h-5 text-emerald-600" />
                                                     )}
                                                 </div>
                                                 <div className="min-w-0">
@@ -205,7 +205,7 @@ export default function ContentCategoryPage() {
                                     <div className="pt-2 border-t border-gray-50 dark:border-stone-700/50 flex justify-end">
                                         <Link
                                             href={`/content/category/edit/${cat._id}`}
-                                            className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-orange-600 hover:text-orange-700 md:opacity-0 md:translate-y-1 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-200"
+                                            className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-emerald-600 hover:text-emerald-700 md:opacity-0 md:translate-y-1 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-200"
                                         >
                                             <PencilSquareIcon className="w-3.5 h-3.5" />
                                             Edit

@@ -139,13 +139,13 @@ function VerifyOtpForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-stone-50 via-white to-stone-50 p-4 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-orange-600/10 blur-[120px] dark:bg-orange-600/15" />
+        <div className="absolute -top-40 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-600/10 blur-[120px] dark:bg-emerald-600/15" />
       </div>
 
       <div className="relative w-full max-w-md">
         <div className="mb-6 flex justify-center">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-orange-500/25" />
+            <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
             <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
               {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
             </span>
@@ -154,7 +154,7 @@ function VerifyOtpForm() {
 
         <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-2xl backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-orange-500/20">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/20">
               <svg
                 className="h-6 w-6 text-white"
                 fill="none"
@@ -205,7 +205,7 @@ function VerifyOtpForm() {
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={index === 0 ? handlePaste : undefined}
-                    className="flex h-14 w-full items-center justify-center rounded-lg border border-stone-200 bg-stone-50 text-center text-xl font-semibold text-zinc-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white sm:h-16"
+                    className="flex h-14 w-full items-center justify-center rounded-lg border border-stone-200 bg-stone-50 text-center text-xl font-semibold text-zinc-900 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 disabled:opacity-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white sm:h-16"
                     aria-label={`Digit ${index + 1}`}
                   />
                 ))}
@@ -217,7 +217,7 @@ function VerifyOtpForm() {
                 type="button"
                 onClick={handleResend}
                 disabled={resending || loading}
-                className="text-sm text-orange-600 font-bold transition hover:text-orange-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-orange-400 dark:hover:text-orange-300"
+                className="text-sm text-emerald-600 font-bold transition hover:text-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-emerald-400 dark:hover:text-emerald-300"
               >
                 {resending ? "Sending…" : "Resend code"}
               </button>
@@ -242,7 +242,7 @@ export default function VerifyOtpPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-stone-50 via-white to-stone-50 p-4 dark:from-stone-950 dark:via-stone-900 dark:to-stone-950">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
         </div>
       }
     >

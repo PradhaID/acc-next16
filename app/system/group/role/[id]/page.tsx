@@ -43,7 +43,7 @@ interface NestedRoles {
 function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-      <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
       <p className="text-sm text-stone-500 font-medium animate-pulse">Loading permissions...</p>
     </div>
   );
@@ -300,19 +300,19 @@ export default function GroupRolePage() {
               return (
                 <div key={rootName}>
                   {/* Root module */}
-                  <div className="flex items-center gap-3 border-b-2 border-orange-500 pb-2.5 group">
+                  <div className="flex items-center gap-3 border-b-2 border-emerald-500 pb-2.5 group">
                     <Toggle
                       id={`root-${rootName}`}
                       checked={rootChecked}
                       indeterminate={rootPartial}
                       onChange={() => toggleRootModule(rootName)}
                     />
-                    <svg className="w-5 h-5 text-orange-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
                     </svg>
                     <label
                       htmlFor={`root-${rootName}`}
-                      className="text-base font-black text-gray-800 dark:text-white uppercase tracking-tight group-hover:text-orange-600 transition-colors cursor-pointer select-none"
+                      className="text-base font-black text-gray-800 dark:text-white uppercase tracking-tight group-hover:text-emerald-600 transition-colors cursor-pointer select-none"
                     >
                       {rootName}
                     </label>
@@ -340,7 +340,7 @@ export default function GroupRolePage() {
                               />
                               <label
                                 htmlFor={`sub-${sub.id}`}
-                                className="text-sm font-bold text-gray-500 dark:text-stone-400 group-hover:text-orange-600 transition-colors cursor-pointer select-none"
+                                className="text-sm font-bold text-gray-500 dark:text-stone-400 group-hover:text-emerald-600 transition-colors cursor-pointer select-none"
                               >
                                 {subName}{hasActions ? " Management" : ""}
                               </label>
@@ -356,8 +356,8 @@ export default function GroupRolePage() {
                                       onClick={() => toggleRole(action._id)}
                                       className={`p-3.5 rounded-xl border cursor-pointer transition-all duration-200 flex items-center gap-3 ${
                                         checked
-                                          ? "border-orange-500 bg-orange-50/70 dark:bg-orange-500/10 shadow-sm shadow-orange-500/5 scale-[1.01]"
-                                          : "border-gray-100 dark:border-stone-700/50 bg-white dark:bg-stone-900/80 hover:border-orange-200 dark:hover:border-orange-800 hover:scale-[1.01]"
+                                          ? "border-emerald-500 bg-emerald-50/70 dark:bg-emerald-500/10 shadow-sm shadow-emerald-500/5 scale-[1.01]"
+                                          : "border-gray-100 dark:border-stone-700/50 bg-white dark:bg-stone-900/80 hover:border-emerald-200 dark:hover:border-emerald-800 hover:scale-[1.01]"
                                       }`}
                                     >
                                       <div className="flex-1 min-w-0">
@@ -389,9 +389,9 @@ export default function GroupRolePage() {
 
         {/* Sidebar summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl p-5 shadow-sm sticky top-6 border-t-4 border-t-orange-500">
+          <div className="bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl p-5 shadow-sm sticky top-6 border-t-4 border-t-emerald-500">
             <h3 className="text-sm font-black uppercase tracking-widest text-gray-900 dark:text-white mb-5 flex items-center gap-2">
-              <svg className="w-5 h-5 text-orange-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
               </svg>
               Access Summary
@@ -403,7 +403,7 @@ export default function GroupRolePage() {
                   <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-1.5">
                     Assigned
                     {saving ? (
-                      <svg className="w-3 h-3 animate-spin text-orange-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <svg className="w-3 h-3 animate-spin text-emerald-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182" />
                       </svg>
                     ) : showCheck ? (
@@ -412,14 +412,14 @@ export default function GroupRolePage() {
                       </svg>
                     ) : null}
                   </span>
-                  <span className="text-2xl font-black text-orange-600 dark:text-orange-400">
+                  <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
                     {currentRoles.length}
                     <span className="text-xs text-gray-400 font-normal ml-1">/ {allRoles.length}</span>
                   </span>
                 </div>
                 <div className="w-full bg-gray-100 dark:bg-stone-800/40 h-2.5 rounded-full overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-amber-500 to-orange-600 h-full transition-all duration-500"
+                    className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-full transition-all duration-500"
                     style={{ width: `${Math.min((currentRoles.length / (allRoles.length || 1)) * 100, 100)}%` }}
                   />
                 </div>

@@ -63,11 +63,11 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-50 transition-colors duration-300">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[600px] w-[600px] bg-gradient-to-tr from-amber-500/10 via-orange-550/5 to-rose-500/10 blur-3xl rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[600px] w-[600px] bg-gradient-to-tr from-emerald-500/10 via-emerald-500/5 to-emerald-500/10 blur-3xl rounded-full" />
 
       <div className="mb-6 flex flex-col items-center gap-2">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-orange-500/25" />
+          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
           <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
             {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
           </span>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
 
       <div className="w-full max-w-md bg-white/80 dark:bg-stone-900/80 backdrop-blur-md shadow-xl rounded-2xl border border-stone-200/60 dark:border-stone-800/60 p-8 sm:p-10">
         <div className="text-center mb-6">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-orange-500/20">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-500/20">
             <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
@@ -111,7 +111,7 @@ export default function ForgotPasswordPage() {
                 value={identifier}
                 onChange={(e) => { setIdentifier(e.target.value); setError(""); }}
                 placeholder={whatsappEnabled ? "Enter email or phone number" : "Enter your email"}
-                className="w-full px-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
+                className="w-full px-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
               />
             </div>
 
@@ -126,7 +126,7 @@ export default function ForgotPasswordPage() {
                     onClick={() => setMethod("email")}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
                       method === "email"
-                        ? "border-orange-500 bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400"
+                        ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400"
                         : "border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-900"
                     }`}
                   >
@@ -140,7 +140,7 @@ export default function ForgotPasswordPage() {
                     onClick={() => setMethod("whatsapp")}
                     className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold border transition-all ${
                       method === "whatsapp"
-                        ? "border-orange-500 bg-orange-50 dark:bg-orange-950/30 text-orange-700 dark:text-orange-400"
+                        ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400"
                         : "border-stone-200 dark:border-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-900"
                     }`}
                   >
@@ -155,7 +155,7 @@ export default function ForgotPasswordPage() {
 
             <button
               type="submit"
-              className="w-full mt-2 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-orange-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer"
+              className="w-full mt-2 bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-emerald-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer"
             >
               {loading ? t("common.loading") : t("auth.sendCode")}
             </button>
@@ -166,7 +166,7 @@ export default function ForgotPasswordPage() {
           {t("auth.rememberPassword")}{" "}
           <Link
             href="/account/signin"
-            className="text-orange-650 dark:text-orange-400 font-bold hover:underline transition-colors ml-0.5"
+            className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-colors ml-0.5"
           >
             {t("auth.signIn")}
           </Link>

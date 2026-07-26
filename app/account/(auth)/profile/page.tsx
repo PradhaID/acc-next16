@@ -177,7 +177,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
       </div>
     );
   }
@@ -185,7 +185,7 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-sm text-zinc-500">Unable to load profile. <Link href="/dashboard" className="text-orange-600 hover:underline">Go to Dashboard</Link></p>
+        <p className="text-sm text-zinc-500">Unable to load profile. <Link href="/dashboard" className="text-emerald-600 hover:underline">Go to Dashboard</Link></p>
       </div>
     );
   }
@@ -244,7 +244,7 @@ export default function ProfilePage() {
                   className="h-44 w-44 rounded-full object-cover ring-4 ring-white dark:ring-stone-900/80 shadow-lg"
                 />
               ) : (
-                <div className="h-44 w-44 rounded-full bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 text-white flex items-center justify-center text-5xl font-extrabold ring-4 ring-white dark:ring-stone-900/80 shadow-lg">
+                <div className="h-44 w-44 rounded-full bg-gradient-to-br from-emerald-400 via-emerald-500 to-emerald-500 text-white flex items-center justify-center text-5xl font-extrabold ring-4 ring-white dark:ring-stone-900/80 shadow-lg">
                   {initial}
                 </div>
               )}
@@ -295,7 +295,7 @@ export default function ProfilePage() {
 
             <Link
               href={`/author/${user._id}`}
-              className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 transition-colors"
+              className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -394,7 +394,7 @@ export default function ProfilePage() {
               <button
                 onClick={generateApiKey}
                 disabled={generating}
-                className="text-[10px] font-black uppercase tracking-widest bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-3 py-1.5 rounded-xl transition-all"
+                className="text-[10px] font-black uppercase tracking-widest bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-3 py-1.5 rounded-xl transition-all"
               >
                 {generating ? "Generating..." : apiKey ? "Regenerate" : "Generate"}
               </button>
@@ -430,8 +430,8 @@ export default function ProfilePage() {
             )}
             {apiKey && (
               <p className="text-[10px] text-gray-400 mt-2">
-                Use this key in the <code className="text-orange-600 dark:text-orange-400 bg-gray-100 dark:bg-stone-800/40 px-1 rounded text-[10px] font-mono">Authorization: Bearer &lt;key&gt;</code> header.
-                See the <Link href="/doc/api/v1" className="text-orange-600 dark:text-orange-400 underline font-bold">API documentation</Link> for details.
+                Use this key in the <code className="text-emerald-600 dark:text-emerald-400 bg-gray-100 dark:bg-stone-800/40 px-1 rounded text-[10px] font-mono">Authorization: Bearer &lt;key&gt;</code> header.
+                See the <Link href="/doc/api/v1" className="text-emerald-600 dark:text-emerald-400 underline font-bold">API documentation</Link> for details.
               </p>
             )}
           </div>

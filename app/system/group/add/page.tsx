@@ -74,7 +74,7 @@ export default function AddGroupPage() {
         <div className="lg:col-span-3 space-y-6">
           <div className="bg-white dark:bg-stone-900/80 p-6 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm">
             {error && (
-              <div className="mb-6 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/50 text-orange-600 dark:text-orange-400 rounded-xl text-xs font-bold">
+              <div className="mb-6 p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-bold">
                 {error}
               </div>
             )}
@@ -85,7 +85,7 @@ export default function AddGroupPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   placeholder="e.g. Billing Team"
                   required
                 />
@@ -95,7 +95,7 @@ export default function AddGroupPage() {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
                   placeholder="Describe this group\u2019s purpose"
                   rows={4}
                 />
@@ -129,15 +129,15 @@ export default function AddGroupPage() {
             </p>
             <ul className="mt-3 space-y-2 text-[11px] text-gray-500">
               <li className="flex gap-2">
-                <span className="text-orange-600 font-bold shrink-0">1.</span>
+                <span className="text-emerald-600 font-bold shrink-0">1.</span>
                 <span>Create a group with a descriptive name.</span>
               </li>
               <li className="flex gap-2">
-                <span className="text-orange-600 font-bold shrink-0">2.</span>
+                <span className="text-emerald-600 font-bold shrink-0">2.</span>
                 <span>Assign roles to the group after creation.</span>
               </li>
               <li className="flex gap-2">
-                <span className="text-orange-600 font-bold shrink-0">3.</span>
+                <span className="text-emerald-600 font-bold shrink-0">3.</span>
                 <span>Users inherit all roles assigned to their group.</span>
               </li>
             </ul>

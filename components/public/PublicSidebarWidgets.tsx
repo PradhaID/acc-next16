@@ -83,7 +83,7 @@ async function getTagsWithCount() {
 const WIDGET_STYLE =
   "rounded-2xl border border-stone-200 bg-white p-5 shadow-sm dark:border-stone-800 dark:bg-stone-900";
 
-const SECTION_TITLE = "text-[10px] font-black uppercase tracking-widest text-orange-600 mb-3";
+const SECTION_TITLE = "text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3";
 
 async function LatestPostsWidget({ excludeId }: { excludeId?: string }) {
   const posts = await getLatestPostsForSidebar(5, excludeId);
@@ -115,7 +115,7 @@ async function LatestPostsWidget({ excludeId }: { excludeId?: string }) {
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-stone-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors line-clamp-2">
+              <p className="text-sm font-bold text-stone-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
                 {post.title}
               </p>
               {post.date && (
@@ -143,13 +143,13 @@ function CategoryNode({ node, activeCategoryIds, depth = 0 }: { node: any; activ
         href={`/category/${node.slug}`}
         className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs transition-colors ${
           isActive
-            ? "bg-orange-50 text-orange-700 font-bold dark:bg-orange-950/50 dark:text-orange-400"
+            ? "bg-emerald-50 text-emerald-700 font-bold dark:bg-emerald-950/50 dark:text-emerald-400"
             : "text-stone-600 hover:bg-stone-50 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-white"
         }`}
         style={{ paddingLeft: `${depth * 12 + 8}px` }}
       >
         {node.children.length > 0 ? (
-          <svg className={`h-3 w-3 shrink-0 ${isActive ? "text-orange-500" : "text-stone-300 dark:text-stone-600"}`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+          <svg className={`h-3 w-3 shrink-0 ${isActive ? "text-emerald-500" : "text-stone-300 dark:text-stone-600"}`} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
         ) : (
@@ -206,7 +206,7 @@ async function TagsCloudWidget() {
             <Link
               key={tag.name}
               href={`/tag/${tagSlug}`}
-              className={`inline-flex items-center rounded-lg border border-stone-200 bg-stone-50 text-stone-600 transition-colors hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:border-orange-700 dark:hover:bg-orange-950/30 dark:hover:text-orange-400 ${size}`}
+              className={`inline-flex items-center rounded-lg border border-stone-200 bg-stone-50 text-stone-600 transition-colors hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400 ${size}`}
             >
               {tag.name}
             </Link>

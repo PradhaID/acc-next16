@@ -74,7 +74,7 @@ function decodeType(code: string): string {
 }
 
 const statusColors: Record<string, string> = {
-  Pending: "bg-amber-50 border-amber-100 text-amber-600 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-400",
+  Pending: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Confirmed: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
   Rejected: "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800 dark:text-red-400",
   Reversed: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800 dark:text-emerald-400",
@@ -581,11 +581,11 @@ export default function TransactionDetailPage({
                 )}
                 {transaction.reversed?.at && (
                   <div className="flex justify-between items-start px-4 py-3">
-                    <span className="text-xs font-bold text-orange-600">Reversed</span>
+                    <span className="text-xs font-bold text-emerald-600">Reversed</span>
                     <div className="text-right">
-                      <p className="text-xs font-mono font-bold text-orange-600"><FormattedDateTime date={transaction.reversed.at} /></p>
+                      <p className="text-xs font-mono font-bold text-emerald-600"><FormattedDateTime date={transaction.reversed.at} /></p>
                       {transaction.reversed?.by && (
-                        <p className="text-[10px] text-orange-500">{usersMap.get(transaction.reversed.by) || "—"}</p>
+                        <p className="text-[10px] text-emerald-500">{usersMap.get(transaction.reversed.by) || "—"}</p>
                       )}
                     </div>
                   </div>
@@ -641,7 +641,7 @@ export default function TransactionDetailPage({
                           <td className="px-4 py-2 text-right font-bold text-emerald-600">
                             {item.position === "Db" ? formatNumber(item.amount) : "-"}
                           </td>
-                          <td className="px-4 py-2 text-right font-bold text-orange-600">
+                          <td className="px-4 py-2 text-right font-bold text-emerald-600">
                             {item.position === "Cr" ? formatNumber(item.amount) : "-"}
                           </td>
                         </tr>
@@ -654,7 +654,7 @@ export default function TransactionDetailPage({
                       <td className={`px-4 py-2 text-right ${totals.debit !== totals.credit ? "text-red-600" : "text-emerald-600"}`}>
                         {formatNumber(totals.debit)}
                       </td>
-                      <td className={`px-4 py-2 text-right ${totals.debit !== totals.credit ? "text-red-600" : "text-orange-600"}`}>
+                      <td className={`px-4 py-2 text-right ${totals.debit !== totals.credit ? "text-red-600" : "text-emerald-600"}`}>
                         {formatNumber(totals.credit)}
                       </td>
                     </tr>

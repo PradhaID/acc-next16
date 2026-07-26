@@ -100,7 +100,7 @@ export default function MediaDetail({ id }: { id: string }) {
         }
     };
 
-    if (loading) return <div className="p-20 text-center font-bold animate-pulse text-orange-600">{t("media.loadingData")}</div>;
+    if (loading) return <div className="p-20 text-center font-bold animate-pulse text-emerald-600">{t("media.loadingData")}</div>;
 
     return (
         <div className="max-w-full mx-auto pb-20 space-y-6">
@@ -109,7 +109,7 @@ export default function MediaDetail({ id }: { id: string }) {
             {isClient && toast.show && createPortal(
                 <div className="fixed top-24 right-8 z-[9999] animate-in fade-in slide-in-from-right-5 duration-300">
                     <div className="bg-gray-900 dark:bg-white text-white dark:text-stone-100 px-6 py-4 rounded-[1.5rem] shadow-2xl flex items-center gap-3 border border-white/10 min-w-[280px]">
-                        <div className="bg-orange-500 rounded-full p-1.5 shrink-0">
+                        <div className="bg-emerald-500 rounded-full p-1.5 shrink-0">
                             <CheckIcon className="w-4 h-4 text-white" strokeWidth={3} />
                         </div>
                         <div className="flex flex-col">
@@ -129,7 +129,7 @@ export default function MediaDetail({ id }: { id: string }) {
                     </button>
                     <div>
                         <h1 className="text-xl font-bold">{t("media.editMedia")}</h1>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-orange-600">{t("media.manageAsset")}</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{t("media.manageAsset")}</p>
                     </div>
                 </div>
 
@@ -143,7 +143,7 @@ export default function MediaDetail({ id }: { id: string }) {
                     <button
                         onClick={handleUpdate}
                         disabled={saving}
-                        className="bg-orange-600 text-white flex items-center gap-2 px-6 py-2.5 rounded-2xl font-bold shadow-lg shadow-orange-100/20 dark:shadow-none hover:scale-105 active:scale-95 transition-all text-sm"
+                        className="bg-emerald-600 text-white flex items-center gap-2 px-6 py-2.5 rounded-2xl font-bold shadow-lg shadow-emerald-100/20 dark:shadow-none hover:scale-105 active:scale-95 transition-all text-sm"
                     >
                         {saving ? t("media.saving") : <><CheckIcon className="w-5 h-5 stroke-[3px]" /> {t("actions.update")}</>}
                     </button>
@@ -174,17 +174,17 @@ export default function MediaDetail({ id }: { id: string }) {
                                 type="text"
                                 value={form.name}
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                                className="w-full text-2xl font-bold bg-transparent border-none focus:ring-0 p-1 border-b border-transparent focus:border-orange-500 transition-all"
+                                className="w-full text-2xl font-bold bg-transparent border-none focus:ring-0 p-1 border-b border-transparent focus:border-emerald-500 transition-all"
                                 placeholder={t("media.displayName")}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1 text-orange-600">{t("media.descriptionAltText")}</label>
+                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1 text-emerald-600">{t("media.descriptionAltText")}</label>
                             <textarea
                                 rows={5}
                                 value={form.description || ""}
                                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                                className="w-full mt-2 p-5 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-[2rem] text-sm outline-none focus:ring-2 focus:ring-orange-500 resize-none transition-all"
+                                className="w-full mt-2 p-5 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-[2rem] text-sm outline-none focus:ring-2 focus:ring-emerald-500 resize-none transition-all"
                                 placeholder={t("media.descriptionPlaceholder")}
                             />
                         </div>
@@ -195,12 +195,12 @@ export default function MediaDetail({ id }: { id: string }) {
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-stone-800/40 p-8 rounded-[2rem] border border-gray-200 dark:border-stone-700/50 shadow-sm space-y-6">
                         <h3 className="font-bold flex items-center gap-2 text-gray-800 dark:text-stone-100 italic">
-                            <InformationCircleIcon className="w-5 h-5 text-orange-600" /> {t("media.fileProperties")}
+                            <InformationCircleIcon className="w-5 h-5 text-emerald-600" /> {t("media.fileProperties")}
                         </h3>
 
                         <div className="space-y-4">
                             {[
-                                { label: t("media.format"), value: form.extension, color: "text-orange-600" },
+                                { label: t("media.format"), value: form.extension, color: "text-emerald-600" },
                                 { label: t("media.fileSize"), value: `${(form.size / 1024).toFixed(2)} KB` },
                                 { label: t("media.mimeType"), value: form.mimeType, small: true },
                                 { label: t("media.dimensions"), value: form.dimensions || "N/A" },
@@ -222,7 +222,7 @@ export default function MediaDetail({ id }: { id: string }) {
                                 </div>
                                 <button
                                     onClick={handleCopyLink}
-                                    className={`p-4 rounded-2xl transition-all shadow-lg ${copied ? 'bg-emerald-500 text-white shadow-emerald-100' : 'bg-orange-600 text-white hover:bg-orange-700 shadow-orange-100/20'}`}
+                                    className={`p-4 rounded-2xl transition-all shadow-lg ${copied ? 'bg-emerald-500 text-white shadow-emerald-100' : 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-100/20'}`}
                                 >
                                     {copied ? <CheckIcon className="w-5 h-5" /> : <ClipboardIcon className="w-5 h-5" />}
                                 </button>
@@ -238,7 +238,7 @@ export default function MediaDetail({ id }: { id: string }) {
                     <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-md animate-in fade-in duration-300" onClick={() => setShowDeleteModal(false)} />
                     <div className="relative bg-white dark:bg-stone-800/40 rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl animate-in fade-in zoom-in duration-200 border border-gray-100 dark:border-stone-700/50">
                         <div className="flex items-center gap-4 mb-6">
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${usageDetails.length > 0 ? 'bg-amber-50 text-amber-500' : 'bg-red-50 text-red-500'}`}>
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${usageDetails.length > 0 ? 'bg-emerald-50 text-emerald-500' : 'bg-red-50 text-red-500'}`}>
                                 <TrashIcon className="w-7 h-7" />
                             </div>
                             <div>
@@ -261,7 +261,7 @@ export default function MediaDetail({ id }: { id: string }) {
                                 <div className="bg-gray-50 dark:bg-stone-900/80 rounded-2xl p-4 max-h-40 overflow-y-auto space-y-2 border border-gray-100 dark:border-stone-700/50">
                                     {usageDetails.map((use, i) => (
                                         <div key={i} className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tight">
-                                            <span className="text-orange-500 bg-orange-50 px-2 py-0.5 rounded-md">{use.type}</span>
+                                            <span className="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-md">{use.type}</span>
                                             <span className="text-gray-700 truncate ml-4">{use.title}</span>
                                         </div>
                                     ))}

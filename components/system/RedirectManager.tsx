@@ -154,7 +154,7 @@ export default function RedirectManager() {
             onClick={() => setTab("redirects")}
             className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition ${
               tab === "redirects"
-                ? "border-orange-500 text-orange-600"
+                ? "border-emerald-500 text-emerald-600"
                 : "border-transparent text-gray-400 hover:text-gray-600"
             }`}
           >
@@ -164,7 +164,7 @@ export default function RedirectManager() {
             onClick={() => setTab("log")}
             className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider border-b-2 transition ${
               tab === "log"
-                ? "border-orange-500 text-orange-600"
+                ? "border-emerald-500 text-emerald-600"
                 : "border-transparent text-gray-400 hover:text-gray-600"
             }`}
           >
@@ -176,7 +176,7 @@ export default function RedirectManager() {
             <span className="text-xs text-gray-400 font-bold">{redirects.length} {t("redirects.ruleCount")}{redirects.length !== 1 ? "s" : ""}</span>
             <button
               onClick={() => { resetForm(); setShowForm(true); }}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-3.5 py-2 text-[11px] font-bold text-white shadow-md shadow-orange-500/10 transition-all hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-3.5 py-2 text-[11px] font-bold text-white shadow-md shadow-emerald-500/10 transition-all hover:scale-105 active:scale-95"
             >
               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -208,7 +208,7 @@ export default function RedirectManager() {
                   value={form.from}
                   onChange={(e) => setForm({ ...form, from: e.target.value })}
                   placeholder="/old-page"
-                  className="w-full rounded-xl border border-gray-200 dark:border-stone-700/50 bg-gray-50 dark:bg-stone-800/40 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:border-orange-500 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-200 dark:border-stone-700/50 bg-gray-50 dark:bg-stone-800/40 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
               <div>
@@ -217,7 +217,7 @@ export default function RedirectManager() {
                   value={form.to}
                   onChange={(e) => setForm({ ...form, to: e.target.value })}
                   placeholder="/new-page"
-                  className="w-full rounded-xl border border-gray-200 dark:border-stone-700/50 bg-gray-50 dark:bg-stone-800/40 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:border-orange-500 focus:outline-none"
+                  className="w-full rounded-xl border border-gray-200 dark:border-stone-700/50 bg-gray-50 dark:bg-stone-800/40 px-3 py-2 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function RedirectManager() {
                 <select
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value as "301" | "302" | "308" })}
-                  className="rounded-xl border border-gray-200 dark:border-stone-700/50 bg-gray-50 dark:bg-stone-800/40 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-orange-500 focus:outline-none"
+                  className="rounded-xl border border-gray-200 dark:border-stone-700/50 bg-gray-50 dark:bg-stone-800/40 px-3 py-2 text-sm text-gray-900 dark:text-white focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="301">301 — Permanent</option>
                   <option value="302">302 — Temporary</option>
@@ -241,7 +241,7 @@ export default function RedirectManager() {
                   id="isPattern"
                   checked={form.isPattern}
                   onChange={(e) => setForm({ ...form, isPattern: e.target.checked })}
-                  className="h-4 w-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                  className="h-4 w-4 rounded border-gray-300 text-emerald-500 focus:ring-emerald-500"
                 />
                 <label htmlFor="isPattern" className="text-xs text-gray-600 dark:text-stone-400">
                   {t("redirects.patternMode")}
@@ -260,7 +260,7 @@ export default function RedirectManager() {
               </button>
               <button
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 text-[11px] font-bold text-white shadow-md shadow-orange-500/10 transition-all hover:scale-105 active:scale-95"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-[11px] font-bold text-white shadow-md shadow-emerald-500/10 transition-all hover:scale-105 active:scale-95"
               >
                 {editingId ? t("redirects.updateRule") : t("redirects.createRule")}
               </button>
@@ -271,7 +271,7 @@ export default function RedirectManager() {
       {/* Loading */}
       {loading ? (
         <div className="py-20 text-center">
-          <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
       ) : tab === "redirects" ? (
           redirects.length === 0 ? (
@@ -291,7 +291,7 @@ export default function RedirectManager() {
                     <button
                       onClick={() => handleToggle(item)}
                       className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors shrink-0 ${
-                        item.isActive ? "bg-orange-500" : "bg-gray-300 dark:bg-stone-700"
+                        item.isActive ? "bg-emerald-500" : "bg-gray-300 dark:bg-stone-700"
                       }`}
                     >
                       <span
@@ -306,14 +306,14 @@ export default function RedirectManager() {
                     <svg className="w-3 h-3 inline mx-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
-                    <span className="text-orange-600">{item.to}</span>
+                    <span className="text-emerald-600">{item.to}</span>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-[10px] text-gray-400 font-bold">{item.hitCount} {t("redirects.hits")}</span>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEdit(item)}
-                        className="p-1.5 text-gray-400 hover:text-orange-600 transition-colors"
+                        className="p-1.5 text-gray-400 hover:text-emerald-600 transition-colors"
                         title="Edit"
                       >
                         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -351,9 +351,9 @@ export default function RedirectManager() {
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-stone-700/30">
                     {redirects.map((item) => (
-                      <tr key={item._id} className="hover:bg-orange-50/20 dark:hover:bg-orange-500/5 transition-all">
+                      <tr key={item._id} className="hover:bg-emerald-50/20 dark:hover:bg-emerald-500/5 transition-all">
                         <td className="px-4 py-3 font-mono text-gray-800 dark:text-stone-100">{item.from}</td>
-                        <td className="px-4 py-3 font-mono text-orange-600">{item.to}</td>
+                        <td className="px-4 py-3 font-mono text-emerald-600">{item.to}</td>
                         <td className="px-4 py-3">
                           <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider border bg-gray-50 dark:bg-stone-800/40 text-gray-700 dark:text-stone-300 border-gray-200 dark:border-stone-700/50">
                             {item.type}
@@ -364,7 +364,7 @@ export default function RedirectManager() {
                           <button
                             onClick={() => handleToggle(item)}
                             className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                              item.isActive ? "bg-orange-500" : "bg-gray-300 dark:bg-stone-700"
+                              item.isActive ? "bg-emerald-500" : "bg-gray-300 dark:bg-stone-700"
                             }`}
                           >
                             <span
@@ -376,7 +376,7 @@ export default function RedirectManager() {
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-1">
-                            <button onClick={() => handleEdit(item)} className="p-1 text-gray-400 hover:text-orange-600 transition-colors" title="Edit">
+                            <button onClick={() => handleEdit(item)} className="p-1 text-gray-400 hover:text-emerald-600 transition-colors" title="Edit">
                               <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" />
                               </svg>
@@ -408,7 +408,7 @@ export default function RedirectManager() {
               <div key={log._id} className="p-4">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <span className="font-mono text-sm font-bold text-gray-900 dark:text-white truncate">{log.url}</span>
-                  <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-black border bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800">
+                  <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-black border bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800">
                     {log.totalHits || 1} {t("redirects.hits")}
                   </span>
                 </div>
@@ -417,7 +417,7 @@ export default function RedirectManager() {
                 )}
                 <button
                   onClick={() => handleCreateFromLog(log.url)}
-                  className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 px-3 py-2 text-[10px] font-bold text-orange-600 dark:text-orange-400 transition-all"
+                  className="flex-1 inline-flex items-center justify-center gap-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 px-3 py-2 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 transition-all"
                 >
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -451,7 +451,7 @@ export default function RedirectManager() {
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-stone-700/30">
                   {logs.map((log) => (
-                    <tr key={log._id} className="hover:bg-orange-50/20 dark:hover:bg-orange-500/5 transition-all">
+                    <tr key={log._id} className="hover:bg-emerald-50/20 dark:hover:bg-emerald-500/5 transition-all">
                       <td className="px-4 py-3 font-mono text-gray-800 dark:text-stone-100">{log.url}</td>
                       <td className="px-4 py-3 font-mono font-bold text-gray-500">{log.totalHits || 1}</td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-500 whitespace-nowrap">
@@ -462,7 +462,7 @@ export default function RedirectManager() {
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => handleCreateFromLog(log.url)}
-                            className="inline-flex items-center gap-1 rounded-lg bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 px-2 py-1 text-[10px] font-bold text-orange-600 dark:text-orange-400 transition-all"
+                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 transition-all"
                           >
                             <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

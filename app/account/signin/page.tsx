@@ -107,12 +107,12 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-50 transition-colors duration-300">
       {/* Decorative ambient glowing orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[600px] w-[600px] bg-gradient-to-tr from-amber-500/10 via-orange-550/5 to-rose-500/10 blur-3xl rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[600px] w-[600px] bg-gradient-to-tr from-emerald-500/10 via-emerald-500/5 to-emerald-500/10 blur-3xl rounded-full" />
       
       {/* App branding header */}
       <div className="mb-6 flex flex-col items-center gap-2">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-orange-500/25" />
+          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
           <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
             {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
           </span>
@@ -134,7 +134,7 @@ export default function SignInPage() {
           </div>
         )}
         {needsVerification && (
-          <div className="mb-4 bg-amber-50/80 border border-amber-200/60 text-amber-700 dark:bg-amber-950/20 dark:border-amber-800/30 dark:text-amber-400 px-4 py-4 rounded-xl text-sm text-center space-y-3">
+          <div className="mb-4 bg-emerald-50/80 border border-emerald-200/60 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800/30 dark:text-emerald-400 px-4 py-4 rounded-xl text-sm text-center space-y-3">
             <div className="flex items-center justify-center gap-2 font-semibold">
               <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.981l7.5-4.039a2.25 2.25 0 012.134 0l7.5 4.039a2.25 2.25 0 011.183 1.98V19.5z" />
@@ -145,11 +145,11 @@ export default function SignInPage() {
               type="button"
               onClick={handleResendVerification}
               disabled={resending}
-              className="inline-flex items-center gap-2 rounded-xl border border-amber-300 dark:border-amber-700 bg-white dark:bg-stone-900 px-4 py-2 text-xs font-bold text-amber-700 dark:text-amber-300 shadow-sm hover:bg-amber-50 dark:hover:bg-stone-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-stone-900 px-4 py-2 text-xs font-bold text-emerald-700 dark:text-emerald-300 shadow-sm hover:bg-emerald-50 dark:hover:bg-stone-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {resending ? (
                 <>
-                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" />
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
                   Sending...
                 </>
               ) : (
@@ -176,7 +176,7 @@ export default function SignInPage() {
                 {t("auth.identifier")}
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                   <UserIcon className="h-5 w-5" />
                 </div>
                 <input
@@ -188,7 +188,7 @@ export default function SignInPage() {
                   value={form.identifier}
                   onChange={handleChange}
                   placeholder="Enter email or username"
-                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
+                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
                 />
               </div>
             </div>
@@ -200,7 +200,7 @@ export default function SignInPage() {
                 </label>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                   <LockClosedIcon className="h-5 w-5" />
                 </div>
                 <input
@@ -212,12 +212,12 @@ export default function SignInPage() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Enter password"
-                  className="w-full pl-11 pr-10 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
+                  className="w-full pl-11 pr-10 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 dark:text-stone-500 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 dark:text-stone-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor" aria-label={t("auth.hidePassword")}>
@@ -235,7 +235,7 @@ export default function SignInPage() {
 
             <button
               type="submit"
-              className="w-full mt-2 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-orange-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer"
+              className="w-full mt-2 bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-emerald-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer"
             >
               {loading ? t("common.loading") : t("auth.signIn")}
             </button>
@@ -247,7 +247,7 @@ export default function SignInPage() {
                 type="checkbox"
                 checked={form.rememberMe}
                 onChange={handleChange}
-                className="h-4 w-4 rounded border-stone-300 text-orange-500 focus:ring-orange-500"
+                className="h-4 w-4 rounded border-stone-300 text-emerald-500 focus:ring-emerald-500"
               />
               <label htmlFor="rememberMe" className="text-xs text-stone-500 dark:text-stone-400">
                 {t("auth.rememberMe")}
@@ -262,7 +262,7 @@ export default function SignInPage() {
               Don&apos;t have an account?{" "}
               <Link
                 href="/account/signup"
-                className="text-orange-650 dark:text-orange-400 font-bold hover:underline transition-colors ml-0.5"
+                className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-colors ml-0.5"
               >
                 Create one
               </Link>
@@ -271,7 +271,7 @@ export default function SignInPage() {
           <p className="text-xs text-stone-500 dark:text-stone-400">
               <Link
                 href="/account/forgot-password"
-                className="text-orange-650 dark:text-orange-400 font-bold hover:underline transition-colors"
+                className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-colors"
               >
                 {t("auth.forgotPassword")}
               </Link>

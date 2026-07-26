@@ -37,7 +37,7 @@ export default async function PublicFooter() {
               <Link
                 key={page.slug}
                 href={`/${page.slug}`}
-                className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
               >
                 {page.title}
               </Link>

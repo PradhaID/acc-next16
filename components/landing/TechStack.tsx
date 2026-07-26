@@ -1,12 +1,12 @@
 const tech = [
   { badge: "NEXT", label: "Next.js 16", desc: "App Router, React 19", tint: "bg-stone-950 text-white" },
-  { badge: "TW4", label: "Tailwind CSS v4", desc: "Sleek styling engine", tint: "bg-orange-500 text-white" },
+  { badge: "TW4", label: "Tailwind CSS v4", desc: "Sleek styling engine", tint: "bg-emerald-500 text-white" },
   { badge: "MDB", label: "MongoDB", desc: "Flexible NoSQL DB", tint: "bg-emerald-600 text-white" },
   { badge: "TS", label: "TypeScript", desc: "Full type safety", tint: "bg-emerald-600 text-white" },
-  { badge: "JWT", label: "JOSE JWT", desc: "Encrypted tokens", tint: "bg-rose-600 text-white" },
+  { badge: "JWT", label: "JOSE JWT", desc: "Encrypted tokens", tint: "bg-emerald-600 text-white" },
   { badge: "TIP", label: "TipTap", desc: "Rich text editor", tint: "bg-violet-600 text-white" },
   { badge: "SHP", label: "Sharp", desc: "Image processing", tint: "bg-cyan-600 text-white" },
-  { badge: "NOD", label: "Nodemailer", desc: "Email service", tint: "bg-amber-600 text-white" },
+  { badge: "NOD", label: "Nodemailer", desc: "Email service", tint: "bg-emerald-600 text-white" },
 ];
 
 export default function TechStack() {

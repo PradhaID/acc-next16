@@ -311,9 +311,9 @@ export default function AddTransactionPage() {
                   </div>
                 ))}
               </div>
-              <div className="mt-2 px-3 py-2 bg-amber-50 dark:bg-amber-900/10 rounded-lg">
-                <p className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Code Format</p>
-                <p className="text-[10px] text-amber-600 dark:text-amber-300 font-semibold mt-0.5">
+              <div className="mt-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/10 rounded-lg">
+                <p className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">Code Format</p>
+                <p className="text-[10px] text-emerald-600 dark:text-emerald-300 font-semibold mt-0.5">
                   {typeOptions.find((o) => o.value === type)?.code}-YYYYMMDD-RND
                 </p>
               </div>
@@ -383,7 +383,7 @@ export default function AddTransactionPage() {
                         type="button"
                         onClick={() => updatePosition(line.key, "Cr")}
                         disabled={submitting}
-                        className={`flex-1 py-1 text-[10px] font-black uppercase rounded-md transition-all ${line.position === "Cr" ? "bg-white dark:bg-gray-700 text-orange-500 shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"}`}
+                        className={`flex-1 py-1 text-[10px] font-black uppercase rounded-md transition-all ${line.position === "Cr" ? "bg-white dark:bg-gray-700 text-emerald-500 shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"}`}
                       >Cr</button>
                     </div>
                   </td>

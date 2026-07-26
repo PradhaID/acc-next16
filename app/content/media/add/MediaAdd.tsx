@@ -89,7 +89,7 @@ export default function MediaAdd() {
                     </Link>
                     <div>
                         <h1 className="text-xl font-bold">{t("media.uploadMedia")}</h1>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-orange-600">{t("media.newAsset")}</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">{t("media.newAsset")}</p>
                     </div>
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -111,9 +111,9 @@ export default function MediaAdd() {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white dark:bg-stone-800/40 rounded-[2.5rem] border border-gray-200 dark:border-stone-700/50 p-8 shadow-sm">
                         {!file ? (
-                            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-stone-700/50 rounded-[2rem] p-20 cursor-pointer hover:bg-orange-50/30 hover:border-orange-400 transition-all group">
-                                <div className="p-5 bg-orange-50 dark:bg-stone-900/80 rounded-3xl group-hover:scale-110 transition-transform">
-                                    <CloudArrowUpIcon className="w-12 h-12 text-orange-600" />
+                            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 dark:border-stone-700/50 rounded-[2rem] p-20 cursor-pointer hover:bg-emerald-50/30 hover:border-emerald-400 transition-all group">
+                                <div className="p-5 bg-emerald-50 dark:bg-stone-900/80 rounded-3xl group-hover:scale-110 transition-transform">
+                                    <CloudArrowUpIcon className="w-12 h-12 text-emerald-600" />
                                 </div>
                                 <span className="mt-4 font-bold text-gray-700 dark:text-stone-300">{t("media.dragToUpload")}</span>
                                 <span className="text-[10px] uppercase font-black text-gray-400 tracking-tighter mt-1">{t("media.uploadFormats")}</span>
@@ -125,7 +125,7 @@ export default function MediaAdd() {
                                     <img src={preview} alt="Preview" className="w-full h-auto max-h-[500px] object-contain mx-auto" />
                                 ) : (
                                     <div className="p-20 flex flex-col items-center">
-                                        <DocumentIcon className="w-20 h-20 text-orange-200" />
+                                        <DocumentIcon className="w-20 h-20 text-emerald-200" />
                                         <p className="mt-4 font-bold">{file.name}</p>
                                     </div>
                                 )}
@@ -144,7 +144,7 @@ export default function MediaAdd() {
                 <div className="space-y-6">
                     <div className="bg-white dark:bg-stone-800/40 p-6 rounded-3xl border border-gray-200 dark:border-stone-700/50 shadow-sm space-y-5">
                         <h3 className="font-bold flex items-center gap-2 text-gray-800 dark:text-stone-100 italic">
-                            <PhotoIcon className="w-5 h-5 text-orange-600" /> {t("media.assetInfo")}
+                            <PhotoIcon className="w-5 h-5 text-emerald-600" /> {t("media.assetInfo")}
                         </h3>
 
                         <div className="space-y-1">
@@ -154,12 +154,12 @@ export default function MediaAdd() {
                                 value={form.description}
                                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                                 placeholder={t("media.descriptionPlaceholder")}
-                                className="w-full mt-1.5 p-4 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-orange-500 resize-none"
+                                className="w-full mt-1.5 p-4 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
                             />
                         </div>
 
-                        <div className="p-4 bg-orange-50 dark:bg-orange-950/20 rounded-2xl border border-orange-100 dark:border-orange-900">
-                            <p className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest mb-2">{t("media.fileDetail")}</p>
+                        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900">
+                            <p className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-2">{t("media.fileDetail")}</p>
                             <div className="space-y-1 text-xs font-medium">
                                 <p className="truncate">{t("content.name")}: {file?.name || '-'}</p>
                                 <p>{t("media.mimeType")}: {file?.type || '-'}</p>

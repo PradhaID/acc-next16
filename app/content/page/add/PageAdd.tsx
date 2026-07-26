@@ -113,7 +113,7 @@ export default function PageAdd() {
         ? "bg-emerald-50 text-emerald-600"
         : isSlugValid === false
             ? "bg-red-50 text-red-600"
-            : "bg-orange-50 text-orange-600";
+            : "bg-emerald-50 text-emerald-600";
     useEffect(() => {
         fetch("/api/content/page?status=published")
             .then(res => res.json())
@@ -261,20 +261,20 @@ export default function PageAdd() {
         <div className="max-w-full mx-auto pb-20 space-y-6">
             {/* Draft Restore Prompt */}
             {showRestorePrompt && (
-                <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-center justify-between">
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                        <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                         </svg>
-                        <p className="text-sm text-amber-800 dark:text-amber-200">
+                        <p className="text-sm text-emerald-800 dark:text-emerald-200">
                             You have an unsaved draft. Would you like to restore it?
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <button onClick={handleDismissDraft} className="px-3 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 rounded-lg">
+                        <button onClick={handleDismissDraft} className="px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg">
                             Discard
                         </button>
-                        <button onClick={handleRestoreDraft} className="px-3 py-1.5 text-xs font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg">
+                        <button onClick={handleRestoreDraft} className="px-3 py-1.5 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg">
                             Restore
                         </button>
                     </div>
@@ -304,7 +304,7 @@ export default function PageAdd() {
                                         key={s}
                                         type="button"
                                         onClick={() => setForm(prev => ({ ...prev, status: s }))}
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${form.status === s ? 'bg-white dark:bg-stone-700 text-orange-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${form.status === s ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
                                     >
                                         {s.toUpperCase()}
                                     </button>
@@ -373,7 +373,7 @@ export default function PageAdd() {
                     {/* Hierarchy Selector & Order */}
                     <div className="bg-white dark:bg-stone-800/40 p-6 rounded-3xl border border-gray-200 dark:border-stone-700/50 shadow-sm space-y-5">
                         <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-800 dark:text-stone-100">
-                            <ArrowsUpDownIcon className="w-5 h-5 text-orange-500" /> Page Hierarchy
+                            <ArrowsUpDownIcon className="w-5 h-5 text-emerald-500" /> Page Hierarchy
                         </h3>
 
                         <div className="space-y-1">
@@ -382,7 +382,7 @@ export default function PageAdd() {
                                 name="parent"
                                 value={form.parent}
                                 onChange={handleChange}
-                                className="w-full mt-1.5 p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-orange-500 appearance-none"
+                                className="w-full mt-1.5 p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-500 appearance-none"
                             >
                                 <option value="">None (Top Level)</option>
                                 {pageOptions.map(opt => (
@@ -398,7 +398,7 @@ export default function PageAdd() {
                                 name="menuGroup"
                                 value={form.menuGroup}
                                 onChange={handleChange}
-                                className="w-full mt-1.5 p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-orange-500 appearance-none"
+                                className="w-full mt-1.5 p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-500 appearance-none"
                             >
                                 <option value="main">Main Menu (Header)</option>
                                 <option value="secondary">Secondary (Footer)</option>
@@ -416,7 +416,7 @@ export default function PageAdd() {
                                     value={form.menuOrder}
                                     onChange={handleChange}
                                     placeholder="0"
-                                    className="w-full p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="w-full p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-bold outline-none focus:ring-2 focus:ring-emerald-500"
                                 />
                                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-300 uppercase">Index</span>
                             </div>
@@ -427,7 +427,7 @@ export default function PageAdd() {
                     {/* Language Card */}
                     <div className="bg-white dark:bg-stone-800/40 p-6 rounded-3xl border border-gray-200 dark:border-stone-700/50 shadow-sm space-y-4">
                         <h3 className="font-bold flex items-center gap-2 text-gray-800 dark:text-stone-100">
-                            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                             </svg>
                             {t("content.language")}
@@ -436,7 +436,7 @@ export default function PageAdd() {
                             name="locale"
                             value={form.locale}
                             onChange={handleChange}
-                            className="w-full mt-1.5 p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-orange-500 appearance-none"
+                            className="w-full mt-1.5 p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-2xl text-sm font-medium outline-none focus:ring-2 focus:ring-emerald-500 appearance-none"
                         >
                             {SUPPORTED_LOCALES.map(loc => (
                                 <option key={loc} value={loc}>{getLocaleLabel(loc as "en_US" | "id_ID")}</option>
@@ -485,7 +485,7 @@ export default function PageAdd() {
                                         }
                                     }}
                                     placeholder="SEO Keywords (Enter)..."
-                                    className="flex-1 text-xs p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-xl outline-none focus:ring-2 focus:ring-orange-500"
+                                    className="flex-1 text-xs p-3 bg-gray-50 dark:bg-stone-900/80 border border-gray-100 dark:border-stone-700/50 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500"
                                 />
                             </div>
 
@@ -503,28 +503,28 @@ export default function PageAdd() {
                     </div>
 
                     {/* SEO Card */}
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-2xl p-5 space-y-4">
-                        <h3 className="font-bold flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                    <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/30 dark:to-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl p-5 space-y-4">
+                        <h3 className="font-bold flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
                             <GlobeAltIcon className="w-5 h-5" /> SEO Settings
                         </h3>
                         <div className="space-y-3">
                             <div className="space-y-1">
-                                <label className="text-[10px] font-black uppercase text-amber-600/70 dark:text-amber-400/70">{t("content.metaTitle")}</label>
+                                <label className="text-[10px] font-black uppercase text-emerald-600/70 dark:text-emerald-400/70">{t("content.metaTitle")}</label>
                                 <input
                                     name="meta.title"
                                     value={form.meta.title}
                                     onChange={handleChange}
-                                    className="w-full bg-white/70 dark:bg-stone-800/40 border border-amber-200/50 dark:border-amber-900/30 rounded-xl p-3 text-sm outline-none placeholder:text-amber-400/40 focus:ring-1 focus:ring-amber-500"
+                                    className="w-full bg-white/70 dark:bg-stone-800/40 border border-emerald-200/50 dark:border-emerald-900/30 rounded-xl p-3 text-sm outline-none placeholder:text-emerald-400/40 focus:ring-1 focus:ring-emerald-500"
                                 />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-[10px] font-black uppercase text-amber-600/70 dark:text-amber-400/70">{t("content.metaDescription")}</label>
+                                <label className="text-[10px] font-black uppercase text-emerald-600/70 dark:text-emerald-400/70">{t("content.metaDescription")}</label>
                                 <textarea
                                     name="excerpt"
                                     value={form.excerpt}
                                     onChange={handleChange}
                                     rows={3}
-                                    className="w-full bg-white/70 dark:bg-stone-800/40 border border-amber-200/50 dark:border-amber-900/30 rounded-xl p-3 text-sm outline-none resize-none focus:ring-1 focus:ring-amber-500"
+                                    className="w-full bg-white/70 dark:bg-stone-800/40 border border-emerald-200/50 dark:border-emerald-900/30 rounded-xl p-3 text-sm outline-none resize-none focus:ring-1 focus:ring-emerald-500"
                                 />
                             </div>
                         </div>

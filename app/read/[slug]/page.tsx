@@ -141,7 +141,7 @@ export default async function ReadPostPage({
           <div className="min-w-0 flex-1 max-w-4xl">
             {/* Breadcrumb */}
             <nav className="mb-8 flex items-center gap-2 text-xs text-stone-400 dark:text-stone-500">
-              <Link href="/" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">Home</Link>
+              <Link href="/" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Home</Link>
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
               <span className="text-stone-500 dark:text-stone-400">Posts</span>
             </nav>
@@ -153,7 +153,7 @@ export default async function ReadPostPage({
                   <Link
                     key={cat._id}
                     href={`/category/${cat.slug}`}
-                    className="inline-flex items-center rounded-full border border-orange-200/60 bg-orange-50/50 px-3 py-1 text-xs font-semibold text-orange-700 dark:border-orange-800/30 dark:bg-orange-950/30 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/30 transition-colors"
+                    className="inline-flex items-center rounded-full border border-emerald-200/60 bg-emerald-50/50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:border-emerald-800/30 dark:bg-emerald-950/30 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -178,7 +178,7 @@ export default async function ReadPostPage({
                         className="h-6 w-6 rounded-full object-cover ring-1 ring-stone-200 dark:ring-stone-700"
                       />
                     ) : (
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100 text-[10px] font-bold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
                         {((post.author.fullName || post.author.username || "?").trim().charAt(0) || "?").toUpperCase()}
                       </span>
                     )}
@@ -230,7 +230,7 @@ export default async function ReadPostPage({
                         <Link
                           key={tag}
                           href={`/tag/${tagSlug}`}
-                          className="inline-flex items-center rounded-lg border border-stone-200 bg-white px-2.5 py-1 text-xs font-medium text-stone-600 transition-colors hover:border-orange-300 hover:text-orange-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:border-orange-700 dark:hover:text-orange-400"
+                          className="inline-flex items-center rounded-lg border border-stone-200 bg-white px-2.5 py-1 text-xs font-medium text-stone-600 transition-colors hover:border-emerald-300 hover:text-emerald-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:border-emerald-700 dark:hover:text-emerald-400"
                         >
                           {tag}
                         </Link>

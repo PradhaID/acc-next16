@@ -142,7 +142,7 @@ export default function AdManagementPage() {
                     canCreate && (
                         <Link
                             href="/content/ad/add"
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+                            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all"
                         >
                             <PlusIcon className="w-4 h-4 stroke-[3px]" /> {t("ad.newAd")}
                         </Link>
@@ -158,7 +158,7 @@ export default function AdManagementPage() {
                         <button
                             key={s}
                             onClick={() => { setStatusFilter(s); setPage(1); }}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${statusFilter === s ? 'bg-white dark:bg-stone-700 text-orange-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${statusFilter === s ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
                         >
                             {s.toUpperCase()}
                         </button>
@@ -169,7 +169,7 @@ export default function AdManagementPage() {
                 <select
                     value={positionFilter}
                     onChange={e => { setPositionFilter(e.target.value); setPage(1); }}
-                    className="px-3 py-2.5 bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-xl text-xs font-bold outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer shrink-0 text-stone-700 dark:text-stone-300"
+                    className="px-3 py-2.5 bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-xl text-xs font-bold outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer shrink-0 text-stone-700 dark:text-stone-300"
                 >
                     <option value="all">{t("ad.allPositions")}</option>
                     {positions.map(p => (
@@ -198,7 +198,7 @@ export default function AdManagementPage() {
             <div className="bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl overflow-hidden shadow-sm">
                 {loading ? (
                     <div className="py-20 text-center">
-                        <div className="w-10 h-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                         <p className="text-gray-400 text-sm">{t("ad.loading")}</p>
                     </div>
                 ) : filtered.length === 0 ? (
@@ -207,7 +207,7 @@ export default function AdManagementPage() {
                         <p className="text-gray-500 text-sm font-medium">{t("ad.noResults")}</p>
                         <button
                             onClick={() => { setSearch(""); setStatusFilter("all"); setPositionFilter("all"); }}
-                            className="mt-3 text-orange-600 text-xs font-bold hover:underline"
+                            className="mt-3 text-emerald-600 text-xs font-bold hover:underline"
                         >
                             {t("ad.clearFilters")}
                         </button>
@@ -222,7 +222,7 @@ export default function AdManagementPage() {
                                             type="checkbox"
                                             checked={selection.isAllSelected}
                                             onChange={selection.toggleAll}
-                                            className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                                            className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                         />
                                     </th>
                                     <th className="px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-gray-400">{t("ad.advertisement")}</th>
@@ -234,13 +234,13 @@ export default function AdManagementPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-stone-700/30">
                                 {paginated.map(ad => (
-                                    <tr key={ad._id} className="group hover:bg-orange-50/40 dark:hover:bg-orange-500/5 transition-all">
+                                    <tr key={ad._id} className="group hover:bg-emerald-50/40 dark:hover:bg-emerald-500/5 transition-all">
                                         <td className="px-3 py-2.5">
                                             <input
                                                 type="checkbox"
                                                 checked={selection.isSelected(ad._id)}
                                                 onChange={() => selection.toggle(ad._id)}
-                                                className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                                                className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                             />
                                         </td>
                                         <td className="px-3 py-2.5 max-w-xs">
@@ -301,7 +301,7 @@ export default function AdManagementPage() {
                                                     {ad.isActive ? t("ad.active") : t("ad.inactive")}
                                                 </span>
                                                 {ad.isFirstTimeOnly && (
-                                                     <span className="text-[8px] font-bold text-orange-500 uppercase tracking-tighter">{t("ad.firstVisitOnlyBadge")}</span>
+                                                     <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter">{t("ad.firstVisitOnlyBadge")}</span>
                                                 )}
                                             </div>
                                         </td>

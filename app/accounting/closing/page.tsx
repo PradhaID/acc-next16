@@ -124,14 +124,14 @@ export default function ClosingPage() {
       <PageHeader title="Year-End Closing" subtitle="Close the fiscal year" />
 
       {/* Warning banner */}
-      <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 p-4 rounded-2xl">
+      <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 p-4 rounded-2xl">
         <div className="flex items-start gap-3">
-          <svg className="mt-0.5 w-5 h-5 shrink-0 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <svg className="mt-0.5 w-5 h-5 shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
           </svg>
           <div>
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-amber-800 dark:text-amber-300">Important</h3>
-            <p className="mt-1 text-xs font-bold text-amber-700 dark:text-amber-400">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-300">Important</h3>
+            <p className="mt-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
               Year-end closing will transfer all revenue, COGS, and expense account balances to the
               retained earnings account. This action cannot be undone. Ensure all transactions
               for the fiscal year have been confirmed before proceeding.

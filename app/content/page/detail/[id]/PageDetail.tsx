@@ -131,7 +131,7 @@ export default function PageDetail({ id }: { id: string }) {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-                <div className="w-10 h-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-gray-500 text-sm font-medium animate-pulse">
                     Loading Page Detail...
                 </p>
@@ -191,7 +191,7 @@ export default function PageDetail({ id }: { id: string }) {
                                 <span
                                     className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${page.status === "published"
                                         ? "bg-emerald-100 text-emerald-700"
-                                        : "bg-amber-100 text-amber-700"
+                                        : "bg-emerald-100 text-emerald-700"
                                         }`}
                                 >
                                     {page.status}
@@ -202,7 +202,7 @@ export default function PageDetail({ id }: { id: string }) {
                                     </span>
                                 )}
                             </div>
-                            <p className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">
+                            <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
                                 Static Page
                             </p>
                         </div>
@@ -222,7 +222,7 @@ export default function PageDetail({ id }: { id: string }) {
                             href={`/content/page/edit/${page._id}`}
                             className="btn-action-secondary"
                         >
-                            <PencilSquareIcon className="w-4 h-4 text-orange-600" />
+                            <PencilSquareIcon className="w-4 h-4 text-emerald-600" />
                             Edit Page
                         </Link>
                         <button
@@ -259,7 +259,7 @@ export default function PageDetail({ id }: { id: string }) {
                                 )}
 
                                 <div className="flex flex-wrap gap-3 text-xs">
-                                    <div className="flex items-center gap-2 bg-orange-50 text-orange-700 px-4 py-2 rounded-xl">
+                                    <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-4 py-2 rounded-xl">
                                         <GlobeAltIcon className="w-4 h-4" />
                                         /{page.slug}
                                     </div>
@@ -278,13 +278,13 @@ export default function PageDetail({ id }: { id: string }) {
                                 </div>
 
                                 {page.excerpt && (
-                                    <div className="p-5 bg-gray-50 rounded-2xl border-l-4 border-orange-500">
+                                    <div className="p-5 bg-gray-50 rounded-2xl border-l-4 border-emerald-500">
                                         <p className="italic text-gray-600">{page.excerpt}</p>
                                     </div>
                                 )}
 
                                 <div className="prose prose-orange max-w-none">
-                                    <div className="prose prose-lg dark:prose-invert prose-orange max-w-none prose-headings:font-bold prose-a:text-orange-600 prose-img:rounded-3xl prose-pre:bg-gray-900" dangerouslySetInnerHTML={{ __html: page.content }} />
+                                    <div className="prose prose-lg dark:prose-invert prose-orange max-w-none prose-headings:font-bold prose-a:text-emerald-600 prose-img:rounded-3xl prose-pre:bg-gray-900" dangerouslySetInnerHTML={{ __html: page.content }} />
                                 </div>
                             </div>
                         </div>
@@ -294,7 +294,7 @@ export default function PageDetail({ id }: { id: string }) {
                     <div className="space-y-6">
                         <div className="bg-white dark:bg-stone-800/40 rounded-2xl border border-gray-200 dark:border-stone-700/50 p-6 space-y-5">
                             <h3 className="font-bold flex items-center gap-2 border-b pb-3">
-                                <InformationCircleIcon className="w-5 h-5 text-orange-500" />
+                                <InformationCircleIcon className="w-5 h-5 text-emerald-500" />
                                 Page Info
                             </h3>
 
@@ -350,21 +350,21 @@ export default function PageDetail({ id }: { id: string }) {
                         </div>
 
                         {/* SEO Overview */}
-                        <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-2xl p-6 space-y-4">
-                            <h3 className="font-semibold flex items-center gap-2 text-amber-700 dark:text-amber-300">
+                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/30 dark:to-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl p-6 space-y-4">
+                            <h3 className="font-semibold flex items-center gap-2 text-emerald-700 dark:text-emerald-300">
                                 <GlobeAltIcon className="w-5 h-5" />
                                 SEO Overview
                             </h3>
-                            <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-amber-200/50 dark:border-amber-900/30">
-                                <p className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">
+                            <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-emerald-200/50 dark:border-emerald-900/30">
+                                <p className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">
                                     Meta Title
                                 </p>
                                 <p className="text-sm font-medium text-stone-800 dark:text-stone-100 line-clamp-1 mt-0.5">
                                     {page.meta.title || page.title}
                                 </p>
                             </div>
-                            <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-amber-200/50 dark:border-amber-900/30">
-                                <p className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">
+                            <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-emerald-200/50 dark:border-emerald-900/30">
+                                <p className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">
                                     Meta Description
                                 </p>
                                 <p className="text-xs text-stone-600 dark:text-stone-300 line-clamp-3 mt-0.5">
@@ -380,8 +380,8 @@ export default function PageDetail({ id }: { id: string }) {
             {showPublishModal && (
                 <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
                     <div className="bg-white dark:bg-stone-800/40 rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center animate-scale-in">
-                        <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <RocketLaunchIcon className="w-10 h-10 text-orange-600" />
+                        <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <RocketLaunchIcon className="w-10 h-10 text-emerald-600" />
                         </div>
                         <h3 className="text-2xl font-bold mb-2">Publish Post?</h3>
                         <p className="text-gray-500 text-sm mb-8">This will make your content visible to everyone on the website.</p>

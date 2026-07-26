@@ -79,7 +79,7 @@ function NavItemLink({ item, allPages }: { item: NavItem; allPages: NavPage[] })
     return (
       <Link
         href={`/${fullPath}`}
-        className="text-sm font-medium text-stone-600 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors"
+        className="text-sm font-medium text-stone-600 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors"
       >
         {item.title}
       </Link>
@@ -88,7 +88,7 @@ function NavItemLink({ item, allPages }: { item: NavItem; allPages: NavPage[] })
 
   return (
     <div className="relative group">
-      <button className="inline-flex items-center gap-1 text-sm font-medium text-stone-600 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors">
+      <button className="inline-flex items-center gap-1 text-sm font-medium text-stone-600 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors">
         {item.title}
         <svg className="h-3.5 w-3.5 text-stone-400 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -97,7 +97,7 @@ function NavItemLink({ item, allPages }: { item: NavItem; allPages: NavPage[] })
       <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-xl border border-stone-200 bg-white p-1.5 shadow-lg transition-all dark:border-stone-700 dark:bg-stone-900">
         <Link
           href={`/${fullPath}`}
-          className="block rounded-lg px-3 py-2 text-sm font-medium text-stone-700 hover:bg-orange-50 hover:text-orange-600 dark:text-stone-300 dark:hover:bg-orange-950/30 dark:hover:text-orange-400 transition-colors"
+          className="block rounded-lg px-3 py-2 text-sm font-medium text-stone-700 hover:bg-emerald-50 hover:text-emerald-600 dark:text-stone-300 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400 transition-colors"
         >
           {item.title}
         </Link>
@@ -105,7 +105,7 @@ function NavItemLink({ item, allPages }: { item: NavItem; allPages: NavPage[] })
           <Link
             key={child._id}
             href={`/${getFullSlug(child, allPages)}`}
-            className="block rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-orange-50 hover:text-orange-600 dark:text-stone-400 dark:hover:bg-orange-950/30 dark:hover:text-orange-400 transition-colors"
+            className="block rounded-lg px-3 py-2 text-sm text-stone-600 hover:bg-emerald-50 hover:text-emerald-600 dark:text-stone-400 dark:hover:bg-emerald-950/30 dark:hover:text-emerald-400 transition-colors"
           >
             {child.title}
           </Link>
@@ -138,7 +138,7 @@ export default async function PublicHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-stone-200/50 bg-white/70 backdrop-blur-md dark:border-stone-800/50 dark:bg-stone-950/70">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 sm:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-orange-500/25" />
+          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
           <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
             {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
           </span>
@@ -146,7 +146,7 @@ export default async function PublicHeader() {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/" className="text-sm font-medium text-stone-600 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors">
+          <Link href="/" className="text-sm font-medium text-stone-600 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors">
             Home
           </Link>
           {navTree.map((item) => (
@@ -161,7 +161,7 @@ export default async function PublicHeader() {
             <div className="flex items-center gap-4">
               <Link
                 href="/dashboard"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-500 hover:shadow-md hover:shadow-orange-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500 hover:shadow-md hover:shadow-emerald-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
               >
                 Go to Dashboard
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
@@ -179,7 +179,7 @@ export default async function PublicHeader() {
             <>
               <Link
                 href="/account/signin"
-                className="text-sm font-semibold text-stone-700 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors"
+                className="text-sm font-semibold text-stone-700 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors"
               >
                 Sign In
               </Link>
@@ -208,7 +208,7 @@ export default async function PublicHeader() {
 function MobileNav({ items, allPages }: { items: NavItem[]; allPages: NavPage[] }) {
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1">
-      <Link href="/" className="text-sm font-medium text-stone-600 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors">
+      <Link href="/" className="text-sm font-medium text-stone-600 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors">
         Home
       </Link>
       {items.map((item) => (
@@ -225,7 +225,7 @@ function MobileNavItem({ item, allPages }: { item: NavItem; allPages: NavPage[] 
     return (
       <Link
         href={`/${fullPath}`}
-        className="text-sm font-medium text-stone-600 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors"
+        className="text-sm font-medium text-stone-600 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors"
       >
         {item.title}
       </Link>
@@ -236,7 +236,7 @@ function MobileNavItem({ item, allPages }: { item: NavItem; allPages: NavPage[] 
     <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
       <Link
         href={`/${fullPath}`}
-        className="text-sm font-medium text-stone-600 hover:text-orange-600 dark:text-stone-300 dark:hover:text-orange-400 transition-colors"
+        className="text-sm font-medium text-stone-600 hover:text-emerald-600 dark:text-stone-300 dark:hover:text-emerald-400 transition-colors"
       >
         {item.title}
       </Link>
@@ -244,7 +244,7 @@ function MobileNavItem({ item, allPages }: { item: NavItem; allPages: NavPage[] 
         <Link
           key={child._id}
           href={`/${getFullSlug(child, allPages)}`}
-          className="text-sm text-stone-500 hover:text-orange-600 dark:text-stone-400 dark:hover:text-orange-400 transition-colors"
+          className="text-sm text-stone-500 hover:text-emerald-600 dark:text-stone-400 dark:hover:text-emerald-400 transition-colors"
         >
           {child.title}
         </Link>

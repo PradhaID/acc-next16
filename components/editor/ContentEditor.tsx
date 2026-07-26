@@ -91,7 +91,7 @@ function Toolbar({ editor }: { editor: any }) {
 
     const buttonClass = (active?: boolean) =>
         `p-2 rounded-lg transition-colors ${active
-            ? 'bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-300'
+            ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-300'
             : 'hover:bg-gray-100 dark:hover:bg-stone-700 text-gray-600 dark:text-stone-400'
         }`;
 
@@ -357,7 +357,7 @@ export default function ContentEditor({ value, onChange }: Props) {
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
-                    class: 'text-orange-600 dark:text-orange-400 underline hover:text-orange-900 dark:hover:text-orange-300',
+                    class: 'text-emerald-600 dark:text-emerald-400 underline hover:text-emerald-900 dark:hover:text-emerald-300',
                 },
             }),
             TextAlign.configure({
@@ -402,7 +402,7 @@ export default function ContentEditor({ value, onChange }: Props) {
             className="
                 border border-gray-300 dark:border-stone-700/50 rounded-lg 
                 bg-white dark:bg-stone-800/40
-                focus-within:ring-2 focus-within:ring-orange-500 focus-within:border-orange-500
+                focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-500
                 transition-all
             "
         >
@@ -450,9 +450,9 @@ export default function ContentEditor({ value, onChange }: Props) {
                         [&_.ProseMirror_th]:dark:bg-stone-700
                         [&_.ProseMirror_th]:font-bold
                         [&_.ProseMirror_th]:text-left
-                        [&_.ProseMirror_.selectedCell]:bg-orange-50
-                        [&_.ProseMirror_.selectedCell]:dark:bg-orange-950/30
-                        [&_.ProseMirror_.selectedCell]:border-orange-500
+                        [&_.ProseMirror_.selectedCell]:bg-emerald-50
+                        [&_.ProseMirror_.selectedCell]:dark:bg-emerald-950/30
+                        [&_.ProseMirror_.selectedCell]:border-emerald-500
                     "
                 />
             </div>

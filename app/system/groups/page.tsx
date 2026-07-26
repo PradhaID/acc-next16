@@ -87,7 +87,7 @@ export default function GroupsPage() {
           canAddGroup && (
             <Link
               href="/system/groups/add"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -114,7 +114,7 @@ export default function GroupsPage() {
         </div>
         <button
           onClick={() => handleSearch("")}
-          className="px-4 py-1.5 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+          className="px-4 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
         >
           Reset
         </button>
@@ -122,7 +122,7 @@ export default function GroupsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-12 bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-xl">
-          <div className="h-7 w-7 animate-spin rounded-full border-[3px] border-orange-500 border-t-transparent" />
+          <div className="h-7 w-7 animate-spin rounded-full border-[3px] border-emerald-500 border-t-transparent" />
         </div>
       ) : filtered.length === 0 ? (
         <div className="py-12 text-center bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-xl">
@@ -141,7 +141,7 @@ export default function GroupsPage() {
                     type="checkbox"
                     checked={selection.isAllSelected}
                     onChange={selection.toggleAll}
-                    className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                    className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                   />
                 </th>
                 <th className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400">Name</th>
@@ -154,14 +154,14 @@ export default function GroupsPage() {
                 <tr
                   key={g._id}
                   onClick={() => router.push(`/system/groups/edit/${g._id}`)}
-                  className="transition-colors hover:bg-orange-50/40 dark:hover:bg-orange-500/5 cursor-pointer"
+                  className="transition-colors hover:bg-emerald-50/40 dark:hover:bg-emerald-500/5 cursor-pointer"
                 >
                   <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
                       checked={selection.isSelected(g._id)}
                       onChange={() => selection.toggle(g._id)}
-                      className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                     />
                   </td>
                   <td className="px-3 py-2 font-bold text-gray-900 dark:text-white">{g.name}</td>

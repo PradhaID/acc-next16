@@ -49,16 +49,16 @@ function flattenCoa(nodes: COA[], parentId: string | null = null): COA[] {
 
 const categoryColors: Record<string, string> = {
   Asset: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800",
-  Liability: "bg-amber-50 border-amber-100 text-amber-600 dark:bg-amber-950/20 dark:border-amber-800",
+  Liability: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800",
   Equity: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800",
   Revenue: "bg-violet-50 border-violet-100 text-violet-600 dark:bg-violet-950/20 dark:border-violet-800",
-  COGS: "bg-rose-50 border-rose-100 text-rose-600 dark:bg-rose-950/20 dark:border-rose-800",
+  COGS: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800",
   Expense: "bg-red-50 border-red-100 text-red-600 dark:bg-red-950/20 dark:border-red-800",
 };
 
 const positionStyles: Record<string, string> = {
   Db: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800",
-  Cr: "bg-orange-50 border-orange-100 text-orange-600 dark:bg-orange-950/20 dark:border-orange-800",
+  Cr: "bg-emerald-50 border-emerald-100 text-emerald-600 dark:bg-emerald-950/20 dark:border-emerald-800",
 };
 
 export default function COAListPage() {
@@ -449,7 +449,7 @@ export default function COAListPage() {
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400">
-                            <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                             Inactive
                           </span>
                         )}

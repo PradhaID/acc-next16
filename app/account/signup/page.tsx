@@ -70,12 +70,12 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-50 transition-colors duration-300">
       {/* Decorative ambient glowing orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[600px] w-[600px] bg-gradient-to-tr from-amber-500/10 via-orange-550/5 to-rose-500/10 blur-3xl rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[600px] w-[600px] bg-gradient-to-tr from-emerald-500/10 via-emerald-500/5 to-emerald-500/10 blur-3xl rounded-full" />
 
       {/* App branding header */}
       <div className="mb-6 flex flex-col items-center gap-2">
         <Link href="/" className="flex items-center gap-3">
-          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-orange-500/25" />
+          <img src="/img/logo.webp" alt="Logo" width="36" height="36" className="h-9 w-9 rounded-xl object-contain shadow-md shadow-emerald-500/25" />
           <span className="text-lg font-bold tracking-tight text-stone-900 dark:text-white">
             {process.env.NEXT_PUBLIC_APP_NAME || "boilerplate-next16"}
           </span>
@@ -95,7 +95,7 @@ export default function SignUpPage() {
           </p>
           <Link
             href="/account/signin"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-orange-500/10 transition-all hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-md shadow-emerald-500/10 transition-all hover:scale-105 active:scale-95"
           >
             Go to Sign In
           </Link>
@@ -129,7 +129,7 @@ export default function SignUpPage() {
                 {t("auth.username")}
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                   <UserIcon className="h-5 w-5" />
                 </div>
                 <input
@@ -141,7 +141,7 @@ export default function SignUpPage() {
                   value={form.username}
                   onChange={handleChange}
                   placeholder="Enter a username"
-                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
+                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
                 />
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function SignUpPage() {
                 {t("auth.fullName")}
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                   <UserIcon className="h-5 w-5" />
                 </div>
                 <input
@@ -163,7 +163,7 @@ export default function SignUpPage() {
                   value={form.fullName}
                   onChange={handleChange}
                   placeholder="Enter your full name"
-                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
+                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
                 />
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function SignUpPage() {
                 {t("auth.email")}
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                   <EnvelopeIcon className="h-5 w-5" />
                 </div>
                 <input
@@ -185,7 +185,7 @@ export default function SignUpPage() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="Enter your email"
-                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
+                  className="w-full pl-11 pr-4 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function SignUpPage() {
                 {t("auth.password")}
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-500/60">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-500/60">
                   <LockClosedIcon className="h-5 w-5" />
                 </div>
                 <input
@@ -219,12 +219,12 @@ export default function SignUpPage() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Create a password"
-                  className="w-full pl-11 pr-10 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
+                  className="w-full pl-11 pr-10 py-2.5 border border-stone-200 dark:border-stone-800/80 rounded-xl bg-stone-50/50 dark:bg-stone-950/40 text-stone-900 dark:text-stone-100 placeholder-stone-400 dark:placeholder-stone-500 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 focus:bg-white dark:focus:bg-stone-950 transition-all text-sm font-bold"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 dark:text-stone-500 hover:text-orange-500 dark:hover:text-orange-400 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-stone-400 dark:text-stone-500 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
                 >
                   {showPassword ? (
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
@@ -243,7 +243,7 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              className="w-full mt-2 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-orange-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer"
+              className="w-full mt-2 bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white font-semibold py-2.5 rounded-xl shadow-md shadow-emerald-500/10 active:scale-[0.98] transition-all text-sm cursor-pointer"
             >
               {loading ? t("common.loading") : t("auth.createAccount")}
             </button>
@@ -255,7 +255,7 @@ export default function SignUpPage() {
             {t("auth.alreadyHave")}{" "}
             <Link
               href="/account/signin"
-              className="text-orange-650 dark:text-orange-400 font-bold hover:underline transition-colors ml-0.5"
+              className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-colors ml-0.5"
             >
               {t("auth.signIn")}
             </Link>
@@ -263,7 +263,7 @@ export default function SignUpPage() {
           <p className="text-xs text-stone-500 dark:text-stone-400">
             <Link
               href="/account/forgot-password"
-              className="text-orange-650 dark:text-orange-400 font-bold hover:underline transition-colors"
+              className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-colors"
             >
               Forgot password?
             </Link>

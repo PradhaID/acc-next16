@@ -218,14 +218,14 @@ export default function CategoryAdd() {
                                     name="name"
                                     value={form.name}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                                     placeholder="Category name..."
                                     required
                                 />
                             </FormField>
 
                             <FormField label={t("content.slug")}>
-                                <div className="flex items-center gap-2 text-xs text-orange-500 bg-orange-50 dark:bg-orange-950/30 px-3 py-2 rounded-xl">
+                                <div className="flex items-center gap-2 text-xs text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 px-3 py-2 rounded-xl">
                                     <GlobeAltIcon className="w-3.5 h-3.5 shrink-0" />
                                     <span className="truncate">{APP_URL}/category/{form.slug || "..."}</span>
                                 </div>
@@ -237,7 +237,7 @@ export default function CategoryAdd() {
                                     rows={6}
                                     value={form.description}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 resize-none transition-colors"
+                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder:text-gray-400 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 resize-none transition-colors"
                                     placeholder="Describe what this category is about..."
                                 />
                             </FormField>
@@ -247,7 +247,7 @@ export default function CategoryAdd() {
                                     name="parent"
                                     value={form.parent}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white appearance-none cursor-pointer outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white appearance-none cursor-pointer outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                                 >
                                     <option value="">— {t("content.noneTopLevel")} —</option>
                                     {categories.map(c => (
@@ -261,7 +261,7 @@ export default function CategoryAdd() {
                                     name="locale"
                                     value={form.locale}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white appearance-none cursor-pointer outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                                    className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white appearance-none cursor-pointer outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                                 >
                                     {SUPPORTED_LOCALES.map(loc => (
                                         <option key={loc} value={loc}>{getLocaleLabel(loc as "en_US" | "id_ID")}</option>
@@ -292,7 +292,7 @@ export default function CategoryAdd() {
                 <div className="space-y-4">
                     {/* Thumbnail */}
                     <div className="bg-white dark:bg-stone-900/80 p-4 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm">
-                        <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600 mb-3">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3">
                             {t("content.thumbnail")}
                         </h3>
                         <div className="w-full h-40 border-2 border-dashed rounded-xl flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-stone-800/40 border-gray-200 dark:border-stone-700/50">
@@ -307,44 +307,44 @@ export default function CategoryAdd() {
                         <input
                             type="file"
                             onChange={handleImageUpload}
-                            className="mt-3 block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                            className="mt-3 block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"
                         />
-                        {uploading && <p className="text-[10px] text-orange-500 animate-pulse mt-2 text-center">Uploading image...</p>}
+                        {uploading && <p className="text-[10px] text-emerald-500 animate-pulse mt-2 text-center">Uploading image...</p>}
                     </div>
 
                     {/* SEO */}
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-2xl p-4 space-y-4">
-                        <h3 className="text-[10px] font-black uppercase tracking-widest text-amber-700 dark:text-amber-300">
+                    <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/30 dark:to-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl p-4 space-y-4">
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-300">
                             {t("content.seo")}
                         </h3>
                         <div className="space-y-3">
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">{t("content.metaTitle")}</label>
+                                <label className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">{t("content.metaTitle")}</label>
                                 <input
                                     name="metaTitle"
                                     value={form.metaTitle}
                                     onChange={handleChange}
-                                    className="w-full bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg px-3 py-2 text-sm mt-1 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20"
+                                    className="w-full bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg px-3 py-2 text-sm mt-1 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
                                 />
                                 <div className="flex justify-between mt-1 px-1">
-                                    <span className="text-[10px] text-amber-600/50">Limit: 60</span>
-                                    <span className={`text-[10px] ${form.metaTitle.length > 60 ? 'text-red-500' : 'text-amber-600/50'}`}>
+                                    <span className="text-[10px] text-emerald-600/50">Limit: 60</span>
+                                    <span className={`text-[10px] ${form.metaTitle.length > 60 ? 'text-red-500' : 'text-emerald-600/50'}`}>
                                         {form.metaTitle.length} chars
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">{t("content.metaDescription")}</label>
+                                <label className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">{t("content.metaDescription")}</label>
                                 <textarea
                                     name="metaDescription"
                                     rows={3}
                                     value={form.metaDescription}
                                     onChange={handleChange}
-                                    className="w-full bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg px-3 py-2 text-sm mt-1 outline-none resize-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20"
+                                    className="w-full bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg px-3 py-2 text-sm mt-1 outline-none resize-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20"
                                 />
                                 <div className="flex justify-between mt-1 px-1">
-                                    <span className="text-[10px] text-amber-600/50">Limit: 160</span>
-                                    <span className={`text-[10px] ${form.metaDescription.length > 160 ? 'text-red-500' : 'text-amber-600/50'}`}>
+                                    <span className="text-[10px] text-emerald-600/50">Limit: 160</span>
+                                    <span className={`text-[10px] ${form.metaDescription.length > 160 ? 'text-red-500' : 'text-emerald-600/50'}`}>
                                         {form.metaDescription.length} chars
                                     </span>
                                 </div>

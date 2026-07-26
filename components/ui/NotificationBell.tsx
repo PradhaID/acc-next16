@@ -16,7 +16,7 @@ interface Notification {
 const TYPE_STYLES: Record<string, { dot: string; bg: string }> = {
   SUCCESS: { dot: "bg-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
   ERROR: { dot: "bg-red-500", bg: "bg-red-50 dark:bg-red-950/30" },
-  WARN: { dot: "bg-amber-500", bg: "bg-amber-50 dark:bg-amber-950/30" },
+  WARN: { dot: "bg-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
   INFO: { dot: "bg-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
 };
 
@@ -100,7 +100,7 @@ export default function NotificationBell({ dropdownUp }: { dropdownUp?: boolean 
           <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-white/[0.06]">
             <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500">Notifications</h3>
             {unreadCount > 0 && (
-              <button onClick={handleMarkAllRead} className="text-[10px] font-bold text-orange-600 hover:underline">
+              <button onClick={handleMarkAllRead} className="text-[10px] font-bold text-emerald-600 hover:underline">
                 Mark all read
               </button>
             )}

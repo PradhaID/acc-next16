@@ -180,7 +180,7 @@ body {
   }
 
   .stat-icon-orange {
-    @apply p-2 rounded-lg w-fit bg-orange-100 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400;
+    @apply p-2 rounded-lg w-fit bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400;
   }
 
   .stat-icon-red {

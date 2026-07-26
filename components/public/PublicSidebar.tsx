@@ -89,7 +89,7 @@ export default async function PublicSidebar({ currentPath }: PublicSidebarProps)
             href={`/${fullPath}`}
             className={`block rounded-lg px-3 py-2 text-sm font-medium transition ${
               isActive
-                ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+                ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
                 : "text-stone-600 hover:bg-stone-50 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-white/[0.04] dark:hover:text-white"
             }`}
           >

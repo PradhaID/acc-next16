@@ -36,13 +36,13 @@ export default function UserMenu({ fullName, username, email, image }: UserMenuP
       <button
         type="button"
         onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
-        className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden border border-orange-200/50 dark:border-orange-800/30 shadow-sm cursor-pointer transition hover:shadow-md"
+        className="flex h-10 w-10 items-center justify-center rounded-xl overflow-hidden border border-emerald-200/50 dark:border-emerald-800/30 shadow-sm cursor-pointer transition hover:shadow-md"
         title={fullName || username}
       >
         {image ? (
           <img src={image} alt="" className="h-10 w-10 rounded-xl object-cover" />
         ) : (
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-300 font-bold text-sm">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-sm">
             {(fullName || username || "?").charAt(0).toUpperCase()}
           </div>
         )}

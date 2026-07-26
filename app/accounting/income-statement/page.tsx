@@ -47,7 +47,7 @@ function yearStartStr(): string {
 
 const sectionColors: Record<string, { text: string; bg: string; border: string; badge: string }> = {
   Revenue: { text: "text-violet-600 dark:text-violet-400", bg: "bg-violet-50 dark:bg-violet-500/10", border: "border-violet-200 dark:border-violet-500/20", badge: "bg-violet-600" },
-  COGS: { text: "text-rose-600 dark:text-rose-400", bg: "bg-rose-50 dark:bg-rose-500/10", border: "border-rose-200 dark:border-rose-500/20", badge: "bg-rose-600" },
+  COGS: { text: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-500/10", border: "border-emerald-200 dark:border-emerald-500/20", badge: "bg-emerald-600" },
   Expense: { text: "text-red-600 dark:text-red-400", bg: "bg-red-50 dark:bg-red-500/10", border: "border-red-200 dark:border-red-500/20", badge: "bg-red-600" },
 };
 
@@ -451,7 +451,7 @@ export default function IncomeStatementPage() {
         {canPrintPdf && (
           <button
             onClick={() => { generatePdf(); }}
-            className="px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 hover:bg-rose-200 dark:hover:bg-rose-900/50"
+            className="px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50"
           >
             Print PDF
           </button>

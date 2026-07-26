@@ -22,7 +22,7 @@ const columns: Column<LogRow>[] = [
         row.level === "ERROR"
           ? "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:border-red-800 dark:text-red-400"
           : row.level === "WARN"
-            ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400"
+            ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-400"
             : "bg-stone-50 text-stone-700 border-stone-200 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300"
       }`}>
         {row.level}

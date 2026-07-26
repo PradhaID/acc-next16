@@ -143,13 +143,13 @@ export default async function CategoryPage({
           <div className="min-w-0 flex-1 max-w-4xl">
             {/* Breadcrumb */}
             <nav className="mb-6 flex items-center gap-2 text-xs text-stone-400 dark:text-stone-500">
-              <Link href="/" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">Home</Link>
+              <Link href="/" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Home</Link>
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-              <Link href="/category" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">Categories</Link>
+              <Link href="/category" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Categories</Link>
               {slug.length > 1 && slug.slice(0, -1).map((seg, i) => (
                 <span key={i} className="flex items-center gap-2">
                   <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                  <Link href={`/category/${slug.slice(0, i + 1).join("/")}`} className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors capitalize">{seg.replace(/-/g, " ")}</Link>
+                  <Link href={`/category/${slug.slice(0, i + 1).join("/")}`} className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors capitalize">{seg.replace(/-/g, " ")}</Link>
                 </span>
               ))}
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
@@ -193,7 +193,7 @@ export default async function CategoryPage({
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
-                        <h2 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors line-clamp-2">
+                        <h2 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
                           {post.title}
                         </h2>
                         {post.excerpt && (

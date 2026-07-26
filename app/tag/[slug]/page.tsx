@@ -81,7 +81,7 @@ export default async function TagPage({
       <main className="mx-auto max-w-4xl px-6 py-16 sm:px-8 lg:py-20">
         {/* Breadcrumb */}
         <nav className="mb-6 flex items-center gap-2 text-xs text-stone-400 dark:text-stone-500">
-          <Link href="/" className="hover:text-orange-600 dark:hover:text-orange-400 transition-colors">Home</Link>
+          <Link href="/" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Home</Link>
           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
           <span className="text-stone-500 dark:text-stone-400">Tags</span>
           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
@@ -89,7 +89,7 @@ export default async function TagPage({
         </nav>
 
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-orange-200/60 bg-orange-50/50 px-3 py-1 text-xs font-semibold text-orange-700 dark:border-orange-800/30 dark:bg-orange-950/30 dark:text-orange-400 mb-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200/60 bg-emerald-50/50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:border-emerald-800/30 dark:bg-emerald-950/30 dark:text-emerald-400 mb-4">
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
@@ -130,7 +130,7 @@ export default async function TagPage({
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <h2 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors line-clamp-2">
+                    <h2 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
                       {post.title}
                     </h2>
                     {post.excerpt && (

@@ -378,20 +378,20 @@ export default function PostEdit({ id }: { id: string }) {
         <div className="max-w-full mx-auto pb-20 space-y-6">
             {/* Draft Restore Prompt */}
             {showRestorePrompt && (
-                <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-center justify-between">
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                        <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                         </svg>
-                        <p className="text-sm text-amber-800 dark:text-amber-200">
+                        <p className="text-sm text-emerald-800 dark:text-emerald-200">
                             You have an unsaved draft. Would you like to restore it?
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <button onClick={handleDismissDraft} className="px-3 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 rounded-lg">
+                        <button onClick={handleDismissDraft} className="px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg">
                             Discard
                         </button>
-                        <button onClick={handleRestoreDraft} className="px-3 py-1.5 text-xs font-medium text-white bg-amber-600 hover:bg-amber-700 rounded-lg">
+                        <button onClick={handleRestoreDraft} className="px-3 py-1.5 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg">
                             Restore
                         </button>
                     </div>
@@ -408,7 +408,7 @@ export default function PostEdit({ id }: { id: string }) {
                         <div>
                             <h1 className="text-xl font-bold">{form.title || 'Edit Post'}</h1>
                             <div className="flex items-center gap-2 mt-1">
-                                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${form.status === 'published' && form.published.at && new Date(form.published.at) > new Date() ? 'bg-orange-100 text-orange-700' : form.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${form.status === 'published' && form.published.at && new Date(form.published.at) > new Date() ? 'bg-emerald-100 text-emerald-700' : form.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-100 text-emerald-700'}`}>
                                     {form.status === 'published' && form.published.at && new Date(form.published.at) > new Date() ? 'Scheduled' : form.status}
                                 </span>
                                 <AutoSaveIndicator status={saveStatus} lastSaved={lastSaved} errorMessage={errorMessage} />
@@ -426,7 +426,7 @@ export default function PostEdit({ id }: { id: string }) {
                                             key={s}
                                             type="button"
                                             onClick={() => setForm(prev => ({ ...prev, status: s }))}
-                                            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${form.status === s ? 'bg-white dark:bg-stone-700 text-orange-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${form.status === s ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
                                         >
                                             {t(`status.${s}`)}
                                         </button>
@@ -454,7 +454,7 @@ export default function PostEdit({ id }: { id: string }) {
                             />
                         </div>
                         <div className="px-6 pb-4">
-                            <div className="flex items-center gap-2 text-xs text-orange-500 bg-orange-50 px-3 py-1.5 rounded-full w-fit">
+                            <div className="flex items-center gap-2 text-xs text-emerald-500 bg-emerald-50 px-3 py-1.5 rounded-full w-fit">
                                 <GlobeAltIcon className="w-3.5 h-3.5" />
                                 <span>{`${APP_URL}/read/${form.slug}`}</span>
                             </div>
@@ -474,7 +474,7 @@ export default function PostEdit({ id }: { id: string }) {
                     {/* Scheduling */}
                     <div className="dashboard-card p-5 bg-white dark:bg-stone-800/40 rounded-2xl shadow-sm space-y-4">
                         <h3 className="font-semibold flex items-center gap-2">
-                            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                             Scheduling
@@ -486,7 +486,7 @@ export default function PostEdit({ id }: { id: string }) {
                                 name="publishedAt"
                                 value={form.published.at}
                                 onChange={handleChange}
-                                className="w-full mt-1.5 p-2 bg-gray-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-xl text-xs outline-none focus:ring-1 focus:ring-orange-500"
+                                className="w-full mt-1.5 p-2 bg-gray-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-xl text-xs outline-none focus:ring-1 focus:ring-emerald-500"
                             />
                             <p className="text-[10px] text-gray-400 mt-2 italic">Leave empty to publish immediately when status is "Publish".</p>
                         </div>
@@ -505,7 +505,7 @@ export default function PostEdit({ id }: { id: string }) {
                                 <button
                                     type="button"
                                     onClick={() => { setFixInstruction(""); setFixResult(null); setFixModalOpen(true); }}
-                                    className="w-full px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/10 hover:from-amber-600 hover:to-orange-700 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                    className="w-full px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 hover:from-emerald-600 hover:to-emerald-700 active:scale-95 transition-all flex items-center justify-center gap-2"
                                 >
                                     <SparklesIcon className="w-3.5 h-3.5" /> Fix Content
                                 </button>
@@ -523,7 +523,7 @@ export default function PostEdit({ id }: { id: string }) {
                     {/* Language Card */}
                     <div className="dashboard-card p-5 bg-white dark:bg-stone-800/40 rounded-2xl shadow-sm space-y-4">
                         <h3 className="font-semibold flex items-center gap-2">
-                            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                             </svg>
                             {t("content.language")}
@@ -532,7 +532,7 @@ export default function PostEdit({ id }: { id: string }) {
                             name="locale"
                             value={form.locale}
                             onChange={handleChange}
-                            className="w-full p-2 bg-gray-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-xl text-xs outline-none focus:ring-1 focus:ring-orange-500"
+                            className="w-full p-2 bg-gray-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-xl text-xs outline-none focus:ring-1 focus:ring-emerald-500"
                         >
                             {SUPPORTED_LOCALES.map(loc => (
                                 <option key={loc} value={loc}>{getLocaleLabel(loc as "en_US" | "id_ID")}</option>
@@ -556,9 +556,9 @@ export default function PostEdit({ id }: { id: string }) {
                                 <div key={parent._id} className="space-y-1">
                                     <div
                                         onClick={() => toggleCategory(parent._id)}
-                                        className={`flex items-center gap-2 px-2 rounded-lg cursor-pointer transition-all ${form.categories.includes(parent._id) ? 'bg-orange-50 text-orange-700' : 'hover:bg-gray-50'}`}
+                                        className={`flex items-center gap-2 px-2 rounded-lg cursor-pointer transition-all ${form.categories.includes(parent._id) ? 'bg-emerald-50 text-emerald-700' : 'hover:bg-gray-50'}`}
                                     >
-                                        <div className={`w-4 h-4 rounded border ${form.categories.includes(parent._id) ? 'bg-orange-600 border-orange-600' : 'border-stone-300'}`} />
+                                        <div className={`w-4 h-4 rounded border ${form.categories.includes(parent._id) ? 'bg-emerald-600 border-emerald-600' : 'border-stone-300'}`} />
                                         <span className="text-sm font-medium">{parent.name}</span>
                                     </div>
                                     {groupedCategories[parent._id]?.map((child: Category) => (
@@ -567,7 +567,7 @@ export default function PostEdit({ id }: { id: string }) {
                                             onClick={() => toggleCategory(child._id)}
                                             className="flex items-center gap-2 px-2 ml-6 cursor-pointer text-xs"
                                         >
-                                            <div className={`w-2 h-2 rounded-full ${form.categories.includes(child._id) ? 'bg-orange-400' : 'bg-gray-200'}`} />
+                                            <div className={`w-2 h-2 rounded-full ${form.categories.includes(child._id) ? 'bg-emerald-400' : 'bg-gray-200'}`} />
                                             <span>{child.name}</span>
                                         </div>
                                     ))}
@@ -587,7 +587,7 @@ export default function PostEdit({ id }: { id: string }) {
                                         onChange={handleTagInput}
                                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                                         placeholder="Add tag (press Enter)..."
-                                        className="flex-1 text-xs p-2 bg-gray-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-lg outline-none focus:border-orange-500"
+                                        className="flex-1 text-xs p-2 bg-gray-50 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-lg outline-none focus:border-emerald-500"
                                     />
                                     <button
                                         type="button"
@@ -626,25 +626,25 @@ export default function PostEdit({ id }: { id: string }) {
                     </div>
 
                     {/* SEO */}
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-2xl p-5 space-y-4">
-                        <h3 className="font-semibold mb-4 flex items-center gap-2 text-amber-700 dark:text-amber-300"><GlobeAltIcon className="w-5 h-5" /> SEO Strategy</h3>
+                    <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/30 dark:to-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl p-5 space-y-4">
+                        <h3 className="font-semibold mb-4 flex items-center gap-2 text-emerald-700 dark:text-emerald-300"><GlobeAltIcon className="w-5 h-5" /> SEO Strategy</h3>
                         <div className="space-y-4">
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">{t("content.metaTitle")}</label>
-                                <input name="meta.title" value={form.meta.title} onChange={handleChange} className="w-full bg-white/70 dark:bg-stone-800/40 border border-amber-200/50 dark:border-amber-900/30 rounded-lg p-2 text-sm mt-1 outline-none focus:ring-1 focus:ring-amber-500" />
+                                <label className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">{t("content.metaTitle")}</label>
+                                <input name="meta.title" value={form.meta.title} onChange={handleChange} className="w-full bg-white/70 dark:bg-stone-800/40 border border-emerald-200/50 dark:border-emerald-900/30 rounded-lg p-2 text-sm mt-1 outline-none focus:ring-1 focus:ring-emerald-500" />
                                 <div className="flex justify-between mt-1 px-1">
-                                    <span className="text-[10px] text-amber-600/50">Limit: 60</span>
-                                    <span className={`text-[10px] ${form.meta.title.length > 60 ? 'text-red-500' : 'text-amber-600/50'}`}>
+                                    <span className="text-[10px] text-emerald-600/50">Limit: 60</span>
+                                    <span className={`text-[10px] ${form.meta.title.length > 60 ? 'text-red-500' : 'text-emerald-600/50'}`}>
                                         {form.meta.title.length} chars
                                     </span>
                                 </div>
                             </div>
                             <div>
-                                <label className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">{t("content.metaDescription")}</label>
-                                <textarea name="excerpt" value={form.excerpt} onChange={handleChange} rows={3} className="w-full bg-white/70 dark:bg-stone-800/40 border border-amber-200/50 dark:border-amber-900/30 rounded-lg p-2 text-sm mt-1 outline-none resize-none focus:ring-1 focus:ring-amber-500" />
+                                <label className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">{t("content.metaDescription")}</label>
+                                <textarea name="excerpt" value={form.excerpt} onChange={handleChange} rows={3} className="w-full bg-white/70 dark:bg-stone-800/40 border border-emerald-200/50 dark:border-emerald-900/30 rounded-lg p-2 text-sm mt-1 outline-none resize-none focus:ring-1 focus:ring-emerald-500" />
                                 <div className="flex justify-between mt-1 px-1">
-                                    <span className="text-[10px] text-amber-600/50">Limit: 160</span>
-                                    <span className={`text-[10px] ${form.meta.description.length > 160 ? 'text-red-500' : 'text-amber-600/50'}`}>
+                                    <span className="text-[10px] text-emerald-600/50">Limit: 160</span>
+                                    <span className={`text-[10px] ${form.meta.description.length > 160 ? 'text-red-500' : 'text-emerald-600/50'}`}>
                                         {form.meta.description.length} chars
                                     </span>
                                 </div>
@@ -776,7 +776,7 @@ export default function PostEdit({ id }: { id: string }) {
                                     </button>
                                     <button
                                         onClick={applyFixResult}
-                                        className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/10 hover:from-amber-600 hover:to-orange-700 active:scale-95 transition-all flex items-center gap-1.5"
+                                        className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 hover:from-emerald-600 hover:to-emerald-700 active:scale-95 transition-all flex items-center gap-1.5"
                                     >
                                         <CheckIcon className="w-3.5 h-3.5" /> Apply Changes
                                     </button>
@@ -792,7 +792,7 @@ export default function PostEdit({ id }: { id: string }) {
                                     <button
                                         onClick={() => handleFixByAI(fixInstruction)}
                                         disabled={!fixInstruction.trim() || fixLoading}
-                                        className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/10 hover:from-amber-600 hover:to-orange-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                                        className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 hover:from-emerald-600 hover:to-emerald-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
                                     >
                                         <SparklesIcon className="w-3.5 h-3.5" /> Run AI
                                     </button>

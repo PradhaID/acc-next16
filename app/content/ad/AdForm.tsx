@@ -169,7 +169,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                                 <select
                                     value={formData.isActive ? "active" : "inactive"}
                                     onChange={(e) => setFormData({ ...formData, isActive: e.target.value === "active" })}
-                                    className="bg-transparent text-sm font-bold cursor-pointer outline-none text-orange-600"
+                                    className="bg-transparent text-sm font-bold cursor-pointer outline-none text-emerald-600"
                                 >
                                     <option value="active">{t("ad.active")}</option>
                                     <option value="inactive">{t("ad.inactive")}</option>
@@ -250,7 +250,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                                 <button
                                     type="button"
                                     onClick={addItem}
-                                    className="flex items-center gap-1.5 text-xs font-black text-orange-600 hover:text-orange-700 uppercase tracking-widest transition-all"
+                                    className="flex items-center gap-1.5 text-xs font-black text-emerald-600 hover:text-emerald-700 uppercase tracking-widest transition-all"
                                 >
                                      <PlusIcon className="w-4 h-4" /> {t("ad.addSlide")}
                                 </button>
@@ -267,7 +267,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                                     value={formData.adsenseCode}
                                     onChange={(e) => setFormData({ ...formData, adsenseCode: e.target.value })}
                                     placeholder={t("ad.adsensePlaceholder")}
-                                    className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-stone-900/80 border-none rounded-xl text-sm outline-none font-mono focus:ring-1 focus:ring-orange-500"
+                                    className="w-full h-48 px-4 py-3 bg-gray-50 dark:bg-stone-900/80 border-none rounded-xl text-sm outline-none font-mono focus:ring-1 focus:ring-emerald-500"
                                 />
                                 <p className="text-[10px] text-gray-400 mt-2">
                                     {t("ad.adsenseHint")}
@@ -297,7 +297,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                                                             className="w-full px-3 py-2 bg-white dark:bg-stone-800/40 text-[10px] rounded-xl outline-none"
                                                         />
                                                         <label className="w-full">
-                                                            <div className="w-full px-3 py-2 bg-orange-600 hover:bg-orange-700 text-white text-[10px] font-bold rounded-xl text-center cursor-pointer transition-colors">
+                                                            <div className="w-full px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold rounded-xl text-center cursor-pointer transition-colors">
                                                                  {uploading === index ? t("ad.uploading") : t("ad.uploadLocal")}
                                                             </div>
                                                             <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(index, e)} />
@@ -314,7 +314,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                                                         value={item.linkUrl}
                                                         onChange={(e) => updateItem(index, "linkUrl", e.target.value)}
                                                         placeholder="https://..."
-                                                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-900/80 border-none rounded-xl text-sm outline-none focus:ring-1 focus:ring-orange-500"
+                                                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-900/80 border-none rounded-xl text-sm outline-none focus:ring-1 focus:ring-emerald-500"
                                                     />
                                                 </div>
                                                 <div className="space-y-1.5">
@@ -324,7 +324,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                                                         value={item.altText}
                                                         onChange={(e) => updateItem(index, "altText", e.target.value)}
                                                         placeholder="Describe the image..."
-                                                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-900/80 border-none rounded-xl text-sm outline-none focus:ring-1 focus:ring-orange-500"
+                                                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-900/80 border-none rounded-xl text-sm outline-none focus:ring-1 focus:ring-emerald-500"
                                                     />
                                                 </div>
                                             </div>
@@ -351,7 +351,7 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                     {/* Scheduling Card */}
                     <div className="bg-white dark:bg-stone-800/40 rounded-2xl border border-gray-200 dark:border-stone-700/50 p-6 space-y-6">
                         <h3 className="font-bold text-sm flex items-center gap-2">
-                             <CalendarIcon className="w-5 h-5 text-orange-600" /> {t("ad.scheduling")}
+                             <CalendarIcon className="w-5 h-5 text-emerald-600" /> {t("ad.scheduling")}
                         </h3>
 
                         <div className="space-y-4">
@@ -387,11 +387,11 @@ export default function AdForm({ initialData, isEdit = false }: AdFormProps) {
                     </div>
 
                     {/* Help Card */}
-                    <div className="bg-amber-50 dark:bg-amber-950/30 rounded-2xl p-6 border border-amber-100 dark:border-amber-900/30">
-                        <h3 className="text-amber-700 dark:text-amber-500 font-bold text-xs flex items-center gap-2 mb-3">
+                    <div className="bg-emerald-50 dark:bg-emerald-950/30 rounded-2xl p-6 border border-emerald-100 dark:border-emerald-900/30">
+                        <h3 className="text-emerald-700 dark:text-emerald-500 font-bold text-xs flex items-center gap-2 mb-3">
                              <InformationCircleIcon className="w-4 h-4" /> {t("ad.sizeGuide")}
                         </h3>
-                        <ul className="text-[9px] text-amber-600 dark:text-amber-400 space-y-2 font-medium">
+                        <ul className="text-[9px] text-emerald-600 dark:text-emerald-400 space-y-2 font-medium">
                             <li>• Featured Banner: 1200 x 250 px</li>
                             <li>• Sidebar Ad: 300 x 600 px</li>
                             <li>• Feed Banner: 800 x 180 px</li>

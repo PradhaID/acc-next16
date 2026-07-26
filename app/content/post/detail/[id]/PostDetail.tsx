@@ -339,7 +339,7 @@ export default function PostDetail({ id }: { id: string }) {
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-                <div className="w-10 h-10 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-10 h-10 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
                 <p className="text-gray-500 animate-pulse text-sm font-medium">Loading Post Details...</p>
             </div>
         );
@@ -385,7 +385,7 @@ export default function PostDetail({ id }: { id: string }) {
                         <div>
                             <div className="flex items-center gap-2">
                                 <h1 className="text-xl font-bold truncate max-w-[200px] sm:max-w-md">{post.title}</h1>
-                                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${post.status === 'published' && post.published?.at && new Date(post.published.at) > new Date() ? 'bg-orange-100 text-orange-700' : post.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${post.status === 'published' && post.published?.at && new Date(post.published.at) > new Date() ? 'bg-emerald-100 text-emerald-700' : post.status === 'published' ? 'bg-emerald-100 text-emerald-700' : 'bg-emerald-100 text-emerald-700'}`}>
                                     {post.status === 'published' && post.published?.at && new Date(post.published.at) > new Date() ? 'Scheduled' : post.status}
                                 </span>
                                 {post.locale && (
@@ -412,7 +412,7 @@ export default function PostDetail({ id }: { id: string }) {
                             </button>
                         )}
                         <Link href={`/content/post/edit/${post._id}`} className="btn-action-secondary">
-                            <PencilSquareIcon className="w-4 h-4 text-orange-600" /> <span className="hidden sm:inline">Edit Post</span>
+                            <PencilSquareIcon className="w-4 h-4 text-emerald-600" /> <span className="hidden sm:inline">Edit Post</span>
                         </Link>
                         <button onClick={() => setShowDeleteModal(true)} className="btn-action-danger-icon">
                             <TrashIcon className="w-4 h-4" />
@@ -436,7 +436,7 @@ export default function PostDetail({ id }: { id: string }) {
                             <div className="p-8 space-y-8">
                                 {!post.featuredImage?.url && <h2 className="text-3xl font-bold text-gray-900 dark:text-stone-100">{post.title}</h2>}
 
-                                <div className="flex items-center gap-3 text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/20 px-4 py-2 rounded-xl w-fit">
+                                <div className="flex items-center gap-3 text-xs text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-4 py-2 rounded-xl w-fit">
                                     <GlobeAltIcon className="w-4 h-4" />
                                     <div className="flex items-center gap-2">
                                         <span className="font-medium">URL Slug:
@@ -446,7 +446,7 @@ export default function PostDetail({ id }: { id: string }) {
                                         </span>
                                         <button
                                             onClick={copyToClipboard}
-                                            className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900 rounded transition-colors"
+                                            className="p-1 hover:bg-emerald-100 dark:hover:bg-emerald-900 rounded transition-colors"
                                             title="Copy full URL"
                                         >
                                             {copied ? (
@@ -459,12 +459,12 @@ export default function PostDetail({ id }: { id: string }) {
                                 </div>
 
                                 {post.excerpt && (
-                                    <div className="p-5 bg-gray-50 dark:bg-stone-900/80/50 rounded-2xl border-l-4 border-orange-500">
+                                    <div className="p-5 bg-gray-50 dark:bg-stone-900/80/50 rounded-2xl border-l-4 border-emerald-500">
                                         <p className="text-gray-600 dark:text-stone-400 italic leading-relaxed">{post.excerpt}</p>
                                     </div>
                                 )}
 
-                                <div className="article-content prose prose-orange dark:prose-invert max-w-none prose-img:rounded-2xl prose-headings:font-bold prose-a:text-orange-600">
+                                <div className="article-content prose prose-orange dark:prose-invert max-w-none prose-img:rounded-2xl prose-headings:font-bold prose-a:text-emerald-600">
                                     <div dangerouslySetInnerHTML={{ __html: post.content }} />
                                 </div>
                             </div>
@@ -476,7 +476,7 @@ export default function PostDetail({ id }: { id: string }) {
                         {/* Meta Info Card */}
                         <div className="bg-white dark:bg-stone-800/40 rounded-2xl border border-gray-200 dark:border-stone-700/50 p-6 space-y-5 shadow-sm">
                             <h3 className="font-bold text-gray-900 dark:text-stone-100 flex items-center gap-2 border-b pb-3">
-                                <InformationCircleIcon className="w-5 h-5 text-orange-500" /> Post Info
+                                <InformationCircleIcon className="w-5 h-5 text-emerald-500" /> Post Info
                             </h3>
                             <div className="space-y-4">
                                 <div className="flex items-center gap-3">
@@ -511,7 +511,7 @@ export default function PostDetail({ id }: { id: string }) {
                                 <h4 className="text-xs font-bold text-gray-400 uppercase flex items-center gap-2"><Squares2X2Icon className="w-4 h-4" /> Categories</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {post.categories.map(cat => (
-                                        <span key={cat._id} className="px-3 py-1 bg-orange-50 text-orange-700 rounded-lg text-xs font-medium">
+                                        <span key={cat._id} className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-medium">
                                             {cat.parent?.name && `${cat.parent.name} › `}{cat.name}
                                         </span>
                                     ))}
@@ -528,15 +528,15 @@ export default function PostDetail({ id }: { id: string }) {
                         </div>
 
                         {/* SEO Analytics Preview */}
-                        <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200/60 dark:border-amber-900/40 rounded-2xl p-6 space-y-4">
-                            <h3 className="font-semibold flex items-center gap-2 text-amber-700 dark:text-amber-300"><GlobeAltIcon className="w-5 h-5" /> SEO Overview</h3>
+                        <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/30 dark:to-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/40 rounded-2xl p-6 space-y-4">
+                            <h3 className="font-semibold flex items-center gap-2 text-emerald-700 dark:text-emerald-300"><GlobeAltIcon className="w-5 h-5" /> SEO Overview</h3>
                             <div className="space-y-3">
-                                <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-amber-200/50 dark:border-amber-900/30">
-                                    <p className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">Meta Title</p>
+                                <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-emerald-200/50 dark:border-emerald-900/30">
+                                    <p className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">Meta Title</p>
                                     <p className="text-sm font-medium text-stone-800 dark:text-stone-100 line-clamp-1 mt-0.5">{post.meta.title || post.title}</p>
                                 </div>
-                                <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-amber-200/50 dark:border-amber-900/30">
-                                    <p className="text-[10px] uppercase font-bold text-amber-600/70 dark:text-amber-400/70">Meta Description</p>
+                                <div className="bg-white/70 dark:bg-stone-800/40 p-3 rounded-xl border border-emerald-200/50 dark:border-emerald-900/30">
+                                    <p className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70">Meta Description</p>
                                     <p className="text-xs text-stone-600 dark:text-stone-300 line-clamp-3 mt-0.5">{post.meta.description || post.excerpt || 'No meta description set.'}</p>
                                 </div>
                             </div>
@@ -550,8 +550,8 @@ export default function PostDetail({ id }: { id: string }) {
             {showPublishModal && (
                 <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
                     <div className="bg-white dark:bg-stone-800/40 rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center animate-scale-in">
-                        <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <RocketLaunchIcon className="w-10 h-10 text-orange-600" />
+                        <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <RocketLaunchIcon className="w-10 h-10 text-emerald-600" />
                         </div>
                         <h3 className="text-2xl font-bold mb-2">Publish Post?</h3>
                         <p className="text-gray-500 text-sm mb-8">This will make your content visible to everyone on the website.</p>
@@ -591,7 +591,7 @@ export default function PostDetail({ id }: { id: string }) {
                         {!socialResults ? (
                             <>
                                 <div className="text-center mb-6">
-                                    <div className="w-20 h-20 bg-gradient-to-br from-orange-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <ShareIcon className="w-10 h-10 text-white" />
                                     </div>
                                     <h3 className="text-2xl font-bold mb-2">Share to Social Media</h3>
@@ -632,15 +632,15 @@ export default function PostDetail({ id }: { id: string }) {
                                                     key={key}
                                                     onClick={() => togglePlatform(key as keyof typeof selectedPlatforms)}
                                                     className={`w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${selectedPlatforms[key as keyof typeof selectedPlatforms]
-                                                        ? 'border-orange-500 bg-orange-50 dark:bg-orange-950/20'
+                                                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20'
                                                         : 'border-gray-200 dark:border-stone-700/50 hover:border-gray-300'
                                                         }`}
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <div className={`p-2 rounded-xl scale-95 ${key === 'facebook' ? 'bg-orange-100 text-orange-600' :
+                                                        <div className={`p-2 rounded-xl scale-95 ${key === 'facebook' ? 'bg-emerald-100 text-emerald-600' :
                                                             key === 'twitter' ? 'bg-gray-100 text-gray-800' :
                                                                 key === 'threads' ? 'bg-black text-white' :
-                                                                    key === 'push' ? 'bg-orange-600 text-white' :
+                                                                    key === 'push' ? 'bg-emerald-600 text-white' :
                                                                         'bg-gradient-to-br from-purple-500 to-pink-500 text-white'
                                                             }`}>
                                                             {getPlatformIcon(key)}
@@ -659,7 +659,7 @@ export default function PostDetail({ id }: { id: string }) {
                                                         </div>
                                                     </div>
                                                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${selectedPlatforms[key as keyof typeof selectedPlatforms]
-                                                        ? 'border-orange-500 bg-orange-500'
+                                                        ? 'border-emerald-500 bg-emerald-500'
                                                         : 'border-gray-300'
                                                         }`}>
                                                         {selectedPlatforms[key as keyof typeof selectedPlatforms] && (
@@ -714,10 +714,10 @@ export default function PostDetail({ id }: { id: string }) {
                                                 }`}
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-xl scale-95 ${platform === 'facebook' ? 'bg-orange-100 text-orange-600' :
+                                                <div className={`p-2 rounded-xl scale-95 ${platform === 'facebook' ? 'bg-emerald-100 text-emerald-600' :
                                                     platform === 'twitter' ? 'bg-gray-100 text-gray-800' :
                                                         platform === 'threads' ? 'bg-black text-white' :
-                                                            platform === 'push' ? 'bg-orange-600 text-white' :
+                                                            platform === 'push' ? 'bg-emerald-600 text-white' :
                                                                 'bg-gradient-to-br from-purple-500 to-pink-500 text-white'
                                                     }`}>
                                                     {getPlatformIcon(platform)}

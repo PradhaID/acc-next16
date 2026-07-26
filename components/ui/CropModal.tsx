@@ -120,7 +120,7 @@ export default function CropModal({ isOpen, imageSrc, onConfirm, onCancel }: Cro
               }));
               setZoom(newZoom);
             }}
-            className="flex-1 h-1.5 bg-stone-200 rounded-full appearance-none cursor-pointer accent-orange-500 dark:bg-stone-700"
+            className="flex-1 h-1.5 bg-stone-200 rounded-full appearance-none cursor-pointer accent-emerald-500 dark:bg-stone-700"
           />
           <svg className="h-5 w-5 text-stone-400 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6" />
@@ -137,7 +137,7 @@ export default function CropModal({ isOpen, imageSrc, onConfirm, onCancel }: Cro
           </button>
           <button
             onClick={() => onConfirm(offset.x, offset.y, zoom)}
-            className="flex-1 py-2.5 rounded-xl bg-orange-600 text-sm font-bold text-white hover:bg-orange-500 transition-colors shadow-sm"
+            className="flex-1 py-2.5 rounded-xl bg-emerald-600 text-sm font-bold text-white hover:bg-emerald-500 transition-colors shadow-sm"
           >
             Apply Crop
           </button>

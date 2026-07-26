@@ -176,7 +176,7 @@ export default function ContentPost() {
                             {aiConfigured && canGenerate && (
                                 <button
                                     onClick={() => { setShowGenerateModal(true); setGenerateQuery(""); setGenerateResult(null); }}
-                                    className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all flex items-center gap-2"
+                                    className="bg-gradient-to-r from-emerald-500 via-emerald-500 to-emerald-500 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all flex items-center gap-2"
                                 >
                                     <SparklesIcon className="w-4 h-4 stroke-[2.5px]" /> {t("content.generateAI")}
                                 </button>
@@ -184,7 +184,7 @@ export default function ContentPost() {
                             {canCreate && (
                                 <Link
                                     href="/content/post/add"
-                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all"
                                 >
                                     <PlusIcon className="w-4 h-4 stroke-[3px]" /> {t("content.newPost")}
                                 </Link>
@@ -201,7 +201,7 @@ export default function ContentPost() {
                             <button
                                 key={s}
                                 onClick={() => { setStatusFilter(s); setPage(1); }}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${statusFilter === s ? 'bg-white dark:bg-stone-700 text-orange-600 shadow-sm' : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'}`}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${statusFilter === s ? 'bg-white dark:bg-stone-700 text-emerald-600 shadow-sm' : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'}`}
                             >
                                 {s.toUpperCase()}
                             </button>
@@ -238,7 +238,7 @@ export default function ContentPost() {
                     {/* Stats pills */}
                     <div className="flex items-center gap-2 shrink-0 text-[10px] font-black md:pl-2">
                         <span className="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg">{stats.published} {t("content.publishedAbbr")}</span>
-                        <span className="px-2.5 py-1.5 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 rounded-lg">{stats.draft} {t("content.draftAbbr")}</span>
+                        <span className="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg">{stats.draft} {t("content.draftAbbr")}</span>
                         <span className="px-2.5 py-1.5 bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 rounded-lg">{totalItems} {t("content.totalAbbr")}</span>
                     </div>
                 </div>
@@ -247,7 +247,7 @@ export default function ContentPost() {
                 <div className="bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-700/50 rounded-2xl overflow-hidden shadow-sm dark:shadow-stone-950/30">
                     {loading ? (
                         <div className="py-20 text-center">
-                            <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                            <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                             <p className="text-stone-400 dark:text-stone-500 text-sm">{t("content.loadingArticles")}</p>
                          </div>
                      ) : posts.length === 0 ? (
@@ -256,7 +256,7 @@ export default function ContentPost() {
                              <p className="text-stone-500 dark:text-stone-400 text-sm font-medium">{t("content.noResultsPosts")}</p>
                              <button
                                  onClick={() => { setSearch(""); setStatusFilter("all"); setCategory("all"); }}
-                                 className="mt-3 text-orange-600 text-xs font-bold hover:underline"
+                                 className="mt-3 text-emerald-600 text-xs font-bold hover:underline"
                              >
                                  {t("content.clearFilters")}
                              </button>
@@ -272,7 +272,7 @@ export default function ContentPost() {
                                                 type="checkbox"
                                                 checked={selection.isSelected(p._id)}
                                                 onChange={() => selection.toggle(p._id)}
-                                                className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-orange-600 focus:ring-orange-500 cursor-pointer mt-1 shrink-0"
+                                                className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-emerald-600 focus:ring-emerald-500 cursor-pointer mt-1 shrink-0"
                                             />
                                             <div className="h-10 w-10 rounded-xl bg-gray-100 dark:bg-stone-800/40 flex-shrink-0 overflow-hidden border border-gray-100 dark:border-stone-700/50">
                                                 {p.featuredImage?.url ? (
@@ -288,11 +288,11 @@ export default function ContentPost() {
                                                     </p>
                                                     <span className={`shrink-0 mt-0.5 px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wider ${p.status === 'published'
                                                         ? (p.published?.at && new Date(p.published.at) > new Date()
-                                                            ? 'bg-orange-100 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400'
+                                                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                             : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400')
                                                         : p.status === 'archived'
                                                             ? 'bg-gray-100 text-gray-500 dark:bg-stone-800/40 dark:text-stone-400'
-                                                            : 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+                                                            : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                         }`}>
                                                         {p.status === 'published' && p.published?.at && new Date(p.published.at) > new Date() ? t("status.scheduled") : p.status}
                                                     </span>
@@ -302,7 +302,7 @@ export default function ContentPost() {
                                                 {p.categories && p.categories.length > 0 && (
                                                     <div className="flex flex-wrap gap-1 mt-1.5">
                                                         {p.categories.slice(0, 2).map((cat, i) => (
-                                                            <span key={i} className="bg-orange-100 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400 px-1.5 py-0.5 rounded text-[9px] font-black uppercase">
+                                                            <span key={i} className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 px-1.5 py-0.5 rounded text-[9px] font-black uppercase">
                                                                 {cat.name}
                                                             </span>
                                                         ))}
@@ -324,7 +324,7 @@ export default function ContentPost() {
                                                          </Link>
                                                          <Link
                                                              href={`/content/post/edit/${p._id}`}
-                                                             className="px-2.5 py-1 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all"
+                                                             className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all"
                                                          >
                                                              {t("actions.edit")}
                                                          </Link>
@@ -346,7 +346,7 @@ export default function ContentPost() {
                                                     type="checkbox"
                                                     checked={selection.isAllSelected}
                                                     onChange={selection.toggleAll}
-                                                    className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                                                    className="w-4 h-4 rounded border-stone-300 dark:border-stone-600 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                                 />
                                             </th>
                                             <th className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-stone-400">{t("content.article")}</th>
@@ -365,7 +365,7 @@ export default function ContentPost() {
                                                         type="checkbox"
                                                         checked={selection.isSelected(p._id)}
                                                         onChange={() => selection.toggle(p._id)}
-                                                        className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                                                        className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                                                     />
                                                 </td>
                                                 {/* Article */}
@@ -385,7 +385,7 @@ export default function ContentPost() {
                                                             <div className="flex items-center gap-3 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 <Link
                                                                     href={`/content/post/detail/${p._id}`}
-                                                                    className="flex items-center gap-1 text-orange-600 dark:text-orange-400 text-[10px] font-black uppercase tracking-wider hover:underline"
+                                                                    className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[10px] font-black uppercase tracking-wider hover:underline"
                                                                 >
                                                                     <EyeIcon className="w-3 h-3" /> {t("content.view")}
                                                                 </Link>
@@ -418,7 +418,7 @@ export default function ContentPost() {
                                                 <td className="px-4 py-3">
                                                     <div className="flex flex-wrap gap-1">
                                                         {p.categories?.slice(0, 2).map((cat, i) => (
-                                                            <span key={i} className="bg-orange-100 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400 px-1.5 py-0.5 rounded text-[9px] font-black uppercase">
+                                                            <span key={i} className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 px-1.5 py-0.5 rounded text-[9px] font-black uppercase">
                                                                 {cat.name}
                                                             </span>
                                                         ))}
@@ -432,11 +432,11 @@ export default function ContentPost() {
                                                 <td className="px-4 py-3">
                                                     <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${p.status === 'published'
                                                         ? (p.published?.at && new Date(p.published.at) > new Date()
-                                                            ? 'bg-orange-100 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400'
+                                                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                             : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400')
                                                         : p.status === 'archived'
                                                             ? 'bg-gray-100 text-gray-500 dark:bg-stone-800/40 dark:text-stone-400'
-                                                            : 'bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400'
+                                                            : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
                                                         }`}>
                                                         {p.status === 'published' && p.published?.at && new Date(p.published.at) > new Date() ? t("status.scheduled") : p.status}
                                                     </span>
@@ -525,7 +525,7 @@ export default function ContentPost() {
                                 {settings.gemini_api_key && (
                                     <div className="flex items-center justify-between bg-gray-50 dark:bg-stone-800/40 rounded-xl px-4 py-3">
                                         <div className="flex items-center gap-2">
-                                            <SparklesIcon className="w-4 h-4 text-orange-500" />
+                                            <SparklesIcon className="w-4 h-4 text-emerald-500" />
                                             <span className="text-xs font-bold text-gray-700 dark:text-stone-300">Generate AI Image</span>
                                         </div>
                                         <Toggle
@@ -565,7 +565,7 @@ export default function ContentPost() {
                                 <p className="text-gray-500 dark:text-stone-400 text-xs mb-3">
                                     Writing about <span className="font-bold text-violet-600 dark:text-violet-400">&ldquo;{generateQuery}&rdquo;</span>
                                 </p>
-                                <div className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-700 text-amber-700 dark:text-amber-400 px-3 py-1.5 rounded-xl text-[10px] font-black">
+                                <div className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-xl text-[10px] font-black">
                                     <ClockIcon className="w-3.5 h-3.5" />
                                     {elapsedSeconds < 60
                                         ? `${elapsedSeconds}s — please wait up to 1 minute`

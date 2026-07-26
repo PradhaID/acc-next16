@@ -80,7 +80,7 @@ export default function GroupListPage() {
           canAddGroup && (
             <Link
               href="/system/group/add"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-orange-500/10 transition-all"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:scale-105 active:scale-95 text-xs text-white px-3 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/10 transition-all"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -117,7 +117,7 @@ export default function GroupListPage() {
         </div>
         <button
           onClick={() => handleSearch("")}
-          className="px-4 py-1.5 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+          className="px-4 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
         >
           Reset
         </button>
@@ -127,7 +127,7 @@ export default function GroupListPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100 dark:divide-stone-700/30">
           {loading ? (
             <div className="col-span-full py-20 flex items-center justify-center">
-              <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : filtered.length === 0 ? (
             <div className="col-span-full py-16 text-center">
@@ -136,7 +136,7 @@ export default function GroupListPage() {
               </svg>
               <p className="text-sm text-gray-500 font-medium">No groups found</p>
               {search && (
-                <button onClick={() => setSearch("")} className="mt-2 text-xs text-orange-600 hover:text-orange-700 font-bold">
+                <button onClick={() => setSearch("")} className="mt-2 text-xs text-emerald-600 hover:text-emerald-700 font-bold">
                   Clear search
                 </button>
               )}
@@ -178,7 +178,7 @@ export default function GroupListPage() {
                     {canManageRoles && (
                       <button
                         onClick={() => router.push(`/system/group/role/${group._id}`)}
-                        className="flex-1 text-center py-2 bg-gray-100 dark:bg-stone-800/40 hover:bg-orange-600 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+                        className="flex-1 text-center py-2 bg-gray-100 dark:bg-stone-800/40 hover:bg-emerald-600 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
                       >
                         Manage Roles
                       </button>

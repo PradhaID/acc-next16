@@ -37,9 +37,9 @@ export default function BulkActionBar({ count, actions, onAction, onClear }: Bul
   };
 
   return (
-    <div className="sticky bottom-4 z-20 flex items-center justify-between gap-4 bg-white dark:bg-stone-900/80 border border-amber-200 dark:border-amber-800 rounded-2xl shadow-lg px-5 py-3">
+    <div className="sticky bottom-4 z-20 flex items-center justify-between gap-4 bg-white dark:bg-stone-900/80 border border-emerald-200 dark:border-emerald-800 rounded-2xl shadow-lg px-5 py-3">
       <div className="flex items-center gap-3">
-        <span className="text-sm font-bold text-amber-700 dark:text-amber-400">
+        <span className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
           {count} selected
         </span>
         <button
@@ -65,9 +65,9 @@ export default function BulkActionBar({ count, actions, onAction, onClear }: Bul
                     : "bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400"
                   : a.variant === "warning"
                     ? isConfirming
-                      ? "bg-amber-600 text-white"
-                      : "bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-950/30 dark:text-amber-400"
-                    : "bg-orange-50 text-orange-700 hover:bg-orange-100 dark:bg-orange-950/30 dark:text-orange-400"
+                      ? "bg-emerald-600 text-white"
+                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400"
+                    : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400"
               }`}
             >
               {pending ? "..." : isConfirming ? `Sure?` : a.label}

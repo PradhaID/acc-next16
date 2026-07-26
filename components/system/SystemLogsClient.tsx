@@ -40,9 +40,9 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
   ROLE: { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200 dark:bg-purple-900/20 dark:border-purple-800 dark:text-purple-400" },
   CONTENT: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-400" },
   REDIRECT: { bg: "bg-cyan-50", text: "text-cyan-700", border: "border-cyan-200 dark:bg-cyan-900/20 dark:border-cyan-800 dark:text-cyan-400" },
-  SETTINGS: { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400" },
+  SETTINGS: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-400" },
   PROFILE: { bg: "bg-pink-50", text: "text-pink-700", border: "border-pink-200 dark:bg-pink-900/20 dark:border-pink-800 dark:text-pink-400" },
-  API_KEY: { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200 dark:bg-orange-950/30 dark:border-orange-800 dark:text-orange-400" },
+  API_KEY: { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-400" },
   SYSTEM: { bg: "bg-stone-50", text: "text-stone-700", border: "border-stone-200 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300" },
   AD: { bg: "bg-teal-50", text: "text-teal-700", border: "border-teal-200 dark:bg-teal-900/20 dark:border-teal-800 dark:text-teal-400" },
 };
@@ -126,7 +126,7 @@ export default function SystemLogsClient() {
       lvl === "ERROR"
         ? "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:border-red-800 dark:text-red-400"
         : lvl === "WARN"
-          ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-400"
+          ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-400"
           : "bg-stone-50 text-stone-700 border-stone-200 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300"
     }`}>
       {lvl}
@@ -179,7 +179,7 @@ export default function SystemLogsClient() {
               <div className="flex gap-2 mt-1">
                 {LEVELS.map((l) => (
                   <span key={l} className="text-xs font-bold">
-                    <span className={l === "ERROR" ? "text-red-600" : l === "WARN" ? "text-amber-600" : "text-stone-600"}>{stats.byLevel[l] || 0}</span>
+                    <span className={l === "ERROR" ? "text-red-600" : l === "WARN" ? "text-emerald-600" : "text-stone-600"}>{stats.byLevel[l] || 0}</span>
                     <span className="text-gray-400 ml-0.5">{l.charAt(0)}</span>
                   </span>
                 ))}
@@ -197,7 +197,7 @@ export default function SystemLogsClient() {
                     onClick={() => { setCategory(category === cat ? "" : cat); setPage(1); }}
                     className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold border transition-all ${
                       category === cat
-                        ? "bg-orange-100 border-orange-300 text-orange-700 dark:bg-orange-950/30 dark:border-orange-700 dark:text-orange-400"
+                        ? "bg-emerald-100 border-emerald-300 text-emerald-700 dark:bg-emerald-950/30 dark:border-emerald-700 dark:text-emerald-400"
                         : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 dark:bg-stone-800/40 dark:border-stone-700/50 dark:text-stone-400"
                     }`}
                   >
@@ -231,7 +231,7 @@ export default function SystemLogsClient() {
             <select
               value={category}
               onChange={(e) => { setCategory(e.target.value); setPage(1); }}
-              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-orange-500 focus:outline-none"
+              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-emerald-500 focus:outline-none"
             >
               <option value="">{t("logs.allCategories")}</option>
               {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -240,7 +240,7 @@ export default function SystemLogsClient() {
             <select
               value={level}
               onChange={(e) => { setLevel(e.target.value); setPage(1); }}
-              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-orange-500 focus:outline-none"
+              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-emerald-500 focus:outline-none"
             >
               <option value="">{t("logs.allLevels")}</option>
               {LEVELS.map((l) => <option key={l} value={l}>{l}</option>)}
@@ -252,26 +252,26 @@ export default function SystemLogsClient() {
               onChange={(e) => setUser(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") { setPage(1); fetchLogs(); } }}
               placeholder={t("logs.user") + "..."}
-              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 placeholder:text-gray-400 focus:border-orange-500 focus:outline-none w-24 md:w-28"
+              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 placeholder:text-gray-400 focus:border-emerald-500 focus:outline-none w-24 md:w-28"
             />
 
             <input
               type="date"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
-              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-orange-500 focus:outline-none"
+              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-emerald-500 focus:outline-none"
             />
 
             <input
               type="date"
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-orange-500 focus:outline-none"
+              className="rounded-lg border border-gray-200 dark:border-stone-700/50 bg-transparent px-2 py-1.5 text-xs font-bold text-gray-700 dark:text-stone-300 focus:border-emerald-500 focus:outline-none"
             />
 
             <button
               onClick={() => { setPage(1); fetchLogs(); }}
-              className="px-4 py-1.5 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+              className="px-4 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
             >
               {t("logs.filter")}
             </button>
@@ -279,7 +279,7 @@ export default function SystemLogsClient() {
             {hasFilters && (
               <button
                 onClick={handleReset}
-                className="px-4 py-1.5 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
+                className="px-4 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all"
               >
                 {t("logs.reset")}
               </button>
@@ -287,7 +287,7 @@ export default function SystemLogsClient() {
 
             <button
               onClick={handleExport}
-              className="px-4 py-1.5 bg-orange-50 hover:bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all inline-flex items-center gap-1"
+              className="px-4 py-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl text-[11px] font-black uppercase tracking-tight transition-all inline-flex items-center gap-1"
             >
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -301,12 +301,12 @@ export default function SystemLogsClient() {
       {/* Loading */}
       {loading ? (
         <div className="py-20 text-center bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl shadow-sm">
-          <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
         </div>
       ) : logs.length === 0 ? (
         <div className="py-20 text-center bg-white dark:bg-stone-900/80 border border-gray-200 dark:border-stone-700/50 rounded-2xl shadow-sm">
            <p className="text-gray-500 font-medium">{t("logs.noResults")}</p>
-          <button onClick={handleReset} className="mt-4 text-orange-600 font-bold hover:underline">
+          <button onClick={handleReset} className="mt-4 text-emerald-600 font-bold hover:underline">
             {t("logs.clearFilters")}
           </button>
         </div>
@@ -318,7 +318,7 @@ export default function SystemLogsClient() {
               <div key={log._id}>
                 <button
                   onClick={() => toggleExpand(log._id)}
-                  className="w-full p-4 text-left hover:bg-orange-50/20 transition-all"
+                  className="w-full p-4 text-left hover:bg-emerald-50/20 transition-all"
                 >
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <div className="flex items-center gap-1.5">
@@ -333,7 +333,7 @@ export default function SystemLogsClient() {
                     <p className="text-xs text-gray-400 dark:text-stone-500 mt-1 line-clamp-2">{log.detail}</p>
                   )}
                   {(log.oldValue || log.newValue) && (
-                    <span className="text-[10px] text-orange-500 font-bold mt-1 inline-block">
+                    <span className="text-[10px] text-emerald-500 font-bold mt-1 inline-block">
                        {expandedId === log._id ? t("logs.less") : t("logs.changes")}
                     </span>
                   )}
@@ -387,7 +387,7 @@ export default function SystemLogsClient() {
                       <Fragment key={log._id}>
                         <tr
                           onClick={() => hasChanges && toggleExpand(log._id)}
-                          className={`transition-all ${hasChanges ? "cursor-pointer hover:bg-orange-50/20 dark:hover:bg-orange-500/5" : ""}`}
+                          className={`transition-all ${hasChanges ? "cursor-pointer hover:bg-emerald-50/20 dark:hover:bg-emerald-500/5" : ""}`}
                         >
                           <td className="px-4 py-3">
                             {hasChanges && (

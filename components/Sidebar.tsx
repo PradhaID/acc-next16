@@ -263,7 +263,7 @@ export default function Sidebar({ user }: SidebarProps) {
                       collapsed ? "md:justify-center md:px-0" : ""
                     } ${
                       isActive
-                        ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+                        ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
                         : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.04] dark:hover:text-white"
                     }`}
                     title={collapsed ? t(item.labelKey) : undefined}
@@ -299,7 +299,7 @@ export default function Sidebar({ user }: SidebarProps) {
                               onClick={closeMobile}
                               className={`flex items-center rounded-lg px-3 py-2 text-sm transition ${
                                 subActive
-                                  ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+                                  ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
                                   : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                               }`}
                             >
@@ -331,7 +331,7 @@ export default function Sidebar({ user }: SidebarProps) {
                               onClick={() => { setOpenDropdown(null); closeMobile(); }}
                               className={`flex items-center px-4 py-2 text-sm transition ${
                                 subActive
-                                  ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+                                  ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
                                   : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.04] dark:hover:text-white"
                               }`}
                             >
@@ -354,7 +354,7 @@ export default function Sidebar({ user }: SidebarProps) {
                   collapsed ? "md:justify-center md:px-0" : ""
                 } ${
                   isActive
-                    ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+                    ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
                     : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.04] dark:hover:text-white"
                 }`}
                 title={collapsed ? t(item.labelKey) : undefined}
@@ -386,7 +386,7 @@ export default function Sidebar({ user }: SidebarProps) {
               {user.image ? (
                 <img src={user.image} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
               ) : (
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-semibold text-orange-700 dark:bg-orange-500/20 dark:text-orange-400">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
                   {(user.fullName || user.username || "?").charAt(0).toUpperCase()}
                 </div>
               )}

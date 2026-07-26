@@ -216,7 +216,7 @@ export default function SettingsClient() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-32">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
       </div>
     );
   }
@@ -241,7 +241,7 @@ export default function SettingsClient() {
           {/* Application Info */}
           <div className="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-stone-700/50 dark:bg-stone-900/80 overflow-hidden">
             <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-stone-700/50 dark:bg-stone-800/40">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                 <Cog6ToothIcon className="h-5 w-5" />
               </div>
               <div>
@@ -257,14 +257,14 @@ export default function SettingsClient() {
                       value={settings[item.key] ?? item.value ?? ""}
                       onChange={(e) => handleChange(item.key, e.target.value)}
                       rows={3}
-                      className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
+                      className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 resize-none transition-colors"
                     />
                   ) : (
                     <input
                       type={item.type === "number" ? "number" : "text"}
                       value={settings[item.key] ?? item.value ?? ""}
                       onChange={(e) => handleChange(item.key, item.type === "number" ? Number(e.target.value) : e.target.value)}
-                      className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                      className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                     />
                   )}
                 </FormField>
@@ -275,7 +275,7 @@ export default function SettingsClient() {
           {/* Features */}
           <div className="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-stone-700/50 dark:bg-stone-900/80 overflow-hidden">
             <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-stone-700/50 dark:bg-stone-800/40">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                 <ShieldCheckIcon className="h-5 w-5" />
               </div>
               <div>
@@ -294,7 +294,7 @@ export default function SettingsClient() {
                         <p className="text-sm font-bold text-gray-900 dark:text-white">{item.label}</p>
                         <p className="text-xs text-gray-400 dark:text-stone-500 mt-0.5 font-mono">{item.key}</p>
                         {isWahaToggle && !wahaConfigured && (
-                          <p className="text-[10px] text-amber-500 dark:text-amber-400 mt-1 font-medium">
+                          <p className="text-[10px] text-emerald-500 dark:text-emerald-400 mt-1 font-medium">
                             Fill in all WAHA fields below first to enable this.
                           </p>
                         )}
@@ -337,7 +337,7 @@ export default function SettingsClient() {
                       value={settings[item.key] ?? item.value ?? ""}
                       onChange={(e) => handleChange(item.key, e.target.value)}
                       placeholder={item.key.includes("token") ? "Enter API token" : item.key.includes("url") ? "https://waha.example.com" : "Instance name"}
-                      className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                      className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                     />
                   </FormField>
                 ))}
@@ -357,13 +357,13 @@ export default function SettingsClient() {
                       onChange={(e) => { setTestPhone(e.target.value); setTestResult(null); }}
                       placeholder="e.g. 6281234567890"
                       disabled={!wahaConfigured || testSending}
-                      className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     />
                     <button
                       type="button"
                       onClick={handleTestWaha}
                       disabled={!wahaConfigured || testSending || !testPhone.trim()}
-                      className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/10 hover:from-amber-600 hover:to-orange-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 hover:from-emerald-600 hover:to-emerald-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {testSending ? (
                         <span className="flex items-center gap-1.5">
@@ -402,14 +402,14 @@ export default function SettingsClient() {
                     value={settings.ai_url || ""}
                     onChange={(e) => handleChange("ai_url", e.target.value)}
                     placeholder="https://api.openai.com/v1"
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   />
                   <input
                     type="password"
                     value={settings.ai_api_key || ""}
                     onChange={(e) => handleChange("ai_api_key", e.target.value)}
                     placeholder={t("settings.aiApiKey") + " (sk-...)"}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   />
                 </div>
                 <p className="text-[10px] text-gray-400 dark:text-stone-500 mt-1.5 leading-relaxed">
@@ -422,7 +422,7 @@ export default function SettingsClient() {
                     value={settings.ai_model || ""}
                     onChange={(e) => handleChange("ai_model", e.target.value)}
                     disabled={aiModels.length === 0}
-                    className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <option value="">{t("settings.aiModelPlaceholder")}</option>
                     {aiModels.map((m) => (
@@ -437,7 +437,7 @@ export default function SettingsClient() {
                   >
                     {aiFetchingModels ? (
                       <span className="flex items-center gap-1.5">
-                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
                         {t("settings.fetchingModels")}
                       </span>
                     ) : t("settings.fetchModels")}
@@ -451,14 +451,14 @@ export default function SettingsClient() {
                     value={settings.searxng_url || ""}
                     onChange={(e) => handleChange("searxng_url", e.target.value)}
                     placeholder="URL — http://localhost:8888"
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   />
                   <input
                     type="password"
                     value={settings.searxng_api_key || ""}
                     onChange={(e) => handleChange("searxng_api_key", e.target.value)}
                     placeholder={t("settings.aiApiKey") + " (optional)"}
-                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                    className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                   />
                 </div>
                 <p className="text-[10px] text-gray-400 dark:text-stone-500 mt-1.5">
@@ -471,7 +471,7 @@ export default function SettingsClient() {
                   value={settings.gemini_api_key || ""}
                   onChange={(e) => handleChange("gemini_api_key", e.target.value)}
                   placeholder="AIza... (for AI image generation)"
-                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="w-full px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                 />
                 <p className="text-[10px] text-gray-400 dark:text-stone-500 mt-1.5">
                   Used for AI-powered features like image generation. Get a free key at <code className="bg-gray-100 dark:bg-stone-800 px-1 rounded">aistudio.google.com</code>.
@@ -490,7 +490,7 @@ export default function SettingsClient() {
                   type="button"
                   onClick={handleTestAi}
                   disabled={!settings.ai_url || !settings.ai_model || aiTesting}
-                  className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl text-xs font-bold shadow-md shadow-orange-500/10 hover:from-amber-600 hover:to-orange-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md shadow-emerald-500/10 hover:from-emerald-600 hover:to-emerald-700 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {aiTesting ? (
                     <span className="flex items-center gap-1.5">
@@ -529,7 +529,7 @@ export default function SettingsClient() {
           {/* Keywords */}
           <div className="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-stone-700/50 dark:bg-stone-900/80 overflow-hidden">
             <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-stone-700/50 dark:bg-stone-800/40">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                 <KeyIcon className="h-5 w-5" />
               </div>
               <div>
@@ -545,7 +545,7 @@ export default function SettingsClient() {
                   onChange={handleKeywordInput}
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addKeyword())}
                   placeholder={t("settings.addKeyword")}
-                  className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                 />
                 <button
                   type="button"
@@ -579,7 +579,7 @@ export default function SettingsClient() {
           {/* Tags */}
           <div className="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-stone-700/50 dark:bg-stone-900/80 overflow-hidden">
             <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50/50 px-6 py-4 dark:border-stone-700/50 dark:bg-stone-800/40">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-400">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                 <TagIcon className="h-5 w-5" />
               </div>
               <div>
@@ -595,7 +595,7 @@ export default function SettingsClient() {
                   onChange={handleTagInput}
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
                   placeholder="Add tag (press Enter)..."
-                  className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-gray-50 dark:bg-stone-800/40 border border-transparent focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 rounded-xl outline-none text-sm font-bold text-gray-900 dark:text-white placeholder:text-gray-400 transition-colors"
                 />
                 <button
                   type="button"
@@ -634,7 +634,7 @@ export default function SettingsClient() {
                   name="default_locale"
                   value={settings.default_locale || "id_ID"}
                   onChange={(e) => handleChange("default_locale", e.target.value)}
-                  className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white appearance-none cursor-pointer outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500/20 transition-colors"
+                  className="w-full px-4 py-2.5 bg-white dark:bg-stone-800/40 border border-gray-300 dark:border-stone-600 rounded-lg text-sm text-gray-900 dark:text-white appearance-none cursor-pointer outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-colors"
                 >
                   {SUPPORTED_LOCALES.map(loc => (
                     <option key={loc} value={loc}>{getLocaleLabel(loc as "en_US" | "id_ID")}</option>
@@ -648,7 +648,7 @@ export default function SettingsClient() {
         {/* Right column — info sidebar */}
         <div className="space-y-4">
           <div className="bg-white dark:bg-stone-900/80 p-4 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600 mb-3 flex items-center gap-1.5">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3 flex items-center gap-1.5">
               <InformationCircleIcon className="w-3.5 h-3.5" /> {t("settings.overview")}
             </h3>
             <div className="space-y-3 text-[11px]">
@@ -682,7 +682,7 @@ export default function SettingsClient() {
           </div>
 
           <div className="bg-white dark:bg-stone-900/80 p-4 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600 mb-3 flex items-center gap-1.5">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3 flex items-center gap-1.5">
               <InformationCircleIcon className="w-3.5 h-3.5" /> {t("settings.howItWorks")}
             </h3>
             <div className="text-[11px] text-gray-500 space-y-2">
@@ -693,7 +693,7 @@ export default function SettingsClient() {
           </div>
 
           <div className="bg-white dark:bg-stone-900/80 p-4 rounded-2xl border border-gray-200 dark:border-stone-700/50 shadow-sm text-xs">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-orange-600 mb-3 flex items-center gap-1.5">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-3 flex items-center gap-1.5">
               <InformationCircleIcon className="w-3.5 h-3.5" /> {t("settings.status")}
             </h3>
             <div className="space-y-2">
