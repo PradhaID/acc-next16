@@ -45,6 +45,8 @@ export const id_ID: Dict = {
     balanceSheet: "Neraca Keuangan",
     incomeStatement: "Laporan Laba Rugi",
     closing: "Tutup Buku",
+    cashFlow: "Laporan Arus Kas",
+    equityChanges: "Laporan Perubahan Ekuitas",
   },
   auth: {
     signIn: "Masuk",

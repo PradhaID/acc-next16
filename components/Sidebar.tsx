@@ -67,6 +67,8 @@ const navItems: NavItem[] = [
       { labelKey: "nav.ledger", href: "/accounting/ledger", roleUrl: "/accounting/ledger" },
       { labelKey: "nav.balanceSheet", href: "/accounting/balance-sheet", roleUrl: "/accounting/balance-sheet" },
       { labelKey: "nav.incomeStatement", href: "/accounting/income-statement", roleUrl: "/accounting/income-statement" },
+      { labelKey: "nav.cashFlow", href: "/accounting/cash-flow", roleUrl: "/accounting/cash-flow" },
+      { labelKey: "nav.equityChanges", href: "/accounting/equity-changes", roleUrl: "/accounting/equity-changes" },
       { labelKey: "nav.closing", href: "/accounting/closing", roleUrl: "/accounting/closing" },
     ],
   },

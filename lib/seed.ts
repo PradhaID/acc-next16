@@ -63,6 +63,8 @@ const ROLES = {
   ACCOUNT_PDF: new ObjectId("670000000000000000000216"),
   ACCOUNT_XLSX: new ObjectId("670000000000000000000217"),
   UPLOAD_EVIDENCE: new ObjectId("670000000000000000000218"),
+  CASH_FLOW: new ObjectId("670000000000000000000219"),
+  EQUITY_CHANGES: new ObjectId("67000000000000000000021a"),
 
   // 6. Content
   CONTENT: new ObjectId("670000000000000000000300"),
@@ -584,6 +586,24 @@ async function seed() {
       parent: ROLES.TRANSACTION,
       name: "Upload Evidence",
       description: "Upload transaction evidence documents",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
+      _id: ROLES.CASH_FLOW,
+      parent: ROLES.ACCOUNTING,
+      name: "Statement of Cash Flows",
+      description: "View Statement of Cash Flows",
+      url: "/accounting/cash-flow",
+      created: { at: now, by: null },
+      updated: { at: now, by: null },
+    },
+    {
+      _id: ROLES.EQUITY_CHANGES,
+      parent: ROLES.ACCOUNTING,
+      name: "Statement of Changes in Equity",
+      description: "View Statement of Changes in Equity",
+      url: "/accounting/equity-changes",
       created: { at: now, by: null },
       updated: { at: now, by: null },
     },

@@ -45,6 +45,8 @@ export const en_US: Dict = {
     balanceSheet: "Balance Sheet",
     incomeStatement: "Income Statement",
     closing: "Closing",
+    cashFlow: "Statement of Cash Flows",
+    equityChanges: "Statement of Changes in Equity",
   },
   auth: {
     signIn: "Sign In",

@@ -43,6 +43,8 @@ export type Dict = {
     balanceSheet: string;
     incomeStatement: string;
     closing: string;
+    cashFlow: string;
+    equityChanges: string;
   };
   auth: {
     signIn: string;
