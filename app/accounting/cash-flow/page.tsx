@@ -89,26 +89,39 @@ export default function CashFlowPage() {
 
   const handleDownloadXLSX = () => {
     if (!data) return;
-    const rows = [
-      { Category: "Statement of Cash Flows", Amount: "" },
-      { Category: `Period: ${data.startDate} to ${data.endDate}`, Amount: "" },
-      {},
-      { Category: "Cash Flows from Operating Activities", Amount: "" },
-      ...data.operatingActivities.map((item) => ({ Category: `  ${item.name}`, Amount: item.amount })),
-      { Category: "Net Cash provided by Operating Activities", Amount: data.operatingActivities.reduce((s, x) => s + x.amount, 0) },
-      {},
-      { Category: "Cash Flows from Investing Activities", Amount: "" },
-      ...data.investingActivities.map((item) => ({ Category: `  ${item.name}`, Amount: item.amount })),
-      { Category: "Net Cash used in Investing Activities", Amount: data.investingActivities.reduce((s, x) => s + x.amount, 0) },
-      {},
-      { Category: "Cash Flows from Financing Activities", Amount: "" },
-      ...data.financingActivities.map((item) => ({ Category: `  ${item.name}`, Amount: item.amount })),
-      { Category: "Net Cash provided by Financing Activities", Amount: data.financingActivities.reduce((s, x) => s + x.amount, 0) },
-      {},
-      { Category: "Net Increase in Cash & Cash Equivalents", Amount: data.netIncrease },
-      { Category: "Cash & Cash Equivalents at Beginning of Period", Amount: data.beginningCash },
-      { Category: "Cash & Cash Equivalents at End of Period", Amount: data.endingCash },
-    ];
+    const rows: any[][] = [];
+    rows.push(["STATEMENT OF CASH FLOWS"]);
+    rows.push([`Period: ${data.startDate} to ${data.endDate}`]);
+    rows.push([]);
+    
+    rows.push(["Activities & Categories", "Amount"]);
+    rows.push([]);
+    
+    rows.push(["Cash Flows from Operating Activities"]);
+    for (const item of data.operatingActivities) {
+      rows.push([`   ${item.name}`, item.amount]);
+    }
+    rows.push(["Net cash provided by Operating Activities", totalOperating]);
+    rows.push([]);
+    
+    rows.push(["Cash Flows from Investing Activities"]);
+    for (const item of data.investingActivities) {
+      rows.push([`   ${item.name}`, item.amount]);
+    }
+    rows.push(["Net cash used in Investing Activities", totalInvesting]);
+    rows.push([]);
+    
+    rows.push(["Cash Flows from Financing Activities"]);
+    for (const item of data.financingActivities) {
+      rows.push([`   ${item.name}`, item.amount]);
+    }
+    rows.push(["Net cash provided by Financing Activities", totalFinancing]);
+    rows.push([]);
+    
+    rows.push(["Net Increase in Cash & Cash Equivalents", data.netIncrease]);
+    rows.push(["Cash at Beginning of Period", data.beginningCash]);
+    rows.push(["Cash at End of Period", data.endingCash]);
+    
     downloadXLSX([{ name: "Cash Flows", rows }], `statement-of-cash-flows-${startDate}-${endDate}.xlsx`);
   };
 

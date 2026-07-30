@@ -103,26 +103,33 @@ export default function EquityChangesPage() {
 
   const handleDownloadXLSX = () => {
     if (!data) return;
-    const rows = [
-      { Description: "Statement of Changes in Equity", "Share Capital": "", "Retained Earnings": "", "Other Reserves": "", Total: "" },
-      { Description: `Period: ${data.startDate} to ${data.endDate}`, "Share Capital": "", "Retained Earnings": "", "Other Reserves": "", Total: "" },
-      {},
-      { Description: "Description", "Share Capital": "Share Capital", "Retained Earnings": "Retained Earnings", "Other Reserves": "Other Reserves", Total: "Total" },
-      ...data.rows.map((row) => ({
-        Description: row.description,
-        "Share Capital": row.shareCapital,
-        "Retained Earnings": row.retainedEarnings,
-        "Other Reserves": row.otherReserves,
-        Total: row.total,
-      })),
-      {
-        Description: "Ending Balance",
-        "Share Capital": totalShareCapital,
-        "Retained Earnings": totalRetainedEarnings,
-        "Other Reserves": totalOtherReserves,
-        Total: totalEquity,
-      },
-    ];
+    const rows: any[][] = [];
+    rows.push(["STATEMENT OF CHANGES IN EQUITY"]);
+    rows.push([`Period: ${data.startDate} to ${data.endDate}`]);
+    rows.push([]);
+    
+    rows.push(["Description", "Share Capital", "Retained Earnings", "Other Reserves", "Total Equity"]);
+    rows.push([]);
+    
+    for (const row of data.rows) {
+      rows.push([
+        row.description,
+        row.shareCapital !== 0 ? row.shareCapital : "-",
+        row.retainedEarnings !== 0 ? row.retainedEarnings : "-",
+        row.otherReserves !== 0 ? row.otherReserves : "-",
+        row.total,
+      ]);
+    }
+    
+    rows.push([]);
+    rows.push([
+      "Ending Balance",
+      totalShareCapital,
+      totalRetainedEarnings,
+      totalOtherReserves,
+      totalEquity,
+    ]);
+    
     downloadXLSX([{ name: "Equity Changes", rows }], `statement-of-changes-in-equity-${startDate}-${endDate}.xlsx`);
   };
 

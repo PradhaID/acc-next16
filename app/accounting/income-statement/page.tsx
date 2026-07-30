@@ -385,14 +385,26 @@ export default function IncomeStatementPage() {
       { label: "Cost of Goods Sold", node: data.cogs },
       { label: "Expenses", node: data.expenses },
     ];
-    const allRows: Record<string, unknown>[] = [];
-    allRows.push({ "Income Statement": `${data.startDate} — ${data.endDate}` });
-    allRows.push({});
+    
+    const rows: any[][] = [];
+    
+    // Title & Meta Info
+    rows.push(["INCOME STATEMENT"]);
+    rows.push([`${formatDate(data.startDate)} — ${formatDate(data.endDate)}`]);
+    rows.push([]);
+    
+    // Headers
+    if (showCode) {
+      rows.push(["Code", "Description", "Total"]);
+    } else {
+      rows.push(["Description", "Total"]);
+    }
+    rows.push([]);
+    
     for (const { label, node } of sections) {
-      allRows.push({ [label]: "" });
+      rows.push(showCode ? ["", label.toUpperCase(), ""] : [label.toUpperCase(), ""]);
       const tree = flattenTree(node);
       for (const r of tree) {
-        allRows.push({ "": r.name, Total: r.total });
       }
       allRows.push({ "": `Total ${label}`, Total: node.total });
       allRows.push({});

@@ -317,24 +317,55 @@ export default function BalanceSheetPage() {
       { label: "Liabilities", root: data.liabilities },
       { label: "Equity", root: data.equity },
     ];
-    const allRows: Record<string, unknown>[] = [];
-    allRows.push({ "Balance Sheet": `As of ${data.asOfDate}` });
-    allRows.push({});
+    
+    const rows: any[][] = [];
+    
+    // Title & Meta Info
+    rows.push(["BALANCE SHEET"]);
+    rows.push([`As of ${formatDate(data.asOfDate)}`]);
+    rows.push([]);
+    
+    // Headers
+    if (showCode) {
+      rows.push(["Code", "Description", "Total"]);
+    } else {
+      rows.push(["Description", "Total"]);
+    }
+    rows.push([]);
+    
     for (const { label, root } of sections) {
-      allRows.push({ [label]: "" });
+      rows.push(showCode ? ["", label.toUpperCase(), ""] : [label.toUpperCase(), ""]);
       const tree = flattenTree(root);
       if (label === "Equity" && data.netIncome > 0) {
         tree.push({ depth: 1, name: "Current Year Earnings", code: "", total: data.netIncome });
       }
       for (const r of tree) {
-        allRows.push({ "": r.name, Total: r.total });
+        const indentName = "   ".repeat(r.depth) + r.name;
+        if (showCode) {
+          rows.push([r.code || "", indentName, r.total]);
+        } else {
+          rows.push([indentName, r.total]);
+        }
       }
-      allRows.push({ "": `Total ${label}`, Total: root.total });
-      allRows.push({});
+      // Total for section
+      if (showCode) {
+        rows.push(["", `Total ${label}`, root.total]);
+      } else {
+        rows.push([`Total ${label}`, root.total]);
+      }
+      rows.push([]);
     }
-    allRows.push({ "": "TOTAL LIABILITIES & EQUITY", Total: totalLiabilitiesEquity });
-    allRows.push({ "": isBalanced ? "Balanced" : "Out of Balance" });
-    downloadXLSX([{ name: "Balance Sheet", rows: allRows }], `balance-sheet-${data.asOfDate}.xlsx`);
+    
+    // Total Liabilities & Equity
+    if (showCode) {
+      rows.push(["", "TOTAL LIABILITIES & EQUITY", totalLiabilitiesEquity]);
+      rows.push(["", isBalanced ? "Balanced" : "Out of Balance", ""]);
+    } else {
+      rows.push(["TOTAL LIABILITIES & EQUITY", totalLiabilitiesEquity]);
+      rows.push([isBalanced ? "Balanced" : "Out of Balance", ""]);
+    }
+    
+    downloadXLSX([{ name: "Balance Sheet", rows }], `balance-sheet-${data.asOfDate}.xlsx`);
   }
 
   return (
