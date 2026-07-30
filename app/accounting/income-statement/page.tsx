@@ -173,18 +173,18 @@ function SectionCard({ node, colors, collapsed, onToggle, showCode }: { node: Co
   );
 }
 
-type FlatRow = { depth: number; name: string; total: number };
+type FlatRow = { depth: number; name: string; total: number; code?: string };
 function flattenTree(node: CoaNode): FlatRow[] {
   const rows: FlatRow[] = [];
   for (const child of node.children) {
-    rows.push({ depth: 0, name: child.name, total: child.total });
+    rows.push({ depth: 0, name: child.name, total: child.total, code: child.code });
     flattenChildren(child, 1, rows);
   }
   return rows;
 }
 function flattenChildren(node: CoaNode, depth: number, rows: FlatRow[]) {
   for (const child of node.children) {
-    rows.push({ depth, name: child.name, total: child.total });
+    rows.push({ depth, name: child.name, total: child.total, code: child.code });
     flattenChildren(child, depth + 1, rows);
   }
 }
@@ -405,15 +405,42 @@ export default function IncomeStatementPage() {
       rows.push(showCode ? ["", label.toUpperCase(), ""] : [label.toUpperCase(), ""]);
       const tree = flattenTree(node);
       for (const r of tree) {
+        const indentName = "   ".repeat(r.depth) + r.name;
+        if (showCode) {
+          rows.push([r.code || "", indentName, r.total]);
+        } else {
+          rows.push([indentName, r.total]);
+        }
       }
-      allRows.push({ "": `Total ${label}`, Total: node.total });
-      allRows.push({});
+      // Total for section
+      if (showCode) {
+        rows.push(["", `Total ${label}`, node.total]);
+      } else {
+        rows.push([`Total ${label}`, node.total]);
+      }
+      rows.push([]);
+      
+      // Inject Gross Profit right after Cost of Goods Sold section
+      if (label === "Cost of Goods Sold") {
+        if (showCode) {
+          rows.push(["", "GROSS PROFIT", data.grossProfit]);
+        } else {
+          rows.push(["GROSS PROFIT", data.grossProfit]);
+        }
+        rows.push([]);
+      }
     }
-    allRows.push({ "": "Gross Profit", Total: data.grossProfit });
-    allRows.push({ "": `Net ${data.netProfit >= 0 ? "Profit" : "Loss"}`, Total: data.netProfit });
-    downloadXLSX([{ name: "Income Statement", rows: allRows }], `income-statement-${data.startDate}-${data.endDate}.xlsx`);
+    
+    // Net Profit/Loss
+    const netLabel = `NET ${data.netProfit >= 0 ? "PROFIT" : "LOSS"}`;
+    if (showCode) {
+      rows.push(["", netLabel, data.netProfit]);
+    } else {
+      rows.push([netLabel, data.netProfit]);
+    }
+    
+    downloadXLSX([{ name: "Income Statement", rows }], `income-statement-${data.startDate}-${data.endDate}.xlsx`);
   }
-
   return (
     <div className="max-w-full mx-auto space-y-4 pb-10">
       <PageHeader title="Income Statement" subtitle="Profit & loss report" />
