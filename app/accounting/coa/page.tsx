@@ -162,9 +162,13 @@ export default function COAListPage() {
       y = height - margin;
     };
 
-    const drawText = (text: string, x: number, size: number, opts?: { bold?: boolean; color?: number[] }) => {
+    const drawText = (text: string, x: number, size: number, opts?: { bold?: boolean; color?: number[]; align?: 'right' | 'left' }) => {
       const f = opts?.bold ? bold : font;
-      page.drawText(text, { x, y: y - 2, size, font: f, color: rgb(opts?.color?.[0] ?? 0, opts?.color?.[1] ?? 0, opts?.color?.[2] ?? 0.4) });
+      let tx = x;
+      if (opts?.align === 'right') {
+        tx = x - f.widthOfTextAtSize(text, size);
+      }
+      page.drawText(text, { x: tx, y: y - 2, size, font: f, color: rgb(opts?.color?.[0] ?? 0, opts?.color?.[1] ?? 0, opts?.color?.[2] ?? 0.4) });
     };
 
     const wrapText = (text: string, maxWidth: number, size: number): string[] => {
@@ -204,7 +208,7 @@ export default function COAListPage() {
     y -= rowH;
 
     // Header row
-    drawText("Code", colX[0], 9, { bold: true, color: [0, 0, 0] });
+    drawText("Code", colX[1] - 8, 9, { bold: true, color: [0, 0, 0], align: 'right' });
     drawText("Account Name", colX[1], 9, { bold: true, color: [0, 0, 0] });
     drawText("Category", colX[2], 9, { bold: true, color: [0, 0, 0] });
     drawText("Pos", colX[3], 9, { bold: true, color: [0, 0, 0] });
@@ -222,7 +226,7 @@ export default function COAListPage() {
 
       if (y - rowHeight < minY) addPage();
 
-      drawText(String(c.code), colX[0], 8);
+      drawText(String(c.code), colX[1] - 8, 8, { align: 'right' });
       for (let i = 0; i < lineCount; i++) {
         if (i > 0) y -= rowH;
         drawText(nameLines[i] ?? '', colX[1], 8);
